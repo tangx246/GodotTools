@@ -18,7 +18,7 @@ func _input(event:InputEvent):
 	if is_on_floor() and event.is_action_pressed("Jump"):
 		jump_velocity_to_add = sqrt(2*jump_height*(-gravity.y))
 
-func _physics_process(delta):
+func _process(delta):
 	velocity = get_input()
 	velocity += gravity * delta
 	velocity += Vector3(0, jump_velocity_to_add, 0)
