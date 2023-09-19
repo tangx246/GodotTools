@@ -23,7 +23,7 @@ func _input(event:InputEvent):
 		mouse_movement.x -= event.relative.x * mouse_look_speed
 		mouse_movement.y -= event.relative.y * mouse_look_speed
 
-func _process(delta):
+func _physics_process(delta):
 	velocity = get_input()
 	velocity += gravity * delta
 	velocity += Vector3(0, jump_velocity_to_add, 0)
