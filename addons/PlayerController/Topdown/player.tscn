@@ -14,7 +14,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("CapsuleShape3D_rydnu")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-1, -6.18172e-08, 6.18172e-08, 0, 0.707107, 0.707107, -8.74228e-08, 0.707107, -0.707107, 0, 3, -3)
+transform = Transform3D(-1, -1.0677e-07, 1.0677e-07, 0, 0.707107, 0.707107, -1.50996e-07, 0.707107, -0.707107, 0, 3, -3)
 
 [node name="Smoothing" type="Node3D" parent="."]
 script = ExtResource("2_dqrsy")
