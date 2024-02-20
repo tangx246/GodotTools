@@ -8,6 +8,7 @@ extends CharacterBody3D
 @export var jump_key : String = "ui_accept"
 @export var camera_basis : Node3D = null
 @export var additional_rotation : Vector3 = Vector3.ZERO
+@export var ignore_time_scale : bool = false
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
@@ -15,6 +16,15 @@ var gravity_direction = ProjectSettings.get_setting("physics/3d/default_gravity_
 
 
 func _physics_process(delta):
+	# This is a really bad hack until https://github.com/godotengine/godot/pull/86766 is merged
+	var scaled_speed : float = speed
+	if ignore_time_scale:
+		scaled_speed = scaled_speed / Engine.time_scale if Engine.time_scale != 0 else scaled_speed
+		
+	var scaled_acceleration : float = acceleration
+	if ignore_time_scale:
+		scaled_acceleration = scaled_acceleration / Engine.time_scale if Engine.time_scale != 0 else scaled_acceleration
+	
 	# Add the gravity.
 	if not is_on_floor():
 		velocity += (gravity_direction * gravity) * delta
@@ -42,11 +52,11 @@ func _physics_process(delta):
 		direction *= quaternion
 	
 	if direction:
-		velocity.x = move_toward(velocity.x, direction.x * speed, acceleration * delta)
-		velocity.z = move_toward(velocity.z, direction.z * speed, acceleration * delta)
+		velocity.x = move_toward(velocity.x, direction.x * scaled_speed, scaled_acceleration * delta)
+		velocity.z = move_toward(velocity.z, direction.z * scaled_speed, scaled_acceleration * delta)
 	else:
-		velocity.x = move_toward(velocity.x, 0, acceleration * delta)
-		velocity.z = move_toward(velocity.z, 0, acceleration * delta)
+		velocity.x = move_toward(velocity.x, 0, scaled_acceleration * delta)
+		velocity.z = move_toward(velocity.z, 0, scaled_acceleration * delta)
 
 	move_and_slide()
 

@@ -1,4 +1,6 @@
-extends Node
+class_name Daynight extends Node
+
+const tag : String = "Daynight"
 
 @export var sun : DirectionalLight3D
 @export var moon : DirectionalLight3D
@@ -6,6 +8,11 @@ extends Node
 @export var sunrise : float
 ## Time of sunset. 0-1, 0 for 12am, 1 for 12am the next day
 @export var sunset : float
+## Color of the sun throughout the day (not night)
+@export var sunlightGradient : Gradient
+
+func _enter_tree():
+	add_to_group(tag)
 
 func _get_sun_location(time: float):
 	# There is probably a super clever one liner here, but I can't brain
@@ -30,3 +37,9 @@ func move_sun(time : float):
 
 	sun.visible = sunLocation > 0 and sunLocation < 180
 	moon.visible = !sun.visible
+
+	if sun.visible:
+		sun.light_color = _get_sun_color(time)
+		
+func _get_sun_color(time: float):
+	return sunlightGradient.sample((time - sunrise) / (sunset - sunrise))
