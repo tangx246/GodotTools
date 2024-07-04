@@ -1,5 +1,5 @@
 class_name TopdownItemPlacer
-extends Node3D
+extends Control
 
 signal placing_item(placing: bool, item_name: String)
 signal placed_item(item: PlacedItem, global_pos: Vector3, global_rot: Vector3)
@@ -34,7 +34,7 @@ func _input(event: InputEvent):
 	var mouse = event as InputEventMouse
 	if mouse != null:
 		# Only attempt to place on a successful physics raycast
-		var space_state = get_world_3d().direct_space_state
+		var space_state = get_tree().root.get_world_3d().direct_space_state
 		var camera = get_tree().root.get_camera_3d()
 		var from = camera.project_ray_origin(mouse.position)
 		var to = from + camera.project_ray_normal(mouse.position) * ray_length
