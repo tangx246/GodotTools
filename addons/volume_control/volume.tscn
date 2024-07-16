@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://c07y6e7ecwskb"]
+
+[ext_resource type="Script" path="res://addons/volume_control/volume.gd" id="1_grfms"]
+
+[node name="Volume" type="HSlider"]
+custom_minimum_size = Vector2(100, 0)
+size_flags_vertical = 1
+min_value = -80.0
+max_value = 0.0
+step = 0.1
+script = ExtResource("1_grfms")
