@@ -6,6 +6,7 @@ signal placed_item(item: PlacedItem, global_pos: Vector3, global_rot: Vector3)
 
 @export var end_placing_once_placed : bool = false
 @export var ray_length : float = 1000
+@export_flags_3d_physics var raycast_mask : int = 1
 
 var _placing : bool = false:
 	set(value):
@@ -51,7 +52,7 @@ func _input(event: InputEvent):
 		var from = camera.project_ray_origin(mouse.position)
 		var to = from + camera.project_ray_normal(mouse.position) * ray_length
 		
-		var query = PhysicsRayQueryParameters3D.create(from, to)
+		var query = PhysicsRayQueryParameters3D.create(from, to, raycast_mask)
 		var result = space_state.intersect_ray(query)
 		if result.size() > 0:
 			_current_item_preview_scene.visible = true
