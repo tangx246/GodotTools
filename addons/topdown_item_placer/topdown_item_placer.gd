@@ -33,7 +33,7 @@ func _unhandled_input(event: InputEvent):
 		return
 	
 	var mouse = event as InputEventMouse
-	if mouse.is_pressed() and mouse.button_mask == MOUSE_BUTTON_MASK_LEFT:
+	if mouse != null and mouse.is_pressed() and mouse.button_mask == MOUSE_BUTTON_MASK_LEFT:
 		placed_item.emit(_current_item, _current_item_preview_scene.global_position, _current_item_preview_scene.global_rotation)
 		
 		if end_placing_once_placed:
