@@ -4,6 +4,7 @@ extends Control
 signal placing_item(placing: bool, item_name: String)
 signal placed_item(item: PlacedItem, global_pos: Vector3, global_rot: Vector3)
 
+@export var end_placing_once_placed : bool = false
 @export var ray_length : float = 1000
 
 var _placing : bool = false:
@@ -27,6 +28,17 @@ func place_item_requested(item: PlacedItem):
 	add_child(_current_item_preview_scene)
 	_placing = true
 
+func _unhandled_input(event: InputEvent):
+	if !_placing:
+		return
+	
+	var mouse = event as InputEventMouse
+	if mouse.is_pressed() and mouse.button_mask == MOUSE_BUTTON_MASK_LEFT:
+		placed_item.emit(_current_item, _current_item_preview_scene.global_position, _current_item_preview_scene.global_rotation)
+		
+		if end_placing_once_placed:
+			cancel_item_placing()
+
 func _input(event: InputEvent):
 	if !_placing:
 		return
@@ -46,9 +58,6 @@ func _input(event: InputEvent):
 			_current_item_preview_scene.position = result["position"]
 		else:
 			_current_item_preview_scene.visible = false
-		
-		if mouse.is_pressed() and mouse.button_mask == MOUSE_BUTTON_MASK_LEFT:
-			placed_item.emit(_current_item, _current_item_preview_scene.global_position, _current_item_preview_scene.global_rotation)
 		
 	if event.is_action("ui_cancel"):
 		cancel_item_placing()
