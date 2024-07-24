@@ -4,6 +4,8 @@ extends Control
 signal placing_item(placing: bool, item_name: String)
 signal placed_item(item: PlacedItem, global_pos: Vector3, global_rot: Vector3)
 
+## If true, will emit placed_item on mouse press. Otherwise, will emit on mouse release
+@export var mouse_pressed : bool = true
 @export var end_placing_once_placed : bool = false
 @export var ray_length : float = 1000
 @export_flags_3d_physics var raycast_mask : int = 1
@@ -33,12 +35,14 @@ func _unhandled_input(event: InputEvent):
 	if !_placing:
 		return
 	
-	var mouse = event as InputEventMouse
-	if mouse != null and mouse.is_pressed() and mouse.button_mask == MOUSE_BUTTON_MASK_LEFT:
-		placed_item.emit(_current_item, _current_item_preview_scene.global_position, _current_item_preview_scene.global_rotation)
-		
-		if end_placing_once_placed:
-			cancel_item_placing()
+	var mouse = event as InputEventMouseButton
+	if mouse != null:
+		var mouse_button_condition : bool = mouse.pressed if mouse_pressed else not mouse.pressed
+		if mouse_button_condition and mouse.button_index == MOUSE_BUTTON_LEFT:
+			placed_item.emit(_current_item, _current_item_preview_scene.global_position, _current_item_preview_scene.global_rotation)
+			
+			if end_placing_once_placed:
+				cancel_item_placing()
 
 func _input(event: InputEvent):
 	if !_placing:
