@@ -4,7 +4,7 @@ extends Control
 signal placing_item(placing: bool, item_name: String)
 signal placed_item(item: PlacedItem, global_pos: Vector3, global_rot: Vector3)
 
-## If true, will emit placed_item on mouse press. Otherwise, will emit on mouse release
+## If [code]true[/code], will emit [code]placed_item[/code] on mouse press. Otherwise, will emit on mouse release
 @export var mouse_pressed : bool = true
 @export var end_placing_once_placed : bool = false
 @export var ray_length : float = 1000
