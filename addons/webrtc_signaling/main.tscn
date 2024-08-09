@@ -6,7 +6,7 @@
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ax6q8"]
 properties/0/path = NodePath("VBoxContainer:visible")
 properties/0/spawn = true
-properties/0/replication_mode = 1
+properties/0/replication_mode = 2
 
 [node name="Main" type="Node"]
 script = ExtResource("1")

@@ -26,7 +26,6 @@ func start(url: String, _lobby: String = "", _mesh: bool = true) -> void:
 
 
 func stop() -> void:
-	multiplayer.multiplayer_peer = null
 	get_tree().get_multiplayer().multiplayer_peer = null
 	rtc_mp.close()
 	close()
@@ -71,7 +70,6 @@ func _connected(id: int, use_mesh: bool) -> void:
 		rtc_mp.create_server()
 	else:
 		rtc_mp.create_client(id)
-	multiplayer.multiplayer_peer = rtc_mp
 	get_tree().get_multiplayer().multiplayer_peer = rtc_mp
 
 

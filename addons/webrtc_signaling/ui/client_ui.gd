@@ -20,6 +20,12 @@ func _ready() -> void:
 	multiplayer.server_disconnected.connect(_mp_server_disconnect)
 	multiplayer.peer_connected.connect(_mp_peer_connected)
 	multiplayer.peer_disconnected.connect(_mp_peer_disconnected)
+	
+	get_tree().get_multiplayer().connected_to_server.connect(_mp_server_connected)
+	get_tree().get_multiplayer().connection_failed.connect(_mp_server_disconnect)
+	get_tree().get_multiplayer().server_disconnected.connect(_mp_server_disconnect)
+	get_tree().get_multiplayer().peer_connected.connect(_mp_peer_connected)
+	get_tree().get_multiplayer().peer_disconnected.connect(_mp_peer_disconnected)
 
 func _mp_server_connected() -> void:
 	_log("[Multiplayer] Server connected (I am %d)" % client.rtc_mp.get_unique_id())
