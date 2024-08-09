@@ -1,0 +1,52 @@
+[gd_scene load_steps=4 format=3 uid="uid://5p1bp2kcs0py"]
+
+[ext_resource type="Script" path="res://addons/webrtc_signaling/ui/main_ui.gd" id="1_sogqp"]
+[ext_resource type="PackedScene" uid="uid://cpwp4xx6mv5p" path="res://addons/webrtc_signaling/ui/client_ui.tscn" id="2_i1cbs"]
+[ext_resource type="Script" path="res://addons/webrtc_signaling/server/ws_webrtc_server.gd" id="3_0npul"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchor_left = 0.0136719
+anchor_top = 0.0166667
+anchor_right = 0.986328
+anchor_bottom = 0.983333
+script = ExtResource("1_sogqp")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Signaling" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/Signaling"]
+layout_mode = 2
+text = "Signaling server:"
+
+[node name="Port" type="SpinBox" parent="VBoxContainer/Signaling"]
+layout_mode = 2
+min_value = 1025.0
+max_value = 65535.0
+value = 9080.0
+
+[node name="ListenButton" type="Button" parent="VBoxContainer/Signaling"]
+layout_mode = 2
+toggle_mode = true
+text = "Listen"
+
+[node name="Clients" type="GridContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ClientUI" parent="VBoxContainer/Clients" instance=ExtResource("2_i1cbs")]
+layout_mode = 2
+
+[node name="Server" type="Node" parent="."]
+script = ExtResource("3_0npul")
+
+[connection signal="toggled" from="VBoxContainer/Signaling/ListenButton" to="." method="_on_listen_toggled"]
