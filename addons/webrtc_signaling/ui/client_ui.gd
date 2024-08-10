@@ -67,7 +67,7 @@ func _log(msg: String) -> void:
 
 
 func _on_peers_pressed() -> void:
-	_log(str(multiplayer.get_peers()))
+	_log(str(get_tree().get_multiplayer().get_peers()))
 
 func _on_seal_pressed() -> void:
 	client.seal_lobby()
@@ -81,7 +81,7 @@ func _on_stop_pressed() -> void:
 	client.stop()
 
 func _on_start_game_pressed():
-	if is_multiplayer_authority():
+	if get_tree().get_multiplayer().get_unique_id() == get_multiplayer_authority():
 		multiplayerUi.visible = false
 		for child in gameRoot.get_children():
 			gameRoot.remove_child(child)
