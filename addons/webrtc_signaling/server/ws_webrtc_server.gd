@@ -12,7 +12,7 @@ enum Message {
 }
 
 ## Unresponsive clients time out after this time (in milliseconds).
-const TIMEOUT = 1000
+const TIMEOUT = 30000
 
 ## A sealed room will be closed after this time (in milliseconds).
 const SEAL_TIME = 10000
@@ -153,6 +153,7 @@ func poll() -> void:
 	for p: Peer in peers.values():
 		# Peers timeout.
 		if p.lobby.is_empty() and Time.get_ticks_msec() - p.time > TIMEOUT:
+			print("Connection timed out for peer %s" % p.id)
 			p.ws.close()
 		p.ws.poll()
 		while p.is_ws_open() and p.ws.get_available_packet_count():
