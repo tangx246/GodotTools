@@ -14,9 +14,12 @@ func get_input() -> Vector3:
 	return Vector3(velocity2.x, velocity.y, velocity2.y)
 
 func _ready():
-	process_mode = PROCESS_MODE_INHERIT if is_multiplayer_authority() else PROCESS_MODE_DISABLED
-	if not is_multiplayer_authority():
+	if is_multiplayer_authority():
+		process_mode = PROCESS_MODE_INHERIT
+	else:
+		process_mode = PROCESS_MODE_DISABLED
 		camera.queue_free()
+	
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 func _input(event:InputEvent):
