@@ -18,7 +18,7 @@ const TIMEOUT = 30000
 const SEAL_TIME = 10000
 
 ## All alphanumeric characters.
-const ALFNUM = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+const ALFNUM = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
 var _alfnum := ALFNUM.to_ascii_buffer()
 
@@ -188,6 +188,7 @@ func poll() -> void:
 
 
 func _join_lobby(peer: Peer, lobby: String, mesh: bool) -> bool:
+	lobby = lobby.to_upper()
 	if lobby.is_empty():
 		for _i in 5:
 			lobby += char(_alfnum[rand.randi_range(0, ALFNUM.length() - 1)])
