@@ -13,9 +13,7 @@ func get_input() -> Vector3:
 	var velocity2 = (input_dir * speed)
 	return Vector3(velocity2.x, velocity.y, velocity2.y)
 
-func _ready():
-	gravity = ProjectSettings.get_setting("physics/3d/default_gravity") * ProjectSettings.get_setting("physics/3d/default_gravity_vector")
-	
+func _ready():	
 	if is_multiplayer_authority():
 		process_mode = PROCESS_MODE_INHERIT
 		camera.make_current()
@@ -33,6 +31,8 @@ func _input(event:InputEvent):
 		mouse_movement.y -= event.relative.y * mouse_look_speed
 
 func _physics_process(delta):
+	gravity = ProjectSettings.get_setting("physics/3d/default_gravity") * ProjectSettings.get_setting("physics/3d/default_gravity_vector")
+	
 	velocity = get_input()
 	velocity += gravity * delta
 	velocity += Vector3(0, jump_velocity_to_add, 0)
