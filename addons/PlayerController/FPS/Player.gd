@@ -30,6 +30,12 @@ func _input(event:InputEvent):
 		mouse_movement.x -= event.relative.x * mouse_look_speed
 		mouse_movement.y -= event.relative.y * mouse_look_speed
 
+func _process(_delta: float) -> void:
+	rotate_y(mouse_movement.x)
+	mouse_movement.x = 0
+	camera.rotate_x(mouse_movement.y)
+	mouse_movement.y = 0
+
 func _physics_process(delta):
 	gravity = ProjectSettings.get_setting("physics/3d/default_gravity") * ProjectSettings.get_setting("physics/3d/default_gravity_vector")
 	
@@ -41,8 +47,3 @@ func _physics_process(delta):
 	velocity = global_transform.basis * velocity
 	
 	move_and_slide()
-	
-	rotate_y(mouse_movement.x)
-	mouse_movement.x = 0
-	camera.rotate_x(mouse_movement.y)
-	mouse_movement.y = 0
