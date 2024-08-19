@@ -1,12 +1,12 @@
 extends CharacterBody3D
 
-@export var gravity : Vector3 = Vector3(0, -9.81, 0)
 @export var speed : float = 22
 @export var jump_height : float = 2.4
 @export var mouse_look_speed : float = 0.002
 @onready var camera : Camera3D = get_node("Camera3D")
 var jump_velocity_to_add : float = 0
 var mouse_movement : Vector2 = Vector2.ZERO
+var gravity : Vector3
 
 func get_input() -> Vector3:
 	var input_dir = Input.get_vector("Strafe Left", "Strafe Right", "Move Forward", "Move Backward")
@@ -14,11 +14,14 @@ func get_input() -> Vector3:
 	return Vector3(velocity2.x, velocity.y, velocity2.y)
 
 func _ready():
+	gravity = ProjectSettings.get_setting("physics/3d/default_gravity") * ProjectSettings.get_setting("physics/3d/default_gravity_vector")
+	
 	if is_multiplayer_authority():
 		process_mode = PROCESS_MODE_INHERIT
+		camera.make_current()
 	else:
 		process_mode = PROCESS_MODE_DISABLED
-		camera.queue_free()
+		camera.clear_current(true)
 	
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
