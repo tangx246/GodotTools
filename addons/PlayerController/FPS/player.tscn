@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://ctk2635m14tdu"]
+[gd_scene load_steps=4 format=3 uid="uid://ctk2635m14tdu"]
 
 [ext_resource type="Script" path="res://addons/PlayerController/FPS/Player.gd" id="1_b5cvv"]
+[ext_resource type="Script" path="res://addons/PlayerController/FPS/recoil/recoil.gd" id="2_safv3"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_rydnu"]
 height = 1.8
@@ -12,5 +13,8 @@ script = ExtResource("1_b5cvv")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("CapsuleShape3D_rydnu")
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="Recoil" type="Node3D" parent="."]
+script = ExtResource("2_safv3")
+
+[node name="Camera3D" type="Camera3D" parent="Recoil"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.49043, 0)
