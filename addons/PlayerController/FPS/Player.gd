@@ -3,7 +3,7 @@ extends CharacterBody3D
 @export var speed : float = 22
 @export var jump_height : float = 2.4
 @export var mouse_look_speed : float = 0.002
-@onready var camera : Camera3D = get_node("Camera3D")
+@onready var camera : Camera3D = find_child("Camera3D")
 var jump_velocity_to_add : float = 0
 var mouse_movement : Vector2 = Vector2.ZERO
 var gravity : Vector3
@@ -34,6 +34,7 @@ func _process(_delta: float) -> void:
 	rotate_y(mouse_movement.x)
 	mouse_movement.x = 0
 	camera.rotate_x(mouse_movement.y)
+	camera.rotation.x = clampf(camera.rotation.x, -PI/2, PI/2)
 	mouse_movement.y = 0
 
 func _physics_process(delta):
