@@ -1,11 +1,17 @@
 extends Node3D
 
 @export var stream: AudioStream
+@export var add_to_root: bool = false
 
 func spawn():
 	var player = AudioStreamPlayer3D.new()
-	player.position = global_position
 	player.stream = stream
 	player.autoplay = true
+	player.process_mode = Node.PROCESS_MODE_PAUSABLE
 	player.finished.connect(func(): player.queue_free())
-	get_tree().current_scene.add_child(player)
+	if add_to_root:
+		player.position = global_position
+		get_tree().current_scene.add_child(player)
+	else:
+		player.position = position
+		add_child(player)
