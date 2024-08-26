@@ -2,7 +2,9 @@
 class_name Metahuman extends Node3D
 
 @export var skeleton : Skeleton3D
-@export var nodePathsToIndex : Dictionary
+## For each node path key, the specified child index will be enabled
+@export var nodePathsToChildIndex : Dictionary
+## For each node path key that is a ShaderMaterialColorSetter, the specified color will be set
 @export var colorPickerNodePathToColors : Dictionary
 @export_category("Refresh Visibility After Changing Node Paths / Indices")
 @export var refreshVisibility : bool : 
@@ -26,9 +28,9 @@ func _set_colors():
 func refresh():
 	_set_skeletons()
 	_set_colors()
-	for nodePath in nodePathsToIndex:
+	for nodePath in nodePathsToChildIndex:
 		var node = get_node(nodePath)
-		var index = nodePathsToIndex[nodePath]
+		var index = nodePathsToChildIndex[nodePath]
 		var i = 0
 		for child : Node3D in node.get_children():
 			child.visible = i == index
