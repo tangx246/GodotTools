@@ -1,10 +1,17 @@
-[gd_scene load_steps=4 format=3 uid="uid://ctk2635m14tdu"]
+[gd_scene load_steps=6 format=3 uid="uid://ctk2635m14tdu"]
 
 [ext_resource type="Script" path="res://addons/PlayerController/FPS/Player.gd" id="1_b5cvv"]
 [ext_resource type="Script" path="res://addons/PlayerController/FPS/recoil/recoil.gd" id="2_safv3"]
+[ext_resource type="Script" path="res://addons/PlayerController/FPS/recoil/recoil_info.gd" id="3_u4m7j"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_rydnu"]
 height = 1.8
+
+[sub_resource type="Resource" id="Resource_728yc"]
+script = ExtResource("3_u4m7j")
+recoilVector = Vector3(0.5, 0.1, 0)
+snappiness = 10.0
+returnSpeed = 10.0
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_b5cvv")
@@ -15,6 +22,7 @@ shape = SubResource("CapsuleShape3D_rydnu")
 
 [node name="Recoil" type="Node3D" parent="."]
 script = ExtResource("2_safv3")
+recoilInfo = SubResource("Resource_728yc")
 
 [node name="Camera3D" type="Camera3D" parent="Recoil"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.49043, 0)
