@@ -6,6 +6,6 @@ extends Node3D
 @export var localOffset: Vector3
 
 func _physics_process(_delta: float) -> void:
-	var translated = target.transform.translated_local(localOffset)
-	rotation = target.rotation
-	position = translated.origin
+	var translated = target.global_transform.translated_local(localOffset)
+	global_rotation = target.global_rotation
+	global_position = translated.origin
