@@ -5,7 +5,17 @@ extends Node3D
 @export var target: Node3D
 @export var localOffset: Vector3
 
+@export var track_target_in_editor: bool = false
+
 func _physics_process(_delta: float) -> void:
+	if Engine.is_editor_hint():
+		if track_target_in_editor:
+			track_target()
+		return
+
+	track_target()
+
+func track_target():
 	var translated = target.global_transform.translated_local(localOffset)
 	global_rotation = target.global_rotation
 	global_position = translated.origin

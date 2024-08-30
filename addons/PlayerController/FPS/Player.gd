@@ -3,6 +3,11 @@ extends CharacterBody3D
 @export var speed : float = 22
 @export var jump_height : float = 2.4
 @export var mouse_look_speed : float = 0.002
+
+@export_group("Multiplayer Authority")
+@export_flags_3d_physics var authority_layer : int = 1
+@export_flags_3d_physics var no_authority_layer : int = 1
+
 @onready var camera : Camera3D = find_child("Camera3D")
 var jump_velocity_to_add : float = 0
 var mouse_movement : Vector2 = Vector2.ZERO
@@ -17,9 +22,11 @@ func _ready():
 	if is_multiplayer_authority():
 		process_mode = PROCESS_MODE_INHERIT
 		camera.make_current()
+		collision_layer = authority_layer
 	else:
 		process_mode = PROCESS_MODE_DISABLED
 		camera.clear_current(true)
+		collision_layer = no_authority_layer
 	
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
