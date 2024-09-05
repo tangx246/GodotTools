@@ -13,16 +13,28 @@ recoilVector = Vector3(0.5, 0.1, 0)
 snappiness = 10.0
 returnSpeed = 10.0
 
-[node name="Player" type="CharacterBody3D"]
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("stand_position", "crouch_position", "prone_position")]
 script = ExtResource("1_b5cvv")
+stand_position = NodePath("StandCameraPosition")
+crouch_position = NodePath("CrouchCameraPosition")
+prone_position = NodePath("ProneCameraPosition")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("CapsuleShape3D_rydnu")
 
 [node name="Recoil" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.59211, 0)
 script = ExtResource("2_safv3")
 recoilInfo = SubResource("Resource_728yc")
 
 [node name="Camera3D" type="Camera3D" parent="Recoil"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.49043, 0)
+
+[node name="StandCameraPosition" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.59211, 0)
+
+[node name="CrouchCameraPosition" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9897, 0)
+
+[node name="ProneCameraPosition" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.287124, 0)

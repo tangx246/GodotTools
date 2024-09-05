@@ -5,6 +5,7 @@ extends Node3D
 @export var target: Node3D
 @export var localOffset: Vector3
 
+@export_group("Editor Only")
 @export var track_target_in_editor: bool = false
 
 func _physics_process(_delta: float) -> void:
