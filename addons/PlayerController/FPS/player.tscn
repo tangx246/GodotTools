@@ -13,25 +13,39 @@ recoilVector = Vector3(0.5, 0.1, 0)
 snappiness = 10.0
 returnSpeed = 10.0
 
-[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("stand_position", "crouch_position", "prone_position")]
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("stand_position", "standing_lean_left_position", "standing_lean_right_position", "crouch_position", "prone_position", "cameraRoot", "leanRoot")]
 script = ExtResource("1_b5cvv")
 stand_position = NodePath("StandCameraPosition")
+standing_lean_left_position = NodePath("StandLeanLeftCameraPosition")
+standing_lean_right_position = NodePath("StandLeanRightCameraPosition")
 crouch_position = NodePath("CrouchCameraPosition")
 prone_position = NodePath("ProneCameraPosition")
+cameraRoot = NodePath("StandState")
+leanRoot = NodePath("StandState/Recoil/Lean")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("CapsuleShape3D_rydnu")
 
-[node name="Recoil" type="Node3D" parent="."]
+[node name="StandState" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.59211, 0)
+
+[node name="Recoil" type="Node3D" parent="StandState"]
 script = ExtResource("2_safv3")
 recoilInfo = SubResource("Resource_728yc")
 
-[node name="Camera3D" type="Camera3D" parent="Recoil"]
+[node name="Lean" type="Node3D" parent="StandState/Recoil"]
+
+[node name="Camera3D" type="Camera3D" parent="StandState/Recoil/Lean"]
 
 [node name="StandCameraPosition" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.59211, 0)
+
+[node name="StandLeanLeftCameraPosition" type="Marker3D" parent="."]
+transform = Transform3D(0.984808, -0.173648, 0, 0.173648, 0.984808, 0, 0, 0, 1, -0.2, 1.5, 0)
+
+[node name="StandLeanRightCameraPosition" type="Marker3D" parent="."]
+transform = Transform3D(0.984808, 0.173648, 0, -0.173648, 0.984808, 0, 0, 0, 1, 0.2, 1.5, 0)
 
 [node name="CrouchCameraPosition" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9897, 0)

@@ -8,6 +8,9 @@ extends CharacterBody3D
 @export var stand_speed : float = 22
 @export var stand_position : Node3D
 @export var stand_transition_speed : float = 0.2
+@export var standing_lean_left_position : Node3D
+@export var standing_lean_right_position : Node3D
+@export var lean_transition_speed : float = 0.1
 
 @export_group("Crouch")
 @export var crouch_position : Node3D
@@ -32,13 +35,16 @@ extends CharacterBody3D
 		stand_state = value
 		_transition_stand_state(prev_value, value)
 		stand_state_changed.emit()
-
 enum STAND_STATE { STAND, CROUCH, PRONE }
 
+@export var cameraRoot : Node3D
+@export var leanRoot : Node3D
 @onready var camera : Camera3D = find_child("Camera3D")
 var jump_velocity_to_add : float = 0
 var mouse_movement : Vector2 = Vector2.ZERO
 var gravity : Vector3
+var relative_lean_left_position : Vector3
+var relative_lean_right_position : Vector3
 
 signal stand_state_changed
 
@@ -47,7 +53,7 @@ func get_input() -> Vector3:
 	var velocity2 = (input_dir * speed)
 	return Vector3(velocity2.x, velocity.y, velocity2.y)
 
-func _ready():	
+func _ready():
 	if is_multiplayer_authority():
 		process_mode = PROCESS_MODE_INHERIT
 		camera.make_current()
@@ -58,15 +64,28 @@ func _ready():
 		collision_layer = no_authority_layer
 	
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	
+	relative_lean_left_position = standing_lean_left_position.position - stand_position.position
+	relative_lean_right_position = standing_lean_right_position.position - stand_position.position
 
-var current_transition : Tween
-func _tween_camera_to(position: Vector3, time: float) -> Signal:
+func _tween_camera_root_to(position: Vector3, time: float) -> Signal:
+	return _tween_object_to(cameraRoot, position, Vector3.ZERO, time)
+
+func _tween_lean_to(position: Vector3, rotation: Vector3, time: float) -> Signal:
+	return _tween_object_to(leanRoot, position, rotation, time)
+
+var transitions : Dictionary
+func _tween_object_to(object: Object, position: Vector3, rotation: Vector3, time: float) -> Signal:
+	var current_transition = transitions.get(object.to_string())
 	if current_transition:
 		current_transition.kill()
-		current_transition = null
+		transitions.erase(object.to_string())
 		
 	current_transition = create_tween()
-	current_transition.tween_property(camera.get_parent(), "position", position, time)
+	current_transition.set_parallel()
+	current_transition.tween_property(object, "position", position, time)
+	current_transition.tween_property(object, "rotation", rotation, time)
+	transitions[object.to_string()] = current_transition
 	return current_transition.finished
 
 func _transition_stand_state(prevValue: STAND_STATE, value: STAND_STATE):
@@ -76,23 +95,23 @@ func _transition_stand_state(prevValue: STAND_STATE, value: STAND_STATE):
 	if prevValue == STAND_STATE.STAND:
 		if value == STAND_STATE.CROUCH:
 			speed = crouch_speed
-			_tween_camera_to(crouch_position.position, crouch_transition_speed)
+			_tween_camera_root_to(crouch_position.position, crouch_transition_speed)
 		elif value == STAND_STATE.PRONE:
 			speed = prone_speed
-			_tween_camera_to(prone_position.position, crouch_transition_speed + prone_transition_speed)
+			_tween_camera_root_to(prone_position.position, crouch_transition_speed + prone_transition_speed)
 	elif prevValue == STAND_STATE.CROUCH:
 		if value == STAND_STATE.STAND:
-			await _tween_camera_to(stand_position.position, stand_transition_speed)
+			await _tween_camera_root_to(stand_position.position, stand_transition_speed)
 			speed = stand_speed
 		elif value == STAND_STATE.PRONE:
 			speed = prone_speed
-			_tween_camera_to(prone_position.position, prone_transition_speed)
+			_tween_camera_root_to(prone_position.position, prone_transition_speed)
 	elif prevValue == STAND_STATE.PRONE:
 		if value == STAND_STATE.STAND:
-			await _tween_camera_to(stand_position.position, crouch_transition_speed + stand_transition_speed)
+			await _tween_camera_root_to(stand_position.position, crouch_transition_speed + stand_transition_speed)
 			speed = stand_speed
 		elif value == STAND_STATE.CROUCH:
-			await _tween_camera_to(crouch_position.position, crouch_transition_speed)
+			await _tween_camera_root_to(crouch_position.position, crouch_transition_speed)
 			speed = crouch_speed
 
 func _input(event:InputEvent):
@@ -108,6 +127,12 @@ func _input(event:InputEvent):
 				stand_state = STAND_STATE.CROUCH
 		if event.is_action_pressed("Prone"):
 			stand_state = STAND_STATE.PRONE
+		if event.is_action_pressed("Lean Left"):
+			_tween_lean_to(relative_lean_left_position, standing_lean_left_position.rotation, lean_transition_speed)
+		if event.is_action_pressed("Lean Right"):
+			_tween_lean_to(relative_lean_right_position, standing_lean_right_position.rotation, lean_transition_speed)
+		if event.is_action_released("Lean Left") or event.is_action_released("Lean Right"):
+			_tween_lean_to(Vector3.ZERO, Vector3.ZERO, lean_transition_speed)
 	
 	if event is InputEventMouseMotion:
 		mouse_movement.x -= event.relative.x * mouse_look_speed

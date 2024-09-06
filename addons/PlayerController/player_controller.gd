@@ -18,7 +18,9 @@ func add_fps_controller_input_map():
 		"input/Strafe Right": KEY_D,
 		"input/Jump": KEY_SPACE,
 		"input/Crouch": KEY_C,
-		"input/Prone": KEY_X
+		"input/Prone": KEY_X,
+		"input/Lean Left": KEY_Q,
+		"input/Lean Right": KEY_E
 	}
 	
 	for input in input_to_events:
