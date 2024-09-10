@@ -27,7 +27,7 @@ extends CharacterBody3D
 @export var prone_transition_speed : float = 0.4
 @export var prone_collider : CollisionShape3D
 
-@export_group("Root objects")
+@export_group("Camera")
 @export var cameraRoot : Node3D
 @export var leanRoot : Node3D
 
@@ -171,7 +171,7 @@ func _input(event:InputEvent):
 		mouse_movement.x -= event.relative.x * mouse_look_speed
 		mouse_movement.y -= event.relative.y * mouse_look_speed
 
-func _wait_cameraRoot_tweens():
+func _wait_cameraRoot_tweens() -> void:
 	var transition : Tween = transitions.get(cameraRoot.to_string()) as Tween
 	if transition:
 		await transition.finished

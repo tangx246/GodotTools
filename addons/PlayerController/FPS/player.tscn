@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://ctk2635m14tdu"]
+[gd_scene load_steps=10 format=3 uid="uid://ctk2635m14tdu"]
 
 [ext_resource type="Script" path="res://addons/PlayerController/FPS/Player.gd" id="1_b5cvv"]
 [ext_resource type="Script" path="res://addons/PlayerController/FPS/recoil/recoil.gd" id="2_safv3"]
@@ -35,6 +35,11 @@ script = ExtResource("3_u4m7j")
 recoilVector = Vector3(0.5, 0.1, 0)
 snappiness = 10.0
 returnSpeed = 10.0
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_e45ti"]
+properties/0/path = NodePath(".:rotation")
+properties/0/spawn = true
+properties/0/replication_mode = 2
 
 [node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("stand_position", "standing_lean_left_position", "standing_lean_right_position", "stand_collider", "crouch_position", "crouch_collider", "prone_position", "prone_collider", "cameraRoot", "leanRoot")]
 script = ExtResource("1_b5cvv")
@@ -75,14 +80,18 @@ recoilInfo = SubResource("Resource_728yc")
 
 [node name="Camera3D" type="Camera3D" parent="StandState/Recoil/Lean"]
 
+[node name="CameraSynchronizer" type="MultiplayerSynchronizer" parent="StandState/Recoil/Lean"]
+root_path = NodePath("../Camera3D")
+replication_config = SubResource("SceneReplicationConfig_e45ti")
+
 [node name="StandCameraPosition" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.59211, 0)
 
 [node name="StandLeanLeftCameraPosition" type="Marker3D" parent="."]
-transform = Transform3D(0.984808, -0.173648, 0, 0.173648, 0.984808, 0, 0, 0, 1, -0.2, 1.5, 0)
+transform = Transform3D(0.996195, -0.0871558, 0, 0.0871558, 0.996195, 0, 0, 0, 1, -0.35, 1.5, 0)
 
 [node name="StandLeanRightCameraPosition" type="Marker3D" parent="."]
-transform = Transform3D(0.984808, 0.173648, 0, -0.173648, 0.984808, 0, 0, 0, 1, 0.2, 1.5, 0)
+transform = Transform3D(0.996195, 0.0871558, 0, -0.0871558, 0.996195, 0, 0, 0, 1, 0.35, 1.5, 0)
 
 [node name="CrouchCameraPosition" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9897, 0)
