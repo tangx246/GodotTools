@@ -1,11 +1,34 @@
-[gd_scene load_steps=6 format=3 uid="uid://ctk2635m14tdu"]
+[gd_scene load_steps=9 format=3 uid="uid://ctk2635m14tdu"]
 
 [ext_resource type="Script" path="res://addons/PlayerController/FPS/Player.gd" id="1_b5cvv"]
 [ext_resource type="Script" path="res://addons/PlayerController/FPS/recoil/recoil.gd" id="2_safv3"]
 [ext_resource type="Script" path="res://addons/PlayerController/FPS/recoil/recoil_info.gd" id="3_u4m7j"]
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_rydnu"]
-height = 1.8
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fq6a0"]
+radius = 0.25
+height = 1.7
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_whbei"]
+radius = 0.3
+height = 1.3
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fvl13"]
+radius = 0.25
+height = 1.5
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_8wb3o"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:stand_state")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:lean_state")
+properties/3/spawn = true
+properties/3/replication_mode = 2
 
 [sub_resource type="Resource" id="Resource_728yc"]
 script = ExtResource("3_u4m7j")
@@ -13,19 +36,33 @@ recoilVector = Vector3(0.5, 0.1, 0)
 snappiness = 10.0
 returnSpeed = 10.0
 
-[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("stand_position", "standing_lean_left_position", "standing_lean_right_position", "crouch_position", "prone_position", "cameraRoot", "leanRoot")]
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("stand_position", "standing_lean_left_position", "standing_lean_right_position", "stand_collider", "crouch_position", "crouch_collider", "prone_position", "prone_collider", "cameraRoot", "leanRoot")]
 script = ExtResource("1_b5cvv")
 stand_position = NodePath("StandCameraPosition")
 standing_lean_left_position = NodePath("StandLeanLeftCameraPosition")
 standing_lean_right_position = NodePath("StandLeanRightCameraPosition")
+stand_collider = NodePath("StandCollider")
 crouch_position = NodePath("CrouchCameraPosition")
+crouch_collider = NodePath("CrouchCollider")
 prone_position = NodePath("ProneCameraPosition")
+prone_collider = NodePath("ProneCollider")
 cameraRoot = NodePath("StandState")
 leanRoot = NodePath("StandState/Recoil/Lean")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
-shape = SubResource("CapsuleShape3D_rydnu")
+[node name="StandCollider" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+shape = SubResource("CapsuleShape3D_fq6a0")
+
+[node name="CrouchCollider" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
+shape = SubResource("CapsuleShape3D_whbei")
+
+[node name="ProneCollider" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.25, 0)
+shape = SubResource("CapsuleShape3D_fvl13")
+
+[node name="ControllerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_8wb3o")
 
 [node name="StandState" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.59211, 0)
