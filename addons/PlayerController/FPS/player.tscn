@@ -1,8 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://ctk2635m14tdu"]
+[gd_scene load_steps=12 format=3 uid="uid://ctk2635m14tdu"]
 
 [ext_resource type="Script" path="res://addons/PlayerController/FPS/Player.gd" id="1_b5cvv"]
+[ext_resource type="Script" path="res://addons/PlayerController/FPS/stand_state.gd" id="2_le2tr"]
 [ext_resource type="Script" path="res://addons/PlayerController/FPS/recoil/recoil.gd" id="2_safv3"]
 [ext_resource type="Script" path="res://addons/PlayerController/FPS/recoil/recoil_info.gd" id="3_u4m7j"]
+[ext_resource type="Script" path="res://addons/PlayerController/FPS/lean.gd" id="5_g1hu3"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fq6a0"]
 radius = 0.25
@@ -23,10 +25,10 @@ properties/0/replication_mode = 2
 properties/1/path = NodePath(".:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 2
-properties/2/path = NodePath(".:stand_state")
+properties/2/path = NodePath("StandState:stand_state")
 properties/2/spawn = true
 properties/2/replication_mode = 2
-properties/3/path = NodePath(".:lean_state")
+properties/3/path = NodePath("StandState/Recoil/Lean:lean_state")
 properties/3/spawn = true
 properties/3/replication_mode = 2
 
@@ -41,18 +43,10 @@ properties/0/path = NodePath(".:rotation")
 properties/0/spawn = true
 properties/0/replication_mode = 2
 
-[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("stand_position", "standing_lean_left_position", "standing_lean_right_position", "stand_collider", "crouch_position", "crouch_collider", "prone_position", "prone_collider", "cameraRoot", "leanRoot")]
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("stand_state_controller", "lean_controller")]
 script = ExtResource("1_b5cvv")
-stand_position = NodePath("StandCameraPosition")
-standing_lean_left_position = NodePath("StandLeanLeftCameraPosition")
-standing_lean_right_position = NodePath("StandLeanRightCameraPosition")
-stand_collider = NodePath("StandCollider")
-crouch_position = NodePath("CrouchCameraPosition")
-crouch_collider = NodePath("CrouchCollider")
-prone_position = NodePath("ProneCameraPosition")
-prone_collider = NodePath("ProneCollider")
-cameraRoot = NodePath("StandState")
-leanRoot = NodePath("StandState/Recoil/Lean")
+stand_state_controller = NodePath("StandState")
+lean_controller = NodePath("StandState/Recoil/Lean")
 
 [node name="StandCollider" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
@@ -69,14 +63,26 @@ shape = SubResource("CapsuleShape3D_fvl13")
 [node name="ControllerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_8wb3o")
 
-[node name="StandState" type="Node3D" parent="."]
+[node name="StandState" type="Node3D" parent="." node_paths=PackedStringArray("body", "stand_collider", "crouch_collider", "prone_collider", "stand_position", "crouch_position", "prone_position")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.59211, 0)
+script = ExtResource("2_le2tr")
+body = NodePath("..")
+stand_collider = NodePath("../StandCollider")
+crouch_collider = NodePath("../CrouchCollider")
+prone_collider = NodePath("../ProneCollider")
+stand_position = NodePath("../StandCameraPosition")
+crouch_position = NodePath("../CrouchCameraPosition")
+prone_position = NodePath("../ProneCameraPosition")
 
 [node name="Recoil" type="Node3D" parent="StandState"]
 script = ExtResource("2_safv3")
 recoilInfo = SubResource("Resource_728yc")
 
-[node name="Lean" type="Node3D" parent="StandState/Recoil"]
+[node name="Lean" type="Node3D" parent="StandState/Recoil" node_paths=PackedStringArray("stand_position", "standing_lean_left_position", "standing_lean_right_position")]
+script = ExtResource("5_g1hu3")
+stand_position = NodePath("../../../StandCameraPosition")
+standing_lean_left_position = NodePath("../../../StandLeanLeftCameraPosition")
+standing_lean_right_position = NodePath("../../../StandLeanRightCameraPosition")
 
 [node name="Camera3D" type="Camera3D" parent="StandState/Recoil/Lean"]
 

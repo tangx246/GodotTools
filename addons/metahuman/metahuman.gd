@@ -12,7 +12,7 @@ class_name Metahuman extends Node3D
 		refresh()
 
 func _ready():
-	refresh()
+	refresh.call_deferred()
 
 func _set_skeletons():
 	var meshes = find_children("", "MeshInstance3D", true, false)
