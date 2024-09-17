@@ -2,7 +2,7 @@ extends Control
 
 @onready var client: Node = $Client
 @onready var host: LineEdit = $VBoxContainer/Connect/Host
-@onready var room: LineEdit = $VBoxContainer/Connect/RoomSecret
+@onready var room: LineEdit = $VBoxContainer/Join/RoomSecret
 @onready var mesh: CheckBox = $VBoxContainer/Connect/Mesh
 @onready var multiplayerUi: Control = %VBoxContainer
 @onready var gameRoot: Node
@@ -74,8 +74,14 @@ func _on_seal_pressed() -> void:
 
 
 func _on_start_pressed() -> void:
-	client.start(host.text, room.text, mesh.button_pressed)
+	client.start(host.text, "", mesh.button_pressed)
+	
+func _on_join_pressed() -> void:
+	if room.text.is_empty():
+		_log("Please enter room code")
+		return
 
+	client.start(host.text, room.text, mesh.button_pressed)
 
 func _on_stop_pressed() -> void:
 	client.stop()
