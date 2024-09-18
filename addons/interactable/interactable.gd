@@ -1,7 +1,6 @@
 class_name Interactable
 extends Node3D
 
-signal interacted_no_args()
 signal interacted(interactor: Interactor)
 
 func interact(interactor: Interactor):
@@ -15,4 +14,3 @@ func interact_rpc(interactor_path: NodePath):
 
 	if is_multiplayer_authority():
 		interacted.emit(interactor)
-		interacted_no_args.emit()
