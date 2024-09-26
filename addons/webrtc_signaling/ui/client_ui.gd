@@ -5,6 +5,7 @@ extends Control
 @onready var room: LineEdit = $VBoxContainer/Join/RoomSecret
 @onready var mesh: CheckBox = $VBoxContainer/Connect/Mesh
 @onready var multiplayerUi: Control = %VBoxContainer
+@onready var multiplayerUiRoot: Control = $"%VBoxContainer/.."
 @onready var gameRoot: Node
 
 func _ready() -> void:
@@ -88,7 +89,7 @@ func _on_stop_pressed() -> void:
 
 func _on_start_game_pressed():
 	if get_tree().get_multiplayer().get_unique_id() == get_multiplayer_authority():
-		multiplayerUi.visible = false
+		multiplayerUiRoot.visible = false
 		for child in gameRoot.get_children():
 			gameRoot.remove_child(child)
 			child.queue_free()

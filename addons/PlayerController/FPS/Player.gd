@@ -28,7 +28,7 @@ func _ready():
 	
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
-func _input(event:InputEvent):
+func _unhandled_input(event: InputEvent) -> void:
 	if is_on_floor():
 		if event.is_action_pressed("Jump") and stand_state_controller.stand_state == StandState.STAND_STATE.STAND:
 			jump_velocity_to_add = sqrt(2*jump_height*(-gravity.y))

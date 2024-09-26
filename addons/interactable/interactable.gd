@@ -1,6 +1,8 @@
 class_name Interactable
 extends Node3D
 
+@export var interact_time : float = 0
+
 signal interacted(interactor: Interactor)
 
 func interact(interactor: Interactor):
