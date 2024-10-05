@@ -4,6 +4,10 @@ extends Node3D
 @export var add_to_root: bool = false
 
 func spawn():
+	spawn_rpc.rpc()
+		
+@rpc("call_local")
+func spawn_rpc():
 	var player = AudioStreamPlayer3D.new()
 	player.stream = stream
 	player.autoplay = true

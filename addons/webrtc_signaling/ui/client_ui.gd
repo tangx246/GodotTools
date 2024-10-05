@@ -6,11 +6,9 @@ extends Control
 @onready var mesh: CheckBox = $VBoxContainer/Connect/Mesh
 @onready var multiplayerUi: Control = %VBoxContainer
 @onready var multiplayerUiRoot: Control = $"%VBoxContainer/.."
-@onready var gameRoot: Node
+@onready var main: Node = $"%VBoxContainer/../.."
 
 func _ready() -> void:
-	gameRoot = get_tree().get_first_node_in_group("GameRoot")
-	
 	client.lobby_joined.connect(_lobby_joined)
 	client.lobby_sealed.connect(_lobby_sealed)
 	client.connected.connect(_connected)
@@ -88,12 +86,7 @@ func _on_stop_pressed() -> void:
 	client.stop()
 
 func _on_start_game_pressed():
-	if get_tree().get_multiplayer().get_unique_id() == get_multiplayer_authority():
+	if MultiplayerSceneSwitcher.switch_scenes(main.gameScene):
 		multiplayerUiRoot.visible = false
-		for child in gameRoot.get_children():
-			gameRoot.remove_child(child)
-			child.queue_free()
-		var new_scene = gameRoot.get_parent().gameScene.instantiate()
-		gameRoot.add_child(new_scene, true)
 	else:
 		_log("Cannot start game without authority")
