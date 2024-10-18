@@ -16,8 +16,9 @@ func _ready():
 
 func _set_skeletons():
 	var meshes = find_children("", "MeshInstance3D", true, false)
+	var skeleton_path := skeleton.get_path()
 	for mesh : MeshInstance3D in meshes:
-		mesh.skeleton = skeleton.get_path()
+		mesh.skeleton = skeleton_path
 		
 func _set_colors():
 	if not Engine.is_editor_hint():
@@ -26,6 +27,9 @@ func _set_colors():
 			colorSetter.set_color(colorPickerNodePathToColors[colorPickerNodePath])
 
 func refresh():
+	if not is_inside_tree():
+		return
+	
 	_set_skeletons()
 	_set_colors()
 	for nodePath in nodePathsToChildIndex:
@@ -35,4 +39,3 @@ func refresh():
 		for child : Node3D in node.get_children():
 			child.visible = i == index
 			i = i + 1
-				
