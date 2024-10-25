@@ -1,11 +1,17 @@
+class_name PlayerSpawner
 extends MultiplayerSpawner
 
 ## Players spawn in first
 @export var playerScene : PackedScene
 
+const group : StringName = "PlayerSpawner"
+
 ## Emitted when the player is currently spawning, but before being added to the scene tree.
 ## Authority-related processing should happen here7yAFL
 signal player_spawning(id: int, player: Node)
+
+func _init() -> void:
+	add_to_group(group)
 
 func _ready():
 	spawn_function = _player_spawn

@@ -22,11 +22,14 @@ func _ready():
 	if is_multiplayer_authority():
 		process_mode = PROCESS_MODE_INHERIT
 		camera.make_current()
+		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	else:
 		process_mode = PROCESS_MODE_DISABLED
 		camera.clear_current(true)
-	
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+
+func _exit_tree():
+	if is_multiplayer_authority():
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if is_on_floor():
