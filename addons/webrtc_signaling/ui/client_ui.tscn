@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://cpwp4xx6mv5p"]
 
-[ext_resource type="Script" path="res://addons/webrtc_signaling/ui/client_ui.gd" id="1"]
-[ext_resource type="Script" path="res://addons/webrtc_signaling/client/multiplayer_client.gd" id="2"]
+[ext_resource type="Script" path="res://addons/GodotTools/webrtc_signaling/ui/client_ui.gd" id="1"]
+[ext_resource type="Script" path="res://addons/GodotTools/webrtc_signaling/client/multiplayer_client.gd" id="2"]
 
 [node name="ClientUI" type="Control"]
 layout_mode = 3

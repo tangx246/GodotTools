@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://ptb02aoy8gn1"]
 
-[ext_resource type="PackedScene" uid="uid://c07y6e7ecwskb" path="res://addons/volume_control/volume.tscn" id="1_fobux"]
+[ext_resource type="PackedScene" uid="uid://c07y6e7ecwskb" path="res://addons/GodotTools/volume_control/volume.tscn" id="1_fobux"]
 
 [node name="Volume Container" type="HBoxContainer"]
 offset_right = 168.0
