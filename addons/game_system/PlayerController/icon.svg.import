@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://w64caa6tked"
-path="res://.godot/imported/icon.svg-cda8896207254106ae77ce566931f586.ctex"
+uid="uid://c0m7uxf33gswd"
+path="res://.godot/imported/icon.svg-503b887ee7fc9c290e2bb633c1684922.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/interactable/icon.svg"
-dest_files=["res://.godot/imported/icon.svg-cda8896207254106ae77ce566931f586.ctex"]
+source_file="res://addons/game_system/PlayerController/icon.svg"
+dest_files=["res://.godot/imported/icon.svg-503b887ee7fc9c290e2bb633c1684922.ctex"]
 
 [params]
 

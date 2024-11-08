@@ -1,6 +1,6 @@
 [gd_scene load_steps=10 format=3 uid="uid://caymbqompufss"]
 
-[ext_resource type="Script" path="res://addons/damageable/Damageable.gd" id="1_f1f5u"]
+[ext_resource type="Script" path="res://addons/game_system/damageable/Damageable.gd" id="1_f1f5u"]
 [ext_resource type="Script" path="res://addons/follow_target/follow_target.gd" id="2_ajkxx"]
 [ext_resource type="Script" path="res://scenes/entities/player/authority_collision_layer_setter.gd" id="3_iktyc"]
 

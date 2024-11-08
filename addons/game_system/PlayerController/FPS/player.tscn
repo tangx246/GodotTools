@@ -1,10 +1,10 @@
 [gd_scene load_steps=12 format=3 uid="uid://ctk2635m14tdu"]
 
-[ext_resource type="Script" path="res://addons/PlayerController/FPS/Player.gd" id="1_b5cvv"]
-[ext_resource type="Script" path="res://addons/PlayerController/FPS/stand_state.gd" id="2_le2tr"]
-[ext_resource type="Script" path="res://addons/PlayerController/FPS/recoil/recoil.gd" id="2_safv3"]
-[ext_resource type="Script" path="res://addons/PlayerController/FPS/recoil/recoil_info.gd" id="3_u4m7j"]
-[ext_resource type="Script" path="res://addons/PlayerController/FPS/lean.gd" id="5_g1hu3"]
+[ext_resource type="Script" path="res://addons/game_system/PlayerController/FPS/Player.gd" id="1_b5cvv"]
+[ext_resource type="Script" path="res://addons/game_system/PlayerController/FPS/stand_state.gd" id="2_le2tr"]
+[ext_resource type="Script" path="res://addons/game_system/PlayerController/FPS/recoil/recoil.gd" id="2_safv3"]
+[ext_resource type="Script" path="res://addons/game_system/PlayerController/FPS/recoil/recoil_info.gd" id="3_u4m7j"]
+[ext_resource type="Script" path="res://addons/game_system/PlayerController/FPS/lean.gd" id="5_g1hu3"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fq6a0"]
 radius = 0.25
