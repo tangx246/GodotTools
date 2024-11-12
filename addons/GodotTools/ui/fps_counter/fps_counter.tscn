@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=3 uid="uid://ylgniiud18f4"]
+
+[ext_resource type="Script" path="res://addons/GodotTools/ui/fps_counter/fps_counter.gd" id="1_okvfo"]
+
+[node name="FpsCounter" type="Panel"]
+script = ExtResource("1_okvfo")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+text = "FPS:"
+
+[node name="FPSCounter" type="Label" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "10"

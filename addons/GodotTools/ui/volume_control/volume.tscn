@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://c07y6e7ecwskb"]
 
-[ext_resource type="Script" path="res://addons/GodotTools/volume_control/volume.gd" id="1_grfms"]
+[ext_resource type="Script" path="res://addons/GodotTools/ui/volume_control/volume.gd" id="1_grfms"]
 
 [node name="Volume" type="HSlider"]
 custom_minimum_size = Vector2(100, 0)
