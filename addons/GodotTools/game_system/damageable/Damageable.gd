@@ -46,5 +46,7 @@ func damage(amount: float, source: Node = null):
 	var prev_value = current_hp
 	current_hp = maxf(current_hp - amount, 0)
 	
-	if source:
-		current_hp_changed_by_source.emit(prev_value, current_hp, source)
+	if not source:
+		source = get_parent()
+	
+	current_hp_changed_by_source.emit(prev_value, current_hp, source)
