@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://addons/GodotTools/game_system/damageable/ui/fps_hurt_vignette/hurt_vignette.gd" id="1_shftt"]
 
 [sub_resource type="Gradient" id="Gradient_6g7ui"]
-offsets = PackedFloat32Array(0, 1.1)
+offsets = PackedFloat32Array(1, 1.1)
 colors = PackedColorArray(0, 0, 0, 0, 1, 0, 0, 0.686275)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_5t3nq"]
@@ -20,5 +20,4 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("GradientTexture2D_5t3nq")
 script = ExtResource("1_shftt")
-duration = null
 metadata/_edit_use_anchors_ = true

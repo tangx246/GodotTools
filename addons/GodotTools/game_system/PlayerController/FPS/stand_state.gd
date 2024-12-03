@@ -40,6 +40,7 @@ func _set_collider():
 
 func _ready():
 	_set_collider()
+	body.set(speed_var, crouch_speed)
 
 func _transition_stand_state(prevValue: STAND_STATE, value: STAND_STATE):
 	if prevValue == value:
