@@ -20,6 +20,7 @@ extends Node
 
 signal current_hp_changed(prevValue:float, value: float)
 signal max_hp_changed(prevValue:float, value: float)
+signal current_hp_changed_by_source(prevValue: float, value: float, source: Node)
 signal died()
 signal revived()
 signal hp_changed()
@@ -41,5 +42,9 @@ func _death_check(prev_hp: float, current_hp: float):
 func is_dead() -> bool:
 	return current_hp <= 0
 
-func damage(amount: float):
+func damage(amount: float, source: Node = null):
+	var prev_value = current_hp
 	current_hp = maxf(current_hp - amount, 0)
+	
+	if source:
+		current_hp_changed_by_source.emit(prev_value, current_hp, source)
