@@ -17,11 +17,12 @@ func _init() -> void:
 	peer_disconnected.connect(_peer_disconnected)
 
 
-func start(url: String, _lobby: String = "", _mesh: bool = true) -> void:
+func start(url: String, _lobby: String = "", _mesh: bool = true, _autojoin: bool = true) -> void:
 	stop()
 	sealed = false
 	mesh = _mesh
 	lobby = _lobby
+	autojoin = _autojoin
 	connect_to_url(url)
 
 

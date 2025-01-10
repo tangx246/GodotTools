@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://dr242bojmpc28"]
 
-[ext_resource type="Script" path="res://addons/GodotTools/webrtc_signaling/main.gd" id="1"]
+[ext_resource type="Script" uid="uid://bpaj0bxcna4ei" path="res://addons/GodotTools/webrtc_signaling/main.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://5p1bp2kcs0py" path="res://addons/GodotTools/webrtc_signaling/ui/main_ui.tscn" id="1_rhk73"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ax6q8"]

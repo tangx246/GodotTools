@@ -9,6 +9,7 @@ enum Message {
 	ANSWER,
 	CANDIDATE,
 	SEAL,
+	REFRESH_ROOM_LIST
 }
 
 @export var autojoin := true
@@ -29,6 +30,7 @@ signal offer_received(id: int, offer: String)
 signal answer_received(id: int, answer: String)
 signal candidate_received(id: int, mid: String, index: int, sdp: String)
 signal lobby_sealed()
+signal room_list_received(room_list: Dictionary)
 
 
 func connect_to_url(url: String) -> void:
@@ -45,8 +47,10 @@ func close() -> void:
 func _process(_delta: float) -> void:
 	ws.poll()
 	var state := ws.get_ready_state()
-	if state != old_state and state == WebSocketPeer.STATE_OPEN and autojoin:
-		join_lobby(lobby)
+	if state != old_state and state == WebSocketPeer.STATE_OPEN:
+		if autojoin:
+			join_lobby(lobby)
+		refresh_room_list()
 	while state == WebSocketPeer.STATE_OPEN and ws.get_available_packet_count():
 		if not _parse_msg():
 			print("Error parsing message from server.")
@@ -96,6 +100,8 @@ func _parse_msg() -> bool:
 		if not candidate[1].is_valid_int():
 			return false
 		candidate_received.emit(src_id, candidate[0], candidate[1].to_int(), candidate[2])
+	elif type == Message.REFRESH_ROOM_LIST:
+		room_list_received.emit(JSON.parse_string(msg.data))
 	else:
 		return false
 
@@ -109,6 +115,8 @@ func join_lobby(lobby: String) -> Error:
 func seal_lobby() -> Error:
 	return _send_msg(Message.SEAL, 0)
 
+func refresh_room_list() -> Error:
+	return _send_msg(Message.REFRESH_ROOM_LIST, 0)
 
 func send_candidate(id: int, mid: String, index: int, sdp: String) -> Error:
 	return _send_msg(Message.CANDIDATE, id, "\n%s\n%d\n%s" % [mid, index, sdp])

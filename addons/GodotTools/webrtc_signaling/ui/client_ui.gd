@@ -7,12 +7,14 @@ extends Control
 @onready var multiplayerUi: Control = %VBoxContainer
 @onready var multiplayerUiRoot: Control = $"%VBoxContainer/.."
 @onready var main: Node = $"%VBoxContainer/../.."
+@onready var room_list: ItemList = %RoomList
 
 func _ready() -> void:
 	client.lobby_joined.connect(_lobby_joined)
 	client.lobby_sealed.connect(_lobby_sealed)
 	client.connected.connect(_connected)
 	client.disconnected.connect(_disconnected)
+	client.room_list_received.connect(_room_list_received)
 
 	multiplayer.connected_to_server.connect(_mp_server_connected)
 	multiplayer.connection_failed.connect(_mp_server_disconnect)
@@ -25,6 +27,8 @@ func _ready() -> void:
 	get_tree().get_multiplayer().server_disconnected.connect(_mp_server_disconnect)
 	get_tree().get_multiplayer().peer_connected.connect(_mp_peer_connected)
 	get_tree().get_multiplayer().peer_disconnected.connect(_mp_peer_disconnected)
+
+	room_list.item_activated.connect(_on_room_list_activated)
 
 func _mp_server_connected() -> void:
 	_log("[Multiplayer] Server connected (I am %d)" % client.rtc_mp.get_unique_id())
@@ -61,7 +65,7 @@ func _lobby_sealed() -> void:
 func _log(msg: String) -> void:
 	print(msg)
 	$VBoxContainer/TextEdit.text += str(msg) + "\n"
-	var bar : VScrollBar = $VBoxContainer/TextEdit.get_v_scroll_bar()
+	var bar: VScrollBar = $VBoxContainer/TextEdit.get_v_scroll_bar()
 	bar.value = bar.max_value
 
 
@@ -82,6 +86,9 @@ func _on_join_pressed() -> void:
 
 	client.start(host.text, room.text, mesh.button_pressed)
 
+func _on_refresh_pressed() -> void:
+	client.start(host.text, "", mesh.button_pressed, false)
+
 func _on_stop_pressed() -> void:
 	client.stop()
 
@@ -90,3 +97,15 @@ func _on_start_game_pressed():
 		multiplayerUiRoot.visible = false
 	else:
 		_log("Cannot start game without authority")
+
+func _on_room_list_activated(id: int) -> void:
+	var room: String = room_list.get_item_metadata(id)
+	client.start(host.text, room, mesh.button_pressed)
+
+func _room_list_received(received_rooms: Dictionary) -> void:
+	_log("Room list received: %s" % received_rooms.keys())
+	room_list.clear()
+	
+	for room in received_rooms.keys():
+		var id: int = room_list.add_item(room)
+		room_list.set_item_metadata(id, room)

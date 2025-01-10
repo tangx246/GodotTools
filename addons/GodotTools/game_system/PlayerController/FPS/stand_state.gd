@@ -1,46 +1,47 @@
 class_name StandState
 extends TweenObjectTo
 
-@export var body : CollisionObject3D
-@export var speed_var : StringName = "speed"
+@export var body: CollisionObject3D
+@export var speed_var: StringName = "speed"
 
 @export_group("Stand")
-@export var stand_collider : CollisionShape3D
-@export var crouch_collider : CollisionShape3D
-@export var prone_collider : CollisionShape3D
-@export var stand_speed : float = 10
-@export var sprint_speed : float = 22
-@export var stand_position : Node3D
-@export var stand_transition_speed : float = 0.2
+@export var stand_collider: CollisionShape3D
+@export var crouch_collider: CollisionShape3D
+@export var prone_collider: CollisionShape3D
+@export var walk_speed: float = 1
+@export var stand_speed: float = 10
+@export var sprint_speed: float = 22
+@export var stand_position: Node3D
+@export var stand_transition_speed: float = 0.2
 
 @export_group("Crouch")
-@export var crouch_position : Node3D
-@export var crouch_speed : float = 3.6
-@export var crouch_transition_speed : float = 0.2
+@export var crouch_position: Node3D
+@export var crouch_speed: float = 3.6
+@export var crouch_transition_speed: float = 0.2
 
 @export_group("Prone")
-@export var prone_position : Node3D
-@export var prone_speed : float = 1
-@export var prone_transition_speed : float = 0.4
+@export var prone_position: Node3D
+@export var prone_speed: float = 1
+@export var prone_transition_speed: float = 0.4
 
-@export var stand_state : STAND_STATE = STAND_STATE.STAND:
+@export var stand_state: STAND_STATE = STAND_STATE.STAND:
 	set(value):
 		var prev_value = stand_state
 		stand_state = value
 		_set_collider()
 		_transition_stand_state(prev_value, value)
-enum STAND_STATE { STAND, CROUCH, PRONE }
+enum STAND_STATE {STAND, CROUCH, PRONE}
 
 signal stand_state_changed(transition_time: float)
 
 func _set_collider():
-	var colliders : Array[CollisionShape3D] = [stand_collider, crouch_collider, prone_collider]
+	var colliders: Array[CollisionShape3D] = [stand_collider, crouch_collider, prone_collider]
 	for i in range(colliders.size()):
 		colliders[i].disabled = i != stand_state
 
 func _ready():
 	_set_collider()
-	body.set(speed_var, crouch_speed)
+	body.set(speed_var, stand_speed)
 
 func _transition_stand_state(prevValue: STAND_STATE, value: STAND_STATE):
 	if prevValue == value:
@@ -74,6 +75,13 @@ func _transition_stand_state(prevValue: STAND_STATE, value: STAND_STATE):
 			await _tween_camera_root_to(crouch_position.position, crouch_transition_speed)
 			body.set(speed_var, crouch_speed)
 
+func walk(walking: bool):
+	if stand_state == STAND_STATE.STAND:
+		if walking:
+			body.set(speed_var, walk_speed)
+		else:
+			body.set(speed_var, stand_speed)
+
 func sprint(sprinting: bool):
 	if sprinting and stand_state == STAND_STATE.STAND:
 		await _wait_cameraRoot_tweens()
@@ -90,6 +98,6 @@ func _tween_camera_root_to(position: Vector3, time: float) -> Signal:
 	return tween_object_to(self, position, Vector3.ZERO, time)
 
 func _wait_cameraRoot_tweens() -> void:
-	var transition : Tween = transitions.get(self.to_string()) as Tween
+	var transition: Tween = transitions.get(self.to_string()) as Tween
 	if transition:
 		await transition.finished

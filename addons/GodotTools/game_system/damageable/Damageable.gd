@@ -18,16 +18,18 @@ extends Node
 			current_hp = max_hp
 		max_hp_changed.emit(prev_hp, value)
 
-signal current_hp_changed(prevValue:float, value: float)
-signal max_hp_changed(prevValue:float, value: float)
+signal current_hp_changed(prevValue: float, value: float)
+signal max_hp_changed(prevValue: float, value: float)
 signal current_hp_changed_by_source(prevValue: float, value: float, source: Node)
 signal died()
 signal revived()
 signal hp_changed()
+signal current_hp_reduced()
 
 func _ready():
 	current_hp_changed.connect(func(_a, _b): hp_changed.emit())
 	current_hp_changed.connect(_death_check)
+	current_hp_changed.connect(func(prev: float, current: float): if current < prev: current_hp_reduced.emit())
 	max_hp_changed.connect(func(_a, _b): hp_changed.emit())
 	
 	current_hp = current_hp

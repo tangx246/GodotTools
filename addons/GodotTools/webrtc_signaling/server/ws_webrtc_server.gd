@@ -9,6 +9,7 @@ enum Message {
 	ANSWER,
 	CANDIDATE,
 	SEAL,
+	REFRESH_ROOM_LIST
 }
 
 ## Unresponsive clients time out after this time (in milliseconds).
@@ -217,6 +218,10 @@ func _parse_msg(peer: Peer) -> bool:
 		"id": str(parsed.id).to_int(),
 		"data": parsed.data,
 	}
+
+	if msg.type == Message.REFRESH_ROOM_LIST:
+		peer.send(Message.REFRESH_ROOM_LIST, 0, JSON.stringify(lobbies))
+		return true
 
 	if msg.type == Message.JOIN:
 		if peer.lobby:  # Peer must not have joined a lobby already!
