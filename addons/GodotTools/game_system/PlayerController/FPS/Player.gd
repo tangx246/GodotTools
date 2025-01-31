@@ -11,7 +11,6 @@ extends CharacterBody3D
 @onready var camera : Camera3D = find_child("Camera3D")
 var jump_velocity_to_add : float = 0
 var mouse_movement : Vector2 = Vector2.ZERO
-var gravity : Vector3
 
 func get_input() -> Vector3:
 	var input_dir = Input.get_vector("Strafe Left", "Strafe Right", "Move Forward", "Move Backward")
@@ -34,7 +33,7 @@ func _exit_tree():
 func _unhandled_input(event: InputEvent) -> void:
 	if is_on_floor():
 		if event.is_action_pressed("Jump") and stand_state_controller.stand_state == StandState.STAND_STATE.STAND:
-			jump_velocity_to_add = sqrt(2*jump_height*(-gravity.y))
+			jump_velocity_to_add = sqrt(2*jump_height*(get_gravity().length()))
 		if event.is_action_pressed("Jump") and stand_state_controller.stand_state != StandState.STAND_STATE.STAND:
 			stand_state_controller.stand_state = StandState.STAND_STATE.STAND
 		if event.is_action_pressed("Crouch"):
@@ -68,11 +67,9 @@ func _process(_delta: float) -> void:
 	mouse_movement.y = 0
 
 func _physics_process(delta):
-	gravity = ProjectSettings.get_setting("physics/3d/default_gravity") * ProjectSettings.get_setting("physics/3d/default_gravity_vector")
-	
 	velocity = get_input()
-	velocity += gravity * delta
-	velocity += Vector3(0, jump_velocity_to_add, 0)
+	velocity += get_gravity() * delta
+	velocity -= get_gravity().normalized() * jump_velocity_to_add
 	jump_velocity_to_add = 0
 	
 	velocity = global_transform.basis * velocity

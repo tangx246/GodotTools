@@ -1,11 +1,14 @@
-[gd_scene load_steps=14 format=3 uid="uid://ctk2635m14tdu"]
+[gd_scene load_steps=17 format=3 uid="uid://ctk2635m14tdu"]
 
 [ext_resource type="Script" path="res://addons/GodotTools/game_system/PlayerController/FPS/Player.gd" id="1_b5cvv"]
+[ext_resource type="Script" path="res://addons/GodotTools/node_utility/multiplayer_synchronizer_workaround/multiplayer_synchronizer_workaround.gd" id="2_iyc1q"]
 [ext_resource type="Script" path="res://addons/GodotTools/game_system/PlayerController/FPS/stand_state.gd" id="2_le2tr"]
 [ext_resource type="Script" path="res://addons/GodotTools/game_system/PlayerController/FPS/recoil/recoil.gd" id="2_safv3"]
 [ext_resource type="Script" path="res://addons/GodotTools/game_system/PlayerController/FPS/recoil/recoil_info.gd" id="3_u4m7j"]
 [ext_resource type="Script" path="res://addons/GodotTools/game_system/PlayerController/FPS/lean.gd" id="5_g1hu3"]
 [ext_resource type="Script" path="res://addons/GodotTools/game_system/PlayerController/FPS/screen_shake.gd" id="6_dyw3o"]
+[ext_resource type="Script" path="res://addons/GodotTools/game_system/PlayerController/FPS/arms/fps_arms.gd" id="7_sf4bq"]
+[ext_resource type="Material" uid="uid://deouhx0fsblr5" path="res://addons/GodotTools/game_system/PlayerController/FPS/arms/fps_arms_toon_material.tres" id="9_cntxa"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fq6a0"]
 radius = 0.25
@@ -66,6 +69,7 @@ shape = SubResource("CapsuleShape3D_fvl13")
 
 [node name="ControllerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_8wb3o")
+script = ExtResource("2_iyc1q")
 
 [node name="StandState" type="Node3D" parent="." node_paths=PackedStringArray("body", "stand_collider", "crouch_collider", "prone_collider", "stand_position", "crouch_position", "prone_position")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.59211, 0)
@@ -93,6 +97,10 @@ script = ExtResource("6_dyw3o")
 noise = SubResource("FastNoiseLite_lmai6")
 
 [node name="Camera3D" type="Camera3D" parent="StandState/Recoil/Lean/ScreenShake"]
+
+[node name="FPS Arms" type="Node3D" parent="StandState/Recoil/Lean/ScreenShake/Camera3D"]
+script = ExtResource("7_sf4bq")
+shader_material = ExtResource("9_cntxa")
 
 [node name="CameraSynchronizer" type="MultiplayerSynchronizer" parent="StandState/Recoil/Lean/ScreenShake"]
 root_path = NodePath("../Camera3D")

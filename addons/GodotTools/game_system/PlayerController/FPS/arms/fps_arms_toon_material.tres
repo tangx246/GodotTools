@@ -1,0 +1,21 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://deouhx0fsblr5"]
+
+[ext_resource type="Shader" uid="uid://c1dvk6j81u58l" path="res://addons/GodotTools/game_system/PlayerController/FPS/arms/fps_arms_toon_shader.tres" id="1_un8ui"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_un8ui")
+shader_parameter/viewmodel_fov = 75.0
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/point_size = 1.0
+shader_parameter/roughness = 0.3
+shader_parameter/metallic_texture_channel = Vector4(1, 0, 0, 0)
+shader_parameter/specular = 0.5
+shader_parameter/metallic = 0.0
+shader_parameter/normal_scale = 1.0
+shader_parameter/rim = null
+shader_parameter/rim_tint = null
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)

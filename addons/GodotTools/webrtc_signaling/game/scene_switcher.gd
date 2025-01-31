@@ -44,7 +44,7 @@ func _clear_children():
 	await _delete_node_list(gameRoot.find_children("", "PhysicsBody3D", true, false))
 	await _delete_node_list(gameRoot.get_children())
 
-func _delete_node_list(children: Array[Node], chunk: int = 10):
+func _delete_node_list(children: Array[Node], chunk: int = 1):
 	var deleted: int = 0
 	for i in range(children.size() - 1, -1, -1):
 		deleted += 1

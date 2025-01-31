@@ -17,6 +17,4 @@ func _physics_process(_delta: float) -> void:
 	track_target()
 
 func track_target():
-	var translated = target.global_transform.translated_local(localOffset)
-	global_rotation = target.global_rotation
-	global_position = translated.origin
+	global_transform = target.global_transform.translated_local(localOffset)

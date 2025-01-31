@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://ccjtbks3rgejk"]
+
+[ext_resource type="Script" path="res://addons/GodotTools/game_system/level_bounds/level_bounds.gd" id="1_v1fvf"]
+[ext_resource type="Script" path="res://addons/GodotTools/game_system/level_bounds/damageable_killer.gd" id="2_x1dfl"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_j2acs"]
+size = Vector3(232.2, 105, 332.64)
+
+[node name="LevelBounds" type="Area3D" node_paths=PackedStringArray("level_root")]
+collision_layer = 0
+collision_mask = 12
+monitorable = false
+script = ExtResource("1_v1fvf")
+level_root = NodePath("")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32.5, -2.5, -5.5)
+shape = SubResource("BoxShape3D_j2acs")
+
+[node name="LevelBoundsKiller" type="Node" parent="."]
+script = ExtResource("2_x1dfl")
