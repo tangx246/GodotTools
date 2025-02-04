@@ -105,6 +105,7 @@ shader_material = ExtResource("9_cntxa")
 [node name="CameraSynchronizer" type="MultiplayerSynchronizer" parent="StandState/Recoil/Lean/ScreenShake"]
 root_path = NodePath("../Camera3D")
 replication_config = SubResource("SceneReplicationConfig_e45ti")
+script = ExtResource("2_iyc1q")
 
 [node name="StandCameraPosition" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.59211, 0)

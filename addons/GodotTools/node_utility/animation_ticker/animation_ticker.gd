@@ -1,3 +1,4 @@
+@tool
 class_name AnimationTicker
 extends Timer
 
@@ -17,6 +18,11 @@ func _init() -> void:
 func _ready() -> void:
 	mixers = []
 	mixers.assign(root.find_children("", "AnimationMixer"))
+	
+	if Engine.is_editor_hint():
+		get_tree().process_frame.connect(func():
+			for mixer in mixers:
+				mixer.advance(get_process_delta_time()))
 
 	stop()
 	var timer: Timer = Timer.new()

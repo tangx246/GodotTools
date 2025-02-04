@@ -4,7 +4,8 @@ extends Node3D
 @export var add_to_root: bool = false
 
 func spawn():
-	spawn_rpc.rpc()
+	if is_multiplayer_authority():
+		spawn_rpc.rpc()
 		
 @rpc("call_local")
 func spawn_rpc():

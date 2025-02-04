@@ -6,12 +6,11 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_j2acs"]
 size = Vector3(232.2, 105, 332.64)
 
-[node name="LevelBounds" type="Area3D" node_paths=PackedStringArray("level_root")]
+[node name="LevelBounds" type="Area3D"]
 collision_layer = 0
 collision_mask = 12
 monitorable = false
 script = ExtResource("1_v1fvf")
-level_root = NodePath("")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32.5, -2.5, -5.5)
