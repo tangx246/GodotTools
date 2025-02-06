@@ -12,6 +12,8 @@ func _enter_tree() -> void:
 func _ready() -> void:
 	if OS.get_name() == "Web":
 		$VBoxContainer/Signaling.hide()
+	elif OS.has_feature("dedicated_server"):
+		_on_listen_toggled(true)
 
 
 func _on_listen_toggled(button_pressed: bool) -> void:

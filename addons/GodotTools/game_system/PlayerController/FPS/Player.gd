@@ -43,12 +43,13 @@ func _unhandled_input(event: InputEvent) -> void:
 				stand_state_controller.stand_state = StandState.STAND_STATE.CROUCH
 		if event.is_action_pressed("Prone"):
 			stand_state_controller.stand_state = StandState.STAND_STATE.PRONE
-		if event.is_action_pressed("Lean Left"):
-			lean_controller.lean_state = Lean.LEAN_STATE.LEFT
-		if event.is_action_pressed("Lean Right"):
-			lean_controller.lean_state = Lean.LEAN_STATE.RIGHT
-		if event.is_action_released("Lean Left") or event.is_action_released("Lean Right"):
-			lean_controller.lean_state = Lean.LEAN_STATE.NONE
+
+	if event.is_action_pressed("Lean Left"):
+		lean_controller.lean_state = Lean.LEAN_STATE.LEFT
+	if event.is_action_pressed("Lean Right"):
+		lean_controller.lean_state = Lean.LEAN_STATE.RIGHT
+	if event.is_action_released("Lean Left") or event.is_action_released("Lean Right"):
+		lean_controller.lean_state = Lean.LEAN_STATE.NONE
 			
 	if event.is_action_pressed("Sprint"):
 		stand_state_controller.sprint(true)

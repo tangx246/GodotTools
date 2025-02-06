@@ -1,7 +1,11 @@
-extends "ws_webrtc_client.gd"
+class_name WSWebRTCSignalingClient
+extends WebsocketSignalingClient
 
 var rtc_mp := WebRTCMultiplayerPeer.new()
 var sealed := false
+
+signal webrtc_peer_connected(id: int)
+signal webrtc_connected(id: int, use_mesh: bool)
 
 func _init() -> void:
 	connected.connect(_connected)
@@ -72,6 +76,8 @@ func _connected(id: int, use_mesh: bool) -> void:
 	else:
 		rtc_mp.create_client(id)
 	get_tree().get_multiplayer().multiplayer_peer = rtc_mp
+	
+	webrtc_connected.emit(id, use_mesh)
 
 
 func _lobby_joined(_lobby: String) -> void:
@@ -91,12 +97,12 @@ func _disconnected() -> void:
 func _peer_connected(id: int) -> void:
 	print("Peer connected: %d" % id)
 	_create_peer(id)
+	webrtc_peer_connected.emit(id)
 
 
 func _peer_disconnected(id: int) -> void:
 	if rtc_mp.has_peer(id):
 		rtc_mp.remove_peer(id)
-
 
 func _offer_received(id: int, offer: String) -> void:
 	print("Got offer: %d" % id)

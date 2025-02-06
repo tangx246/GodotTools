@@ -1,3 +1,4 @@
+class_name WebsocketSignalingClient
 extends Node
 
 enum Message {

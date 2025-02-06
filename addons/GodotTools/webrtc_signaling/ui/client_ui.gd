@@ -1,9 +1,9 @@
 extends Control
 
-@onready var client: Node = $Client
-@onready var host: LineEdit = $VBoxContainer/Connect/Host
-@onready var room: LineEdit = $VBoxContainer/Join/RoomSecret
-@onready var mesh: CheckBox = $VBoxContainer/Connect/Mesh
+@onready var client: Node = %Client
+@onready var host: LineEdit = %Host
+@onready var room: LineEdit = %RoomSecret
+@onready var mesh: CheckBox = %Mesh
 @onready var multiplayerUi: Control = %VBoxContainer
 @onready var multiplayerUiRoot: Control = $"%VBoxContainer/.."
 @onready var main: Node = $"%VBoxContainer/../.."
