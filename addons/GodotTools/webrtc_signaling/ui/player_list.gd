@@ -3,8 +3,8 @@ extends ItemList
 @onready var client: WSWebRTCSignalingClient = %Client
 
 func _ready() -> void:
+	get_tree().get_multiplayer().peer_connected.connect(_on_peer_changed.unbind(1))
 	client.connected.connect(_on_peer_changed.unbind(2))
-	client.webrtc_peer_connected.connect(_on_peer_changed.unbind(1))
 	client.peer_disconnected.connect(_on_peer_changed.unbind(1))
 	
 func _on_peer_changed() -> void:

@@ -15,9 +15,9 @@ func _init() -> void:
 
 func _ready():
 	spawn_function = _player_spawn
-	if multiplayer.is_server():
+	if is_multiplayer_authority():
 		print("Connected peers: %s" % multiplayer.get_peers())
-		for id in multiplayer.get_peers():
+		for id: int in multiplayer.get_peers():
 			spawn.call_deferred(id)
 
 		# Make one for the server's self

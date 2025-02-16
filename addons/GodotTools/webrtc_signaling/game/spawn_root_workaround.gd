@@ -5,9 +5,9 @@ extends Node
 @export var target_node : Node
 
 func _ready():
-	if multiplayer.is_server():
+	if is_multiplayer_authority():
 		for child in get_children():
-			remove_child(child)
-			target_node.add_child(child, true)
+			child.owner = null
+			child.reparent(target_node)
 
 	queue_free()

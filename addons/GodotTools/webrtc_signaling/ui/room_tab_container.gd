@@ -1,10 +1,13 @@
 extends TabContainer
 
-@onready var client: WebsocketSignalingClient = %Client
+@onready var client: WSWebRTCSignalingClient = %Client
 
 func _ready() -> void:
 	current_tab = 0
-	client.lobby_joined.connect(_on_lobby_joined.unbind(1))
+	get_tree().get_multiplayer().connected_to_server.connect(_on_lobby_joined)
+	client.connected.connect(func(id: int, mesh: bool):
+		if id == 1: 
+			_on_lobby_joined())
 	client.disconnected.connect(_on_disconnected)
 
 func _on_lobby_joined() -> void:

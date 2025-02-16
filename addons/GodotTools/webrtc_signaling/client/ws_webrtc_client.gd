@@ -44,6 +44,9 @@ func connect_to_url(url: String) -> void:
 func close() -> void:
 	ws.close()
 
+func _room_list_callback(_ignore: Dictionary):
+	close()
+	room_list_received.disconnect(_room_list_callback)
 
 func _process(_delta: float) -> void:
 	ws.poll()
@@ -51,7 +54,9 @@ func _process(_delta: float) -> void:
 	if state != old_state and state == WebSocketPeer.STATE_OPEN:
 		if autojoin:
 			join_lobby(lobby)
-		refresh_room_list()
+		else:
+			refresh_room_list()
+			room_list_received.connect(_room_list_callback)
 	while state == WebSocketPeer.STATE_OPEN and ws.get_available_packet_count():
 		if not _parse_msg():
 			print("Error parsing message from server.")

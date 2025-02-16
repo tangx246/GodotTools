@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://clll2a3o4386m"]
+
+[ext_resource type="Script" path="res://addons/GodotTools/audio/ui_sound_themes/ui_sound_theme.gd" id="1_qk7c3"]
+
+[node name="UiSoundTheme" type="Node"]
+script = ExtResource("1_qk7c3")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true

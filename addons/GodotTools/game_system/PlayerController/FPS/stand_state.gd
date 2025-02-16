@@ -90,7 +90,7 @@ func sprint(sprinting: bool):
 		stand_state = STAND_STATE.STAND
 		await _wait_cameraRoot_tweens()
 		body.set(speed_var, sprint_speed)
-	if not sprinting:
+	if not sprinting and stand_state == STAND_STATE.STAND:
 		await _wait_cameraRoot_tweens()
 		body.set(speed_var, stand_speed)
 

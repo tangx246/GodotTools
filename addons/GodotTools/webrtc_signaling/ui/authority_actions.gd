@@ -3,7 +3,8 @@ extends HBoxContainer
 @onready var client: WSWebRTCSignalingClient = %Client
 
 func _ready() -> void:
-	client.webrtc_connected.connect(_on_connected.unbind(2))
+	get_tree().get_multiplayer().connected_to_server.connect(_on_connected)
+	get_tree().get_multiplayer().peer_connected.connect(_on_connected.unbind(1) )
 
 func _on_connected() -> void:
 	_set_children(get_tree().current_scene.is_multiplayer_authority())

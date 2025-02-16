@@ -4,9 +4,6 @@ extends WebsocketSignalingClient
 var rtc_mp := WebRTCMultiplayerPeer.new()
 var sealed := false
 
-signal webrtc_peer_connected(id: int)
-signal webrtc_connected(id: int, use_mesh: bool)
-
 func _init() -> void:
 	connected.connect(_connected)
 	disconnected.connect(_disconnected)
@@ -31,7 +28,8 @@ func start(url: String, _lobby: String = "", _mesh: bool = true, _autojoin: bool
 
 
 func stop() -> void:
-	get_tree().get_multiplayer().multiplayer_peer = null
+	var default_peer: MultiplayerPeer = MultiplayerAPI.create_default_interface().multiplayer_peer
+	get_tree().get_multiplayer().multiplayer_peer = default_peer
 	rtc_mp.close()
 	close()
 
@@ -76,8 +74,6 @@ func _connected(id: int, use_mesh: bool) -> void:
 	else:
 		rtc_mp.create_client(id)
 	get_tree().get_multiplayer().multiplayer_peer = rtc_mp
-	
-	webrtc_connected.emit(id, use_mesh)
 
 
 func _lobby_joined(_lobby: String) -> void:
@@ -90,14 +86,12 @@ func _lobby_sealed() -> void:
 
 func _disconnected() -> void:
 	print("Disconnected: %d: %s" % [code, reason])
-	if not sealed:
-		stop() # Unexpected disconnect
+	stop() # Unexpected disconnect
 
 
 func _peer_connected(id: int) -> void:
 	print("Peer connected: %d" % id)
 	_create_peer(id)
-	webrtc_peer_connected.emit(id)
 
 
 func _peer_disconnected(id: int) -> void:

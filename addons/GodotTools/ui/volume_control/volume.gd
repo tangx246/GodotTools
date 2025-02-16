@@ -10,7 +10,6 @@ func _ready():
 func on_value_changed(value: float):
 	AudioServer.set_bus_volume_db(bus_index, value)
 	PlayerPrefs.set_value(get_key(), value)
-	PlayerPrefs.save()
 
 func get_key() -> String:
 	return "Volume_%d" % bus_index

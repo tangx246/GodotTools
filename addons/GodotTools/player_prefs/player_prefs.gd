@@ -24,10 +24,6 @@ func _init():
 		var node_data = json.get_data()
 
 		values = node_data
-
-func _notification(what):
-	if what == NOTIFICATION_WM_CLOSE_REQUEST:
-		save()
  
 func save():
 	var save_game = FileAccess.open(savePath, FileAccess.WRITE)
@@ -41,8 +37,11 @@ func save():
 	# Store the save dictionary as a new line in the save file.
 	save_game.store_line(json_string)
 	
-func set_value(key: String, value: Variant):
+func set_value(key: String, value: Variant, save: bool = true):
 	values[key] = value
+	
+	if save:
+		save()
 	
 func get_value(key: String, default: Variant = null) -> Variant:
 	if !has_key(key):

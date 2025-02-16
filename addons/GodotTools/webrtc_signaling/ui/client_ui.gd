@@ -1,6 +1,6 @@
 extends Control
 
-@onready var client: Node = %Client
+@onready var client: WSWebRTCSignalingClient = %Client
 @onready var host: LineEdit = %Host
 @onready var room: LineEdit = %RoomSecret
 @onready var mesh: CheckBox = %Mesh
@@ -103,7 +103,7 @@ func _on_room_list_activated(id: int) -> void:
 	client.start(host.text, room, mesh.button_pressed)
 
 func _room_list_received(received_rooms: Dictionary) -> void:
-	_log("Room list received: %s" % received_rooms.keys())
+	_log("Room list received: %s" % (JSON.stringify(received_rooms.keys()) if received_rooms else "[]"))
 	room_list.clear()
 	
 	for room in received_rooms.keys():

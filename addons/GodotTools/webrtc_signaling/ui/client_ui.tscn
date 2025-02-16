@@ -73,6 +73,7 @@ layout_mode = 2
 text = "Start Single Player Game"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TabContainer/Host Join UI"]
+visible = false
 layout_mode = 2
 
 [node name="Room" type="Label" parent="VBoxContainer/TabContainer/Host Join UI/HBoxContainer"]
@@ -120,10 +121,6 @@ text = "Print peers"
 layout_mode = 2
 script = ExtResource("4_dx57n")
 
-[node name="Seal" type="Button" parent="VBoxContainer/TabContainer/In Room UI/HBoxContainer/AuthorityActions"]
-layout_mode = 2
-text = "Lock Room"
-
 [node name="Start Game" type="Button" parent="VBoxContainer/TabContainer/In Room UI/HBoxContainer/AuthorityActions"]
 layout_mode = 2
 text = "Start Game"
@@ -147,5 +144,4 @@ size_flags_vertical = 3
 [connection signal="pressed" from="VBoxContainer/TabContainer/Host Join UI/HBoxContainer/Join Room" to="." method="_on_join_pressed"]
 [connection signal="pressed" from="VBoxContainer/TabContainer/In Room UI/HBoxContainer/Stop" to="." method="_on_stop_pressed"]
 [connection signal="pressed" from="VBoxContainer/TabContainer/In Room UI/HBoxContainer/Peers" to="." method="_on_peers_pressed"]
-[connection signal="pressed" from="VBoxContainer/TabContainer/In Room UI/HBoxContainer/AuthorityActions/Seal" to="." method="_on_seal_pressed"]
 [connection signal="pressed" from="VBoxContainer/TabContainer/In Room UI/HBoxContainer/AuthorityActions/Start Game" to="." method="_on_start_game_pressed"]
