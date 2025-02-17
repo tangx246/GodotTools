@@ -3,6 +3,17 @@ class_name MultiplayerSynchronizerWorkaround
 extends MultiplayerSynchronizer
 
 @onready var root: Node = get_node(root_path)
+@export var tick_rate: int = 1
+
+@export_group("Sleepy ticks")
+## If true, ticks will slow down when values haven't changed for a while
+@export var sleepy_ticks: bool = true
+## Tick rate when values haven't changed for a while
+@export var sleepy_tick_rate: int = 100
+## How many ticks before this synchronizer is considered sleepy
+@export var sleepy_tick_threshold: int = 300
+
+var original_tick_rate: int
 
 # Maps NodePath to Variant
 var resource_memory: Dictionary = {}
@@ -19,6 +30,8 @@ func _init() -> void:
 	replication_interval = 99999999999
 	delta_interval = 99999999999
 	properties = replication_config.get_properties()
+	ticks = randi() % tick_rate
+	original_tick_rate = tick_rate
 
 func _enter_tree() -> void:
 	if is_multiplayer_authority():
@@ -35,7 +48,13 @@ func _exit_tree() -> void:
 
 # NodePath to Variant
 var dirty_properties: Dictionary = {}
+var ticks: int
+var ticks_since_change: int
 func tick() -> void:
+	ticks = (ticks + 1) % tick_rate
+	if ticks != 0:
+		return
+	
 	dirty_properties.clear()
 	for path: NodePath in properties:
 		var cached: CachedNodePath = _get_cached_node_path(path)
@@ -49,7 +68,17 @@ func tick() -> void:
 			dirty_properties[path] = resource
 				
 	if not dirty_properties.is_empty():
+		ticks_since_change = 0
+		if tick_rate == sleepy_tick_rate:
+			tick_rate = original_tick_rate
+		
 		sync_properties.rpc(dirty_properties)
+	else:
+		ticks_since_change += 1
+		
+		if sleepy_ticks and ticks_since_change > sleepy_tick_threshold:
+			tick_rate = sleepy_tick_rate
+			ticks = randi() % tick_rate
 
 func _get_cached_node_path(path: NodePath) -> CachedNodePath:
 	if not nodepath_to_cached_nodepath.has(path):

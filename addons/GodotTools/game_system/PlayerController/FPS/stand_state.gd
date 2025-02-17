@@ -1,7 +1,7 @@
 class_name StandState
 extends TweenObjectTo
 
-@export var body: CollisionObject3D
+@export var body: Node3D
 @export var speed_var: StringName = "speed"
 
 @export_group("Stand")
