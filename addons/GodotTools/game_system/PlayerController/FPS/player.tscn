@@ -51,6 +51,7 @@ properties/0/spawn = true
 properties/0/replication_mode = 2
 
 [node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("stand_state_controller", "lean_controller")]
+platform_on_leave = 2
 script = ExtResource("1_b5cvv")
 stand_state_controller = NodePath("StandState")
 lean_controller = NodePath("StandState/Recoil/Lean")

@@ -26,6 +26,8 @@ func start(url: String, _lobby: String = "", _mesh: bool = true, _autojoin: bool
 	autojoin = _autojoin
 	connect_to_url(url)
 
+func _exit_tree() -> void:
+	stop()
 
 func stop() -> void:
 	var default_peer: MultiplayerPeer = MultiplayerAPI.create_default_interface().multiplayer_peer

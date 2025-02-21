@@ -18,6 +18,8 @@ script = ExtResource("1")
 root_path = NodePath("../Control")
 replication_config = SubResource("SceneReplicationConfig_ax6q8")
 script = ExtResource("3_ck0me")
+tick_rate = 10
+sleepy_ticks = false
 
 [node name="LevelSpawner" type="MultiplayerSpawner" parent="."]
 spawn_path = NodePath("../GameRoot")

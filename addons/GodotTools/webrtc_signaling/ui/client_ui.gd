@@ -37,7 +37,6 @@ func _mp_server_connected() -> void:
 func _mp_server_disconnect() -> void:
 	_log("[Multiplayer] Server disconnected (I am %d)" % client.rtc_mp.get_unique_id())
 
-
 func _mp_peer_connected(id: int) -> void:
 	_log("[Multiplayer] Peer %d connected" % id)
 
@@ -52,7 +51,7 @@ func _connected(id: int, use_mesh: bool) -> void:
 
 func _disconnected() -> void:
 	_log("[Signaling] Server disconnected: %d - %s" % [client.code, client.reason])
-
+	multiplayerUiRoot.visible = true
 
 func _lobby_joined(lobby: String) -> void:
 	_log("[Signaling] Joined lobby %s" % lobby)

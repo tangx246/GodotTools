@@ -9,7 +9,7 @@ extends MultiplayerSynchronizer
 ## If true, ticks will slow down when values haven't changed for a while
 @export var sleepy_ticks: bool = true
 ## Tick rate when values haven't changed for a while
-@export var sleepy_tick_rate: int = 100
+@export var sleepy_tick_rate: int = 10
 ## How many ticks before this synchronizer is considered sleepy
 @export var sleepy_tick_threshold: int = 300
 
@@ -30,8 +30,30 @@ func _init() -> void:
 	replication_interval = 99999999999
 	delta_interval = 99999999999
 	properties = replication_config.get_properties()
+	_positionrotation_to_transform(properties)
+	
 	ticks = randi() % tick_rate
 	original_tick_rate = tick_rate
+
+func _positionrotation_to_transform(node_paths: Array[NodePath]):
+	# Concatenated name (StringName) to Array[int]
+	var indices: Dictionary = {}
+	for i in range(node_paths.size()):
+		var item: NodePath = node_paths[i]
+		var concatenated_name: StringName = item.get_concatenated_names()
+		if not indices.has(concatenated_name):
+			indices[concatenated_name] = []
+		
+		if item.get_subname(0) == "position" or item.get_subname(0) == "rotation":
+			indices[concatenated_name].append(i)
+	
+	for key: StringName in indices:
+		if indices[key].size() == 2:
+			for i in range(indices[key].size() - 1, -1, -1):
+				node_paths.remove_at(i)
+				
+			var transform_nodepath: NodePath = NodePath("%s:transform" % key)
+			node_paths.append(transform_nodepath)
 
 func _enter_tree() -> void:
 	if is_multiplayer_authority():

@@ -40,7 +40,6 @@ func connect_to_url(url: String) -> void:
 	reason = "Unknown"
 	ws.connect_to_url(url)
 
-
 func close() -> void:
 	ws.close()
 

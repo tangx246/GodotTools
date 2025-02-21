@@ -11,6 +11,9 @@ class_name FailureCooldownDecorator
 
 @onready var cache_key = "cooldown_%s" % self.get_instance_id()
 
+var last_tick: float
+func _physics_process(delta: float) -> void:
+	last_tick += delta
 
 func tick(actor: Node, blackboard: Blackboard) -> int:
 	var c = get_child(0)
@@ -23,7 +26,8 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 	if remaining_time > 0:
 		response = FAILURE
 
-		remaining_time -= get_physics_process_delta_time()
+		remaining_time -= last_tick
+		last_tick = 0
 		blackboard.set_value(cache_key, remaining_time, str(actor.get_instance_id()))
 
 		if can_send_message(blackboard):

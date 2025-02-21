@@ -16,10 +16,16 @@ extends Node3D
 var distance_check_ticks: int = 0
 var idle_ticks: int = 0
 var reduce_tick_camera_distance_squared: float
+var track_target_callable: Callable
 func _ready() -> void:
 	reduce_tick_camera_distance_squared = reduce_tick_camera_distance * reduce_tick_camera_distance
 	distance_check_ticks = randi() % camera_distance_tick_rate
 	idle_ticks = randi() % reduced_tick_frames
+	
+	if localOffset == Vector3.ZERO:
+		track_target_callable = track_target_no_translate
+	else:
+		track_target_callable = track_target
 
 var short_distance: bool = true
 func _physics_process(_delta: float) -> void:
@@ -34,14 +40,21 @@ func _physics_process(_delta: float) -> void:
 	
 	distance_check_ticks = (distance_check_ticks + 1) % camera_distance_tick_rate
 	if distance_check_ticks == 0:
+		var prev_short_distance: bool = short_distance
 		short_distance = camera.global_position.distance_squared_to(global_position) < reduce_tick_camera_distance_squared
+		
+		if short_distance != prev_short_distance:
+			idle_ticks = randi() % reduced_tick_frames
 	
 	if short_distance:
-		track_target()
+		track_target_callable.call()
 	else:
 		idle_ticks = (idle_ticks + 1) % reduced_tick_frames
 		if idle_ticks == 0:
-			track_target()
+			track_target_callable.call()
 
-func track_target():
+func track_target() -> void:
 	global_transform = target.global_transform.translated_local(localOffset)
+
+func track_target_no_translate() -> void:
+	global_transform = target.global_transform

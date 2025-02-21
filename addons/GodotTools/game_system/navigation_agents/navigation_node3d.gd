@@ -47,7 +47,7 @@ func _physics_process(_delta: float) -> void:
 
 func _stick_to_floor() -> void:
 	var space_state: PhysicsDirectSpaceState3D = get_world_3d().direct_space_state
-	var query = PhysicsRayQueryParameters3D.create(global_position - Vector3(0, 0.05, 0), global_position - Vector3(0, 1, 0), floor_mask, [self])
+	var query = PhysicsRayQueryParameters3D.create(global_position + Vector3(0, 0.5, 0), global_position - Vector3(0, 1.5, 0), floor_mask, [self])
 	var result = space_state.intersect_ray(query)
 
 	if result:
