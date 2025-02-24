@@ -1,16 +1,18 @@
-[gd_scene load_steps=11 format=3 uid="uid://caymbqompufss"]
+[gd_scene load_steps=15 format=3 uid="uid://caymbqompufss"]
 
 [ext_resource type="Script" path="res://addons/GodotTools/game_system/damageable/Damageable.gd" id="1_f1f5u"]
 [ext_resource type="Script" path="res://addons/GodotTools/node_utility/follow_target/follow_target.gd" id="2_ajkxx"]
 [ext_resource type="Script" path="res://addons/GodotTools/game_system/damageable/authority_collision_layer_setter.gd" id="3_iktyc"]
 [ext_resource type="Script" path="res://addons/GodotTools/node_utility/multiplayer_synchronizer_workaround/multiplayer_synchronizer_workaround.gd" id="4_mkjdy"]
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_3i6i0"]
-radius = 0.12
+[ext_resource type="Script" path="res://addons/GodotTools/game_system/damageable/modifier/percentage_damage_modifier/percentage_damage_modifier.gd" id="5_f7a4h"]
+[ext_resource type="Script" path="res://addons/GodotTools/game_system/damageable/modifier/percentage_damage_modifier/indexed_damage_modifier.gd" id="6_pio6e"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_mf1om"]
 radius = 0.175
 height = 0.7
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_3i6i0"]
+radius = 0.12
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fpyl6"]
 radius = 0.05
@@ -32,7 +34,17 @@ properties/1/path = NodePath(".:max_hp")
 properties/1/spawn = true
 properties/1/replication_mode = 2
 
-[node name="Damageable" type="AnimatableBody3D"]
+[sub_resource type="Resource" id="Resource_5yaro"]
+script = ExtResource("6_pio6e")
+collision_index = 0
+modifier = 0.0
+
+[sub_resource type="Resource" id="Resource_u764a"]
+script = ExtResource("6_pio6e")
+collision_index = 1
+modifier = 0.0
+
+[node name="Damageable" type="AnimatableBody3D" node_paths=PackedStringArray("damage_modifiers")]
 disable_mode = 2
 collision_layer = 0
 collision_mask = 0
@@ -40,6 +52,13 @@ sync_to_physics = false
 script = ExtResource("1_f1f5u")
 current_hp = 10.0
 max_hp = 10.0
+damage_modifiers = [NodePath("PercentageDamageModifier")]
+
+[node name="ChestCollisionShape3D" type="CollisionShape3D" parent="."]
+process_mode = 1
+transform = Transform3D(-0.999546, 0.0283692, -0.0101298, 0.0298693, 0.976987, -0.211196, 0.00390519, -0.211403, -0.977391, -0.00644537, 0.980673, -0.0499262)
+shape = SubResource("CapsuleShape3D_mf1om")
+script = ExtResource("2_ajkxx")
 
 [node name="HeadCollisionShape3D" type="CollisionShape3D" parent="."]
 process_mode = 1
@@ -47,12 +66,6 @@ transform = Transform3D(-0.999326, -0.0351677, 0.0105125, -0.0366091, 0.934229, 
 shape = SubResource("SphereShape3D_3i6i0")
 script = ExtResource("2_ajkxx")
 localOffset = Vector3(0, 0.1, 0)
-
-[node name="ChestCollisionShape3D" type="CollisionShape3D" parent="."]
-process_mode = 1
-transform = Transform3D(-0.999546, 0.0283692, -0.0101298, 0.0298693, 0.976987, -0.211196, 0.00390519, -0.211403, -0.977391, -0.00644537, 0.980673, -0.0499262)
-shape = SubResource("CapsuleShape3D_mf1om")
-script = ExtResource("2_ajkxx")
 
 [node name="LeftUpperArmCollisionShape3D" type="CollisionShape3D" parent="."]
 process_mode = 1
@@ -119,3 +132,8 @@ no_authority_layer = 8
 [node name="DamageableSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_5rsl7")
 script = ExtResource("4_mkjdy")
+
+[node name="PercentageDamageModifier" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("5_f7a4h")
+damage_modifiers = Array[ExtResource("6_pio6e")]([SubResource("Resource_5yaro"), SubResource("Resource_u764a")])

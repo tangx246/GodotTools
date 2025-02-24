@@ -20,7 +20,7 @@ func _oh_hp_changed(prev_value: float, value: float, source: Node):
 	if tween:
 		tween.kill()
 	
-	var hurt_direction: Vector3 = Plane.PLANE_XZ.project(((source as Node3D).global_position - root.global_position)).normalized()
+	var hurt_direction: Vector3 = Plane.PLANE_XZ.project(((source as Node3D).global_position - root.global_position)).normalized() if source is Node3D else root.global_position
 	var basis_hurt_direction: Vector3 = Vector3.FORWARD.rotated(Vector3.UP, -root.global_basis.z.signed_angle_to(hurt_direction, Vector3.UP))
 	var x: float = lerpf(1, 0, (basis_hurt_direction.x + 1) / 2)
 	var y: float = lerpf(0, 0.5, (basis_hurt_direction.z + 1) / 2)

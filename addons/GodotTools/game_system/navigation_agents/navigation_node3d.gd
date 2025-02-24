@@ -55,10 +55,19 @@ func _stick_to_floor() -> void:
 
 func _on_velocity_computed(safe_velocity: Vector3):	
 	velocity = safe_velocity
-	var new_pos: Vector3 = global_position.move_toward(global_position + safe_velocity, speed * get_physics_process_delta_time())
+	WorkerThreadPoolExtended.add_task(_calculate_look_at.bind(safe_velocity))
+	WorkerThreadPoolExtended.add_task(_calculate_new_pos.bind(global_position, safe_velocity, speed * get_physics_process_delta_time()))
+
+func _calculate_new_pos(pos: Vector3, safe_velocity: Vector3, delta: float) -> void:
+	_move_to.call_deferred(pos.move_toward(pos + safe_velocity, delta))
+
+func _calculate_look_at(safe_velocity: Vector3):
 	if safe_velocity.length_squared() > 0.01:
-		look_at(new_pos)
-	global_position = new_pos
+		var horizontal: Vector3 = Plane.PLANE_XZ.project(safe_velocity)
+		look_at.call_deferred(global_transform.translated(horizontal).origin)
+	
+func _move_to(target: Vector3):
+	global_position = target
 
 func is_on_floor():
 	return true

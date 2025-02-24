@@ -11,6 +11,6 @@ func _exit_tree() -> void:
 
 func _on_exited_bounds(body: Node):
 	if is_instance_valid(body) and not body.is_queued_for_deletion() and body is Damageable:
-		body.damage(body.current_hp)
+		body.damage(body.current_hp, self, true)
 	else:
 		printerr("Body %s is not damageable" % body)

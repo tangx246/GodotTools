@@ -18,6 +18,9 @@ extends Node
 			current_hp = max_hp
 		max_hp_changed.emit(prev_hp, value)
 
+## An ordered list of damage modifiers to apply to all incoming damage
+@export var damage_modifiers: Array[DamageModifier]
+
 signal current_hp_changed(prevValue: float, value: float)
 signal max_hp_changed(prevValue: float, value: float)
 signal current_hp_changed_by_source(prevValue: float, value: float, source: Node)
@@ -44,11 +47,22 @@ func _death_check(prev_hp: float, current_hp: float):
 func is_dead() -> bool:
 	return current_hp <= 0
 
-func damage(amount: float, source: Node = null):
+func _get_modified_damage(original_amount: float, source: Node, collision_shape_index: int) -> float:
+	var amount: float = original_amount
+	for modifier in damage_modifiers:
+		amount = modifier.get_damage(amount, source, collision_shape_index)
+	return amount
+
+## Returns the calculated damage received by this Damageable
+func damage(amount: float, source: Node = null, ignore_damage_modifiers: bool = false, collision_shape_index: int = 0) -> float:
+	var modified_amount: float = amount if ignore_damage_modifiers else _get_modified_damage(amount, source, collision_shape_index)
+	
 	var prev_value = current_hp
-	current_hp = maxf(current_hp - amount, 0)
+	current_hp = maxf(current_hp - modified_amount, 0)
 	
 	if not source:
 		source = get_parent()
 	
 	current_hp_changed_by_source.emit(prev_value, current_hp, source)
+
+	return modified_amount
