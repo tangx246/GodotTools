@@ -29,14 +29,27 @@ signal revived()
 signal hp_changed()
 signal current_hp_reduced()
 
-func _ready():
-	current_hp_changed.connect(func(_a, _b): hp_changed.emit())
+func _enter_tree() -> void:
+	get_tree().process_frame
+	current_hp_changed.connect(_on_current_hp_changed)
 	current_hp_changed.connect(_death_check)
-	current_hp_changed.connect(func(prev: float, current: float): if current < prev: current_hp_reduced.emit())
-	max_hp_changed.connect(func(_a, _b): hp_changed.emit())
+	max_hp_changed.connect(_on_max_hp_changed)
 	
 	current_hp = current_hp
 	max_hp = max_hp
+
+func _exit_tree() -> void:
+	current_hp_changed.disconnect(_on_current_hp_changed)
+	current_hp_changed.disconnect(_death_check)
+	max_hp_changed.disconnect(_on_max_hp_changed)
+
+func _on_current_hp_changed(prev: float, current: float) -> void:
+	hp_changed.emit()
+	if current < prev:
+		current_hp_reduced.emit()
+
+func _on_max_hp_changed(_prev: float, _current: float) -> void:
+	hp_changed.emit()
 
 func _death_check(prev_hp: float, current_hp: float):
 	if current_hp <= 0 and prev_hp > 0:

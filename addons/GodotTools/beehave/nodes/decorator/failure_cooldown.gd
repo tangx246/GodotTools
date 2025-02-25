@@ -48,5 +48,9 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 
 		if response == FAILURE:
 			blackboard.set_value(cache_key, wait_time, str(actor.get_instance_id()))
+			c.after_run(actor, blackboard)
+
+		if response == SUCCESS:
+			c.after_run(actor, blackboard)
 
 	return response

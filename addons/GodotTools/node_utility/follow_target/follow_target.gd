@@ -16,12 +16,7 @@ extends Node3D
 		track_target_in_editor = value
 		
 		if Engine.is_editor_hint():
-			if track_target_in_editor:
-				if not get_tree().physics_frame.is_connected(track_target):
-					get_tree().physics_frame.connect(track_target)
-			else:
-				if get_tree().physics_frame.is_connected(track_target):
-					get_tree().physics_frame.disconnect(track_target)
+			set_physics_process(track_target_in_editor)
 				
 var distance_check_ticks: int = 0
 var idle_ticks: int = 0
@@ -32,8 +27,11 @@ func _ready() -> void:
 	reduce_tick_camera_distance_squared = reduce_tick_camera_distance * reduce_tick_camera_distance
 	distance_check_ticks = randi() % camera_distance_tick_rate
 	idle_ticks = randi() % reduced_tick_frames
-	
-	if localOffset == Vector3.ZERO:
+
+	if Engine.is_editor_hint():
+		track_target_callable = track_target_editor
+		set_physics_process(track_target_in_editor)
+	elif localOffset == Vector3.ZERO:
 		track_target_callable = track_target_no_translate
 	else:
 		track_target_callable = track_target
@@ -63,6 +61,9 @@ func _physics_process(_delta: float) -> void:
 
 func track_target() -> void:
 	WorkerThreadPoolExtended.add_task(_calculate_offset.bind(target.global_transform, localOffset))
+
+func track_target_editor() -> void:
+	_calculate_offset.bind(target.global_transform, localOffset).call()
 
 func _calculate_offset(target_transform: Transform3D, offset: Vector3) -> void:
 	_set_transform.call_deferred(target_transform.translated_local(offset))
