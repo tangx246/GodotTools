@@ -43,9 +43,19 @@ func _enter_tree() -> void:
 		timer.autostart = true
 		timer.timeout.connect(func(): print("FPS: %s" % Performance.get_monitor(Performance.Monitor.TIME_FPS)))
 		add_child(timer)
+		
+		multiplayer.peer_disconnected.connect(_on_peer_disconnected.unbind(1))
+
+func _on_peer_disconnected():
+	if multiplayer.get_peers().size() <= 0:
+		print("No more peers in multiprocess instance. Quitting")
+		get_tree().quit()
 
 func _exit_tree() -> void:
 	_kill_headless_process()
+	
+	if multiplayer.peer_disconnected.is_connected(_on_peer_disconnected.unbind(1)):
+		multiplayer.peer_disconnected.disconnect(_on_peer_disconnected.unbind(1))
 
 func _process_observer(pipe: FileAccess, is_error: bool) -> void:
 	while pipe.is_open() and pipe.get_error() == OK:
@@ -57,6 +67,8 @@ func _process_observer(pipe: FileAccess, is_error: bool) -> void:
 
 		if line.begins_with(PATTERN):
 			_on_server_created.call_deferred(line.lstrip(PATTERN))
+			
+	_kill_headless_process()
 
 func _kill_headless_process():
 	if is_multiprocess_instance_running():
@@ -80,6 +92,5 @@ func start_headless_process(single_player: bool):
 func _on_server_created(lobby: String):
 	clientui.room.text = lobby
 	
-	client.disconnected.connect(_kill_headless_process, CONNECT_ONE_SHOT)
 	var single_player: bool = is_local_instance_single_player(self)
 	clientui._on_join_pressed(single_player)
