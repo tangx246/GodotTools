@@ -48,7 +48,9 @@ func _process(_delta: float) -> void:
 ## Does WorkerThreadPool.add_task, but you just fire and forget
 func add_task(action: Callable, high_priority: bool = false, description: String = ""):
 	var task_id: int = WorkerThreadPool.add_task(action, high_priority, description)
-	
+	_add_task_id.call_deferred(task_id)
+
+func _add_task_id(task_id: int):
 	task_ids_mutex.lock()
 	task_ids.append(task_id)
 	task_ids_mutex.unlock()

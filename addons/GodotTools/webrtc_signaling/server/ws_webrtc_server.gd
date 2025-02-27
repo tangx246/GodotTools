@@ -133,6 +133,7 @@ func listen(port: int) -> void:
 		return
 	stop()
 	rand.seed = int(Time.get_unix_time_from_system())
+	print("Signaling server listening on %s" % port)
 	tcp_server.listen(port)
 
 

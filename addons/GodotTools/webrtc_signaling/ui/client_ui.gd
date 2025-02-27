@@ -4,6 +4,8 @@ extends Control
 @onready var host: LineEdit = %Host
 @onready var room: LineEdit = %RoomSecret
 @onready var mesh: CheckBox = %Mesh
+@onready var multiprocess: Multiprocess = %Multiprocess
+@onready var multiprocess_checkbox: CheckBox = %MultiprocessCheckbox
 @onready var multiplayerUi: Control = %VBoxContainer
 @onready var multiplayerUiRoot: Control = $"%VBoxContainer/.."
 @onready var main: Node = $"%VBoxContainer/../.."
@@ -22,11 +24,11 @@ func _ready() -> void:
 	multiplayer.peer_connected.connect(_mp_peer_connected)
 	multiplayer.peer_disconnected.connect(_mp_peer_disconnected)
 	
-	get_tree().get_multiplayer().connected_to_server.connect(_mp_server_connected)
-	get_tree().get_multiplayer().connection_failed.connect(_mp_server_disconnect)
-	get_tree().get_multiplayer().server_disconnected.connect(_mp_server_disconnect)
-	get_tree().get_multiplayer().peer_connected.connect(_mp_peer_connected)
-	get_tree().get_multiplayer().peer_disconnected.connect(_mp_peer_disconnected)
+	#get_tree().get_multiplayer().connected_to_server.connect(_mp_server_connected)
+	#get_tree().get_multiplayer().connection_failed.connect(_mp_server_disconnect)
+	#get_tree().get_multiplayer().server_disconnected.connect(_mp_server_disconnect)
+	#get_tree().get_multiplayer().peer_connected.connect(_mp_peer_connected)
+	#get_tree().get_multiplayer().peer_disconnected.connect(_mp_peer_disconnected)
 
 	room_list.item_activated.connect(_on_room_list_activated)
 
@@ -74,16 +76,26 @@ func _on_peers_pressed() -> void:
 func _on_seal_pressed() -> void:
 	client.seal_lobby()
 
+func _on_start_pressed(single_player: bool = false) -> void:
+	if not multiprocess.is_multiprocess_instance() and multiprocess_checkbox.button_pressed:
+		multiprocess.start_headless_process(false)
+	else:
+		client.start(_get_url(single_player), "", mesh.button_pressed)
 
-func _on_start_pressed() -> void:
-	client.start(host.text, "", mesh.button_pressed)
-	
-func _on_join_pressed() -> void:
+func _get_url(single_player: bool) -> String:
+	var url: String
+	if single_player:
+		url = "ws://127.0.0.1:9080"
+	else:
+		url = host.text
+	return url
+
+func _on_join_pressed(single_player: bool = false) -> void:
 	if room.text.is_empty():
 		_log("Please enter room code")
 		return
 
-	client.start(host.text, room.text, mesh.button_pressed)
+	client.start(_get_url(single_player), room.text, mesh.button_pressed)
 
 func _on_refresh_pressed() -> void:
 	client.start(host.text, "", mesh.button_pressed, false)
@@ -92,10 +104,22 @@ func _on_stop_pressed() -> void:
 	client.stop()
 
 func _on_start_game_pressed():
-	if MultiplayerSceneSwitcher.switch_scenes(main.gameScene):
+	if multiprocess.is_multiprocess_instance_running():
+		_on_start_game_pressed_rpc.rpc_id(MultiplayerPeer.TARGET_PEER_SERVER)
+	elif not multiprocess.is_multiprocess_instance() and multiprocess_checkbox.button_pressed:
+		multiprocess.start_headless_process(true)
+	elif MultiplayerSceneSwitcher.switch_scenes(main.gameScene):
 		multiplayerUiRoot.visible = false
 	else:
 		_log("Cannot start game without authority")
+
+@rpc("any_peer", "call_remote", "reliable")
+func _on_start_game_pressed_rpc():
+	if not multiprocess.is_rpc_safe(self):
+		printerr("Invalid state")
+		return
+	
+	_on_start_game_pressed()
 
 func _on_room_list_activated(id: int) -> void:
 	var room: String = room_list.get_item_metadata(id)

@@ -40,11 +40,11 @@ func _ready() -> void:
 	_distance_update()
 
 	start()
-	timeout.connect(_on_tick)
+	timeout.connect(_on_tick.call_deferred)
 
 func _on_tick():
 	for mixer in mixers:
-		mixer.advance(wait_time)
+		mixer.advance.call_deferred(wait_time)
 
 func _distance_update():
 	var camera: Camera3D = get_viewport().get_camera_3d()

@@ -31,7 +31,7 @@ func _init() -> void:
 	delta_interval = 99999999999
 	properties = replication_config.get_properties()
 	_positionrotation_to_transform(properties)
-	
+
 	ticks = randi() % tick_rate
 	original_tick_rate = tick_rate
 
@@ -59,14 +59,14 @@ func _enter_tree() -> void:
 	if is_multiplayer_authority():
 		for path: NodePath in properties:
 			resource_memory[path] = null
-			
-			if not get_tree().physics_frame.is_connected(tick):
-				get_tree().physics_frame.connect(tick)
+
+		if properties.size() > 0:
+			get_tree().physics_frame.connect(tick.call_deferred)
 
 func _exit_tree() -> void:
 	if is_multiplayer_authority():
-		if get_tree().physics_frame.is_connected(tick):
-			get_tree().physics_frame.disconnect(tick)
+		if get_tree().physics_frame.is_connected(tick.call_deferred):
+			get_tree().physics_frame.disconnect(tick.call_deferred)
 
 # NodePath to Variant
 var dirty_properties: Dictionary = {}

@@ -1,7 +1,9 @@
 class_name Interactor
-extends Area3D
+extends Node3D
 
-@export var actor : Node3D
+@export var actor: Node3D
+@export_flags_3d_physics var collision_mask: int
+@export var shape: Shape3D
 
 var interactable : Interactable = null:
 	set(value):
@@ -32,16 +34,18 @@ func _unhandled_input(event: InputEvent) -> void:
 		interacting = false
 		interact_progress = 0
 
+var shapecast: ShapeCast3D
+
 func _ready() -> void:
-	body_entered.connect(_on_enter)
-	body_exited.connect(_on_exit)
-
-func _on_enter(body: Node3D):
-	interactable = _get_interactable(body, true)
-	print("Interactable %s" % interactable)
-
-func _on_exit(body: Node3D):
-	if interactable == _get_interactable(body, false):
+	shapecast = ShapeCast3D.new()
+	shapecast.collision_mask = collision_mask
+	shapecast.shape = shape
+	add_child(shapecast)
+	
+func _physics_process(_delta: float) -> void:
+	if shapecast.is_colliding():
+		interactable = _get_interactable(shapecast.get_collider(0), true)
+	else:
 		interactable = null
 
 func _get_interactable(body: Node3D, error_on_no_interactable: bool) -> Interactable:

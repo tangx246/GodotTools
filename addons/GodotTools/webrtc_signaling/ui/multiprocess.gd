@@ -1,0 +1,85 @@
+class_name Multiprocess
+extends Node
+
+@onready var clientui: Node = $".."
+@onready var client: WSWebRTCSignalingClient = %Client
+
+const GROUP: StringName = "Multiprocess"
+const PATTERN: String = "[Signaling] Joined lobby "
+const AUTOHOST_PARAM: String = "--autohost"
+const SINGLEPLAYER_PARAM: String = "--singleplayer"
+
+var local_instance_single_player: bool = false
+
+func is_multiprocess_instance() -> bool:
+	return AUTOHOST_PARAM in OS.get_cmdline_args()
+	
+func is_multiprocess_instance_running() -> bool:
+	return not output.is_empty()
+
+static func is_local_instance_single_player(root: Node) -> bool:
+	return get_first_instance(root).local_instance_single_player
+
+static func is_multiprocess_instance_single_player() -> bool:
+	return SINGLEPLAYER_PARAM in OS.get_cmdline_args()
+
+static func get_first_instance(root: Node) -> Multiprocess:
+	return root.get_tree().get_first_node_in_group(GROUP)
+
+static func is_rpc_safe(root: Node) -> bool:
+	return get_first_instance(root).is_multiprocess_instance()
+
+func _enter_tree() -> void:
+	add_to_group(GROUP)
+	
+	if is_multiprocess_instance():
+		await get_tree().process_frame
+		var single_player: bool = is_multiprocess_instance_single_player()
+		print("Multiprocess Server started. Autohosting. Singleplayer: %s" % single_player)
+		clientui._on_start_pressed(single_player)
+
+		var timer: Timer = Timer.new()
+		timer.wait_time = 10
+		timer.autostart = true
+		timer.timeout.connect(func(): print("FPS: %s" % Performance.get_monitor(Performance.Monitor.TIME_FPS)))
+		add_child(timer)
+
+func _exit_tree() -> void:
+	_kill_headless_process()
+
+func _process_observer(pipe: FileAccess, is_error: bool) -> void:
+	while pipe.is_open() and pipe.get_error() == OK:
+		var line: String = pipe.get_line()
+		if is_error:
+			printerr("[Multiprocess] %s" % line)
+		else:
+			print("[Multiprocess] %s" % line)
+
+		if line.begins_with(PATTERN):
+			_on_server_created.call_deferred(line.lstrip(PATTERN))
+
+func _kill_headless_process():
+	if is_multiprocess_instance_running():
+		var pid: int = output["pid"]
+		print("Killing headless process %s" % pid)
+		OS.kill(pid)
+		output = {}
+
+var output: Dictionary
+func start_headless_process(single_player: bool):
+	_kill_headless_process()
+	
+	var params: Array[String] = ["--headless", AUTOHOST_PARAM]
+	if single_player:
+		params.append(SINGLEPLAYER_PARAM)
+	output = OS.execute_with_pipe(OS.get_executable_path(), params)
+	local_instance_single_player = single_player
+	WorkerThreadPoolExtended.add_task(_process_observer.bind(output["stdio"], false))
+	WorkerThreadPoolExtended.add_task(_process_observer.bind(output["stderr"], true))
+
+func _on_server_created(lobby: String):
+	clientui.room.text = lobby
+	
+	client.disconnected.connect(_kill_headless_process, CONNECT_ONE_SHOT)
+	var single_player: bool = is_local_instance_single_player(self)
+	clientui._on_join_pressed(single_player)
