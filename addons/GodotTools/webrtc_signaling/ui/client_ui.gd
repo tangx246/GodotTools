@@ -78,6 +78,7 @@ func _on_seal_pressed() -> void:
 
 func _on_start_pressed(single_player: bool = false) -> void:
 	if not multiprocess.is_multiprocess_instance() and multiprocess_checkbox.button_pressed:
+		_log("Starting multiplayer multiprocess instance")
 		multiprocess.start_headless_process(false)
 	else:
 		client.start(_get_url(single_player), "", mesh.button_pressed)
@@ -107,6 +108,7 @@ func _on_start_game_pressed():
 	if multiprocess.is_multiprocess_instance_running():
 		_on_start_game_pressed_rpc.rpc_id(MultiplayerPeer.TARGET_PEER_SERVER)
 	elif not multiprocess.is_multiprocess_instance() and multiprocess_checkbox.button_pressed:
+		_log("Starting single player multiprocess instance")
 		multiprocess.start_headless_process(true)
 	elif MultiplayerSceneSwitcher.switch_scenes(main.gameScene):
 		multiplayerUiRoot.visible = false

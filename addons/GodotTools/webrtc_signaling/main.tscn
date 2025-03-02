@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://dr242bojmpc28"]
+[gd_scene load_steps=6 format=3 uid="uid://dr242bojmpc28"]
 
 [ext_resource type="Script" path="res://addons/GodotTools/webrtc_signaling/main.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://5p1bp2kcs0py" path="res://addons/GodotTools/webrtc_signaling/ui/main_ui.tscn" id="1_rhk73"]
 [ext_resource type="Script" path="res://addons/GodotTools/node_utility/multiplayer_synchronizer_workaround/multiplayer_synchronizer_workaround.gd" id="3_ck0me"]
+[ext_resource type="Script" path="res://addons/GodotTools/webrtc_signaling/decorative_scenes.gd" id="4_vnl57"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ax6q8"]
 properties/0/path = NodePath(".:visible")
@@ -25,3 +26,7 @@ sleepy_ticks = false
 spawn_path = NodePath("../GameRoot")
 
 [node name="GameRoot" type="Node" parent="." groups=["GameRoot"]]
+unique_name_in_owner = true
+
+[node name="DecorativeScenes" type="Node" parent="."]
+script = ExtResource("4_vnl57")

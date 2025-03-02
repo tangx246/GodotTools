@@ -7,23 +7,22 @@ extends Node3D
 var navigation_agent: NavigationAgent3D
 var velocity: Vector3
 
-var raycast: RayCast3D
 func _enter_tree() -> void:
 	navigation_agent = get_node("NavigationAgent3D")
 	navigation_agent.velocity_computed.connect(_on_velocity_computed)
+
+func _exit_tree() -> void:
+	navigation_agent.velocity_computed.disconnect(_on_velocity_computed)
+
+var raycast: RayCast3D
+func _ready() -> void:
+	ticks = randi() % tick_rate
 	
 	raycast = RayCast3D.new()
 	raycast.collision_mask = floor_mask
 	raycast.position = raycast.position + Vector3(0, 0.5, 0)
 	raycast.target_position = Vector3(0, -1.5, 0)
 	add_child(raycast)
-
-func _exit_tree() -> void:
-	navigation_agent.velocity_computed.disconnect(_on_velocity_computed)
-	remove_child(raycast)
-
-func _ready() -> void:
-	ticks = randi() % tick_rate
 
 func set_movement_target(movement_target: Vector3):
 	navigation_agent.set_target_position(movement_target)

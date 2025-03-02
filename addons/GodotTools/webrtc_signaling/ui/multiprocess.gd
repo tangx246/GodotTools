@@ -10,6 +10,7 @@ const AUTOHOST_PARAM: String = "--autohost"
 const SINGLEPLAYER_PARAM: String = "--singleplayer"
 
 var local_instance_single_player: bool = false
+var first_peer_id: int = -1
 
 func is_multiprocess_instance() -> bool:
 	return AUTOHOST_PARAM in OS.get_cmdline_args()
@@ -44,18 +45,22 @@ func _enter_tree() -> void:
 		timer.timeout.connect(func(): print("FPS: %s" % Performance.get_monitor(Performance.Monitor.TIME_FPS)))
 		add_child(timer)
 		
-		multiplayer.peer_disconnected.connect(_on_peer_disconnected.unbind(1))
+		multiplayer.peer_connected.connect(_on_peer_connected, CONNECT_ONE_SHOT)
+		multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 
-func _on_peer_disconnected():
-	if multiplayer.get_peers().size() <= 0:
-		print("No more peers in multiprocess instance. Quitting")
+func _on_peer_connected(id: int):
+	first_peer_id = id
+
+func _on_peer_disconnected(id: int):
+	if multiplayer.get_peers().size() <= 0 or id == first_peer_id:
+		print("No more peers in multiprocess instance or first peer %s left. Quitting" % id)
 		get_tree().quit()
 
 func _exit_tree() -> void:
 	_kill_headless_process()
 	
-	if multiplayer.peer_disconnected.is_connected(_on_peer_disconnected.unbind(1)):
-		multiplayer.peer_disconnected.disconnect(_on_peer_disconnected.unbind(1))
+	if multiplayer.peer_disconnected.is_connected(_on_peer_disconnected):
+		multiplayer.peer_disconnected.disconnect(_on_peer_disconnected)
 
 func _process_observer(pipe: FileAccess, is_error: bool) -> void:
 	while pipe.is_open() and pipe.get_error() == OK:

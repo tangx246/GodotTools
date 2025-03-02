@@ -6,7 +6,7 @@ extends Node
 		return current_hp
 	set(value):
 		var prev_hp = current_hp
-		current_hp = value
+		current_hp = clampf(value, 0, max_hp)
 		current_hp_changed.emit(prev_hp, value)
 @export var max_hp: float:
 	get:
@@ -71,7 +71,7 @@ func damage(amount: float, source: Node = null, ignore_damage_modifiers: bool = 
 	var modified_amount: float = amount if ignore_damage_modifiers else _get_modified_damage(amount, source, collision_shape_index)
 	
 	var prev_value = current_hp
-	current_hp = maxf(current_hp - modified_amount, 0)
+	current_hp = current_hp - modified_amount
 	
 	if not source:
 		source = get_parent()
