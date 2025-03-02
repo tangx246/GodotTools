@@ -1,12 +1,6 @@
-[gd_resource type="Resource" script_class="SoundTheme" load_steps=5 format=3 uid="uid://csv75vmf4u0v6"]
+[gd_resource type="Resource" script_class="SoundTheme" load_steps=2 format=3 uid="uid://csv75vmf4u0v6"]
 
-[ext_resource type="AudioStream" uid="uid://0n4x584bb6er" path="res://assets/sounds/UINoise/Click.ogg" id="1_3ngb4"]
 [ext_resource type="Script" path="res://addons/GodotTools/audio/ui_sound_themes/sound_theme.gd" id="1_lkvdf"]
-[ext_resource type="AudioStream" uid="uid://cal0pkea2d0im" path="res://assets/sounds/UINoise/Hover.ogg" id="2_j3shx"]
-[ext_resource type="AudioStream" uid="uid://cs1s4o107n4ip" path="res://assets/sounds/UINoise/UnClick.ogg" id="3_obnhr"]
 
 [resource]
 script = ExtResource("1_lkvdf")
-button_hover = ExtResource("2_j3shx")
-button_down = ExtResource("1_3ngb4")
-button_up = ExtResource("3_obnhr")
