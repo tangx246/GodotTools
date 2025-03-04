@@ -160,7 +160,7 @@ func poll() -> void:
 		p.ws.poll()
 		while p.is_ws_open() and p.ws.get_available_packet_count():
 			if not _parse_msg(p):
-				print("Parse message failed from peer %d" % p.id)
+				print("Parse message failed from peer %d, %s" % [p.id, p])
 				to_remove.push_back(p.id)
 				p.ws.close()
 				break
@@ -211,8 +211,9 @@ func _parse_msg(peer: Peer) -> bool:
 	if typeof(parsed) != TYPE_DICTIONARY or not parsed.has("type") or not parsed.has("id") or \
 		typeof(parsed.get("data")) != TYPE_STRING:
 		return false
-	if not str(parsed.type).is_valid_int() or not str(parsed.id).is_valid_int():
-		return false
+	# Godot 4.4 changed is_valid_int behavior
+	#if not str(parsed.type).`() or not str(parsed.id).is_valid_int():
+		#return false
 
 	var msg := {
 		"type": str(parsed.type).to_int(),

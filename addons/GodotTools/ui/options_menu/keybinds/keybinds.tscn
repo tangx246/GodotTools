@@ -1,0 +1,33 @@
+[gd_scene load_steps=3 format=3 uid="uid://cvc2elttch4nb"]
+
+[ext_resource type="Script" uid="uid://c8dsr7jevhmbg" path="res://addons/GodotTools/ui/options_menu/keybinds/keybinds.gd" id="1_fluxy"]
+[ext_resource type="PackedScene" uid="uid://b4gkf7xowtxdk" path="res://addons/GodotTools/ui/options_menu/keybinds/keybind_item.tscn" id="2_mkr0t"]
+
+[node name="Keybinds" type="VBoxContainer"]
+offset_right = 106.0
+offset_bottom = 54.0
+script = ExtResource("1_fluxy")
+keybind_item = ExtResource("2_mkr0t")
+metadata/_tab_index = 0
+
+[node name="Reset" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Reset to Defaults"
+
+[node name="BindList" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="KeybindItem" parent="BindList" instance=ExtResource("2_mkr0t")]
+layout_mode = 2
+
+[node name="KeybindItem2" parent="BindList" instance=ExtResource("2_mkr0t")]
+layout_mode = 2
+
+[node name="Label" parent="BindList/KeybindItem2" index="0"]
+text = "Aim"
+
+[editable path="BindList/KeybindItem"]
+[editable path="BindList/KeybindItem2"]

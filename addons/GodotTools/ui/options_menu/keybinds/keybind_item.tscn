@@ -1,0 +1,40 @@
+[gd_scene load_steps=2 format=3 uid="uid://b4gkf7xowtxdk"]
+
+[ext_resource type="Script" uid="uid://vimmuaprkl2d" path="res://addons/GodotTools/ui/options_menu/keybinds/keybind_item.gd" id="1_ymctv"]
+
+[node name="KeybindItem" type="HBoxContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_ymctv")
+
+[node name="Label" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Fire"
+
+[node name="Events" type="HBoxContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Add" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+text = "+"
+
+[node name="PopupPanel" type="PopupPanel" parent="."]
+unique_name_in_owner = true
+gui_disable_input = true
+initial_position = 2
+size = Vector2i(205, 100)
+always_on_top = true
+mouse_passthrough = true
+
+[node name="Label" type="Label" parent="PopupPanel"]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 201.0
+offset_bottom = 96.0
+mouse_filter = 1
+text = "Press a button to bind"
+horizontal_alignment = 1
+vertical_alignment = 1

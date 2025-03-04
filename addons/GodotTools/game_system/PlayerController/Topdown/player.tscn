@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://dx56qb8o8yxf2"]
 
-[ext_resource type="Script" path="res://addons/GodotTools/game_system/PlayerController/Topdown/Player.gd" id="1_ogl6l"]
-[ext_resource type="Script" path="res://addons/GodotTools/game_system/PlayerController/smoothing.gd" id="2_dqrsy"]
+[ext_resource type="Script" uid="uid://c6kiq45inrt4e" path="res://addons/GodotTools/game_system/PlayerController/Topdown/Player.gd" id="1_ogl6l"]
+[ext_resource type="Script" uid="uid://lqyjkp3cgdtw" path="res://addons/GodotTools/game_system/PlayerController/smoothing.gd" id="2_dqrsy"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_rydnu"]
 height = 1.8

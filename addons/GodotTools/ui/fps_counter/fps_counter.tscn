@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://ylgniiud18f4"]
 
-[ext_resource type="Script" path="res://addons/GodotTools/ui/fps_counter/fps_counter.gd" id="1_okvfo"]
+[ext_resource type="Script" uid="uid://b5v3nlcqbcjxk" path="res://addons/GodotTools/ui/fps_counter/fps_counter.gd" id="1_okvfo"]
 
 [node name="FpsCounter" type="Panel"]
 script = ExtResource("1_okvfo")

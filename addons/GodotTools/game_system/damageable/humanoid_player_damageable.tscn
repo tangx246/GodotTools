@@ -1,11 +1,11 @@
 [gd_scene load_steps=15 format=3 uid="uid://caymbqompufss"]
 
-[ext_resource type="Script" path="res://addons/GodotTools/game_system/damageable/Damageable.gd" id="1_f1f5u"]
-[ext_resource type="Script" path="res://addons/GodotTools/node_utility/follow_target/follow_target.gd" id="2_ajkxx"]
-[ext_resource type="Script" path="res://addons/GodotTools/game_system/damageable/authority_collision_layer_setter.gd" id="3_iktyc"]
-[ext_resource type="Script" path="res://addons/GodotTools/node_utility/multiplayer_synchronizer_workaround/multiplayer_synchronizer_workaround.gd" id="4_mkjdy"]
-[ext_resource type="Script" path="res://addons/GodotTools/game_system/damageable/modifier/percentage_damage_modifier/percentage_damage_modifier.gd" id="5_f7a4h"]
-[ext_resource type="Script" path="res://addons/GodotTools/game_system/damageable/modifier/percentage_damage_modifier/indexed_damage_modifier.gd" id="6_pio6e"]
+[ext_resource type="Script" uid="uid://vnxiuxrgo2ea" path="res://addons/GodotTools/game_system/damageable/Damageable.gd" id="1_f1f5u"]
+[ext_resource type="Script" uid="uid://bqth8w8x7lhd0" path="res://addons/GodotTools/node_utility/follow_target/follow_target.gd" id="2_ajkxx"]
+[ext_resource type="Script" uid="uid://d2nug8km7g6o" path="res://addons/GodotTools/game_system/damageable/authority_collision_layer_setter.gd" id="3_iktyc"]
+[ext_resource type="Script" uid="uid://bgxjal58paq31" path="res://addons/GodotTools/node_utility/multiplayer_synchronizer_workaround/multiplayer_synchronizer_workaround.gd" id="4_mkjdy"]
+[ext_resource type="Script" uid="uid://cesnsk3d7kfi4" path="res://addons/GodotTools/game_system/damageable/modifier/percentage_damage_modifier/percentage_damage_modifier.gd" id="5_f7a4h"]
+[ext_resource type="Script" uid="uid://qbfaom0wmxau" path="res://addons/GodotTools/game_system/damageable/modifier/percentage_damage_modifier/indexed_damage_modifier.gd" id="6_pio6e"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_mf1om"]
 radius = 0.175

@@ -1,11 +1,11 @@
 [gd_scene load_steps=7 format=3 uid="uid://cpwp4xx6mv5p"]
 
-[ext_resource type="Script" path="res://addons/GodotTools/webrtc_signaling/ui/client_ui.gd" id="1"]
-[ext_resource type="Script" path="res://addons/GodotTools/webrtc_signaling/client/multiplayer_client.gd" id="2"]
-[ext_resource type="Script" path="res://addons/GodotTools/webrtc_signaling/ui/multiprocess.gd" id="2_nwvpy"]
-[ext_resource type="Script" path="res://addons/GodotTools/webrtc_signaling/ui/room_tab_container.gd" id="3_1n8go"]
-[ext_resource type="Script" path="res://addons/GodotTools/webrtc_signaling/ui/player_list.gd" id="4_blxr0"]
-[ext_resource type="Script" path="res://addons/GodotTools/webrtc_signaling/ui/authority_actions.gd" id="4_dx57n"]
+[ext_resource type="Script" uid="uid://dopyo7y588l7r" path="res://addons/GodotTools/webrtc_signaling/ui/client_ui.gd" id="1"]
+[ext_resource type="Script" uid="uid://cfgcyyb8hg7re" path="res://addons/GodotTools/webrtc_signaling/client/multiplayer_client.gd" id="2"]
+[ext_resource type="Script" uid="uid://dgwrvhb6ws5ss" path="res://addons/GodotTools/webrtc_signaling/ui/multiprocess.gd" id="2_nwvpy"]
+[ext_resource type="Script" uid="uid://cpy6eglnf65da" path="res://addons/GodotTools/webrtc_signaling/ui/room_tab_container.gd" id="3_1n8go"]
+[ext_resource type="Script" uid="uid://dkbofririgxoe" path="res://addons/GodotTools/webrtc_signaling/ui/player_list.gd" id="4_blxr0"]
+[ext_resource type="Script" uid="uid://bd441qkfic0y1" path="res://addons/GodotTools/webrtc_signaling/ui/authority_actions.gd" id="4_dx57n"]
 
 [node name="ClientUI" type="Control"]
 layout_mode = 3

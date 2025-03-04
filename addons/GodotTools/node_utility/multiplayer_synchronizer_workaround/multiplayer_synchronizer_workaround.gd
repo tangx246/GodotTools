@@ -13,6 +13,7 @@ extends MultiplayerSynchronizer
 ## How many ticks before this synchronizer is considered sleepy
 @export var sleepy_tick_threshold: int = 300
 
+
 var original_tick_rate: int
 
 # Maps NodePath to Variant

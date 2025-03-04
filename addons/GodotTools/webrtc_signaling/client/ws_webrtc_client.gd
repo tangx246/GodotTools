@@ -73,8 +73,9 @@ func _parse_msg() -> bool:
 		return false
 
 	var msg := parsed as Dictionary
-	if not str(msg.type).is_valid_int() or not str(msg.id).is_valid_int():
-		return false
+	# Godot 4.4 changed is_valid_int() behavior
+	#if not str(msg.type).is_valid_int() or not str(msg.id).is_valid_int():
+		#return false
 
 	var type := str(msg.type).to_int()
 	var src_id := str(msg.id).to_int()
@@ -102,8 +103,9 @@ func _parse_msg() -> bool:
 		var candidate: PackedStringArray = msg.data.split("\n", false)
 		if candidate.size() != 3:
 			return false
-		if not candidate[1].is_valid_int():
-			return false
+		# Godot 4.4 changed is_valid_int behavior
+		#if not candidate[1].is_valid_int():
+			#return false
 		candidate_received.emit(src_id, candidate[0], candidate[1].to_int(), candidate[2])
 	elif type == Message.REFRESH_ROOM_LIST:
 		room_list_received.emit(JSON.parse_string(msg.data))

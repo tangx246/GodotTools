@@ -1,0 +1,25 @@
+[gd_scene load_steps=2 format=3 uid="uid://bwate1hp34pw2"]
+
+[ext_resource type="Script" uid="uid://dihamk6x2yj4j" path="res://addons/GodotTools/ui/options_menu/video/fullscreen.gd" id="1_1jr12"]
+
+[node name="Video" type="VBoxContainer"]
+offset_right = 242.0
+offset_bottom = 25.0
+
+[node name="Window Mode" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Window Mode"]
+layout_mode = 2
+text = "Window Mode"
+
+[node name="Fullscreen" type="OptionButton" parent="Window Mode"]
+layout_mode = 2
+item_count = 3
+popup/item_0/text = "Windowed"
+popup/item_0/id = 0
+popup/item_1/text = "Borderless Fullscreen"
+popup/item_1/id = 1
+popup/item_2/text = "Fullscreen"
+popup/item_2/id = 2
+script = ExtResource("1_1jr12")

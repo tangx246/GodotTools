@@ -1,9 +1,9 @@
 [gd_scene load_steps=6 format=3 uid="uid://dr242bojmpc28"]
 
-[ext_resource type="Script" path="res://addons/GodotTools/webrtc_signaling/main.gd" id="1"]
+[ext_resource type="Script" uid="uid://b6vjf0k66niqq" path="res://addons/GodotTools/webrtc_signaling/main.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://5p1bp2kcs0py" path="res://addons/GodotTools/webrtc_signaling/ui/main_ui.tscn" id="1_rhk73"]
-[ext_resource type="Script" path="res://addons/GodotTools/node_utility/multiplayer_synchronizer_workaround/multiplayer_synchronizer_workaround.gd" id="3_ck0me"]
-[ext_resource type="Script" path="res://addons/GodotTools/webrtc_signaling/decorative_scenes.gd" id="4_vnl57"]
+[ext_resource type="Script" uid="uid://bgxjal58paq31" path="res://addons/GodotTools/node_utility/multiplayer_synchronizer_workaround/multiplayer_synchronizer_workaround.gd" id="3_ck0me"]
+[ext_resource type="Script" uid="uid://cf0y37ury0rop" path="res://addons/GodotTools/webrtc_signaling/decorative_scenes.gd" id="4_vnl57"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ax6q8"]
 properties/0/path = NodePath(".:visible")

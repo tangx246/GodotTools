@@ -52,5 +52,8 @@ func get_value(key: String, default: Variant = null) -> Variant:
 func has_key(key: String) -> bool:
 	return values.has(key)
 	
-func delete_key(key: String):
+func delete_key(key: String, save: bool = true):
 	values.erase(key)
+	
+	if save:
+		save()

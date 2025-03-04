@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://ptb02aoy8gn1"]
 
-[ext_resource type="PackedScene" uid="uid://c07y6e7ecwskb" path="res://addons/GodotTools/volume_control/volume.tscn" id="1_fobux"]
+[ext_resource type="PackedScene" uid="uid://c07y6e7ecwskb" path="res://addons/GodotTools/ui/volume_control/volume.tscn" id="1_fobux"]
 
 [node name="Volume Container" type="HBoxContainer"]
 offset_right = 168.0
@@ -8,7 +8,7 @@ offset_bottom = 40.0
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 2
-text = "Volume:"
+text = "Master Volume"
 
 [node name="Volume" parent="." instance=ExtResource("1_fobux")]
 layout_mode = 2

@@ -1,0 +1,39 @@
+[gd_scene load_steps=4 format=3 uid="uid://1tk7mqago26t"]
+
+[ext_resource type="PackedScene" uid="uid://bwate1hp34pw2" path="res://addons/GodotTools/ui/options_menu/video/video.tscn" id="1_1127u"]
+[ext_resource type="PackedScene" uid="uid://cvc2elttch4nb" path="res://addons/GodotTools/ui/options_menu/keybinds/keybinds.tscn" id="1_p0bru"]
+[ext_resource type="PackedScene" uid="uid://ptb02aoy8gn1" path="res://addons/GodotTools/ui/volume_control/volume_container.tscn" id="2_lbnda"]
+
+[node name="OptionsMenu" type="PanelContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TabContainer" type="TabContainer" parent="."]
+layout_mode = 2
+current_tab = 0
+
+[node name="Video" type="ScrollContainer" parent="TabContainer"]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="Video" parent="TabContainer/Video" instance=ExtResource("1_1127u")]
+layout_mode = 2
+
+[node name="Sound" type="ScrollContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="Volume Container" parent="TabContainer/Sound" instance=ExtResource("2_lbnda")]
+layout_mode = 2
+
+[node name="Keybinds" type="ScrollContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+
+[node name="Keybinds" parent="TabContainer/Keybinds" instance=ExtResource("1_p0bru")]
+layout_mode = 2
