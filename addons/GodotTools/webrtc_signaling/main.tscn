@@ -1,9 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://dr242bojmpc28"]
+[gd_scene load_steps=8 format=3 uid="uid://dr242bojmpc28"]
 
 [ext_resource type="Script" uid="uid://b6vjf0k66niqq" path="res://addons/GodotTools/webrtc_signaling/main.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://5p1bp2kcs0py" path="res://addons/GodotTools/webrtc_signaling/ui/main_ui.tscn" id="1_rhk73"]
+[ext_resource type="PackedScene" uid="uid://dluwl3qbyrbs4" path="res://addons/GodotTools/webrtc_signaling/ui/loading_screen.tscn" id="3_84oe2"]
 [ext_resource type="Script" uid="uid://bgxjal58paq31" path="res://addons/GodotTools/node_utility/multiplayer_synchronizer_workaround/multiplayer_synchronizer_workaround.gd" id="3_ck0me"]
 [ext_resource type="Script" uid="uid://cf0y37ury0rop" path="res://addons/GodotTools/webrtc_signaling/decorative_scenes.gd" id="4_vnl57"]
+[ext_resource type="Script" uid="uid://i68o564070pq" path="res://addons/GodotTools/webrtc_signaling/game/scene_switcher.gd" id="5_j5sg8"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ax6q8"]
 properties/0/path = NodePath(".:visible")
@@ -12,6 +14,11 @@ properties/0/replication_mode = 2
 
 [node name="Main" type="Node"]
 script = ExtResource("1")
+
+[node name="MultiplayerSceneSwitcher" type="Node" parent="."]
+script = ExtResource("5_j5sg8")
+loading_screen = ExtResource("3_84oe2")
+metadata/_custom_type_script = "uid://i68o564070pq"
 
 [node name="Control" parent="." instance=ExtResource("1_rhk73")]
 
@@ -22,11 +29,12 @@ script = ExtResource("3_ck0me")
 tick_rate = 10
 sleepy_ticks = false
 
-[node name="LevelSpawner" type="MultiplayerSpawner" parent="."]
+[node name="LevelSpawner" type="MultiplayerSpawner" parent="." groups=["LevelSpawner"]]
 spawn_path = NodePath("../GameRoot")
 
 [node name="GameRoot" type="Node" parent="." groups=["GameRoot"]]
 unique_name_in_owner = true
 
-[node name="DecorativeScenes" type="Node" parent="."]
+[node name="DecorativeScenes" type="Node" parent="." node_paths=PackedStringArray("root")]
 script = ExtResource("4_vnl57")
+root = NodePath("..")

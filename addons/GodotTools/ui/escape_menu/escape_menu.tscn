@@ -1,0 +1,48 @@
+[gd_scene load_steps=4 format=3 uid="uid://bj7g4qji8x0c3"]
+
+[ext_resource type="Script" uid="uid://cucpeilg0mrn3" path="res://addons/GodotTools/ui/escape_menu/leave_game.gd" id="1_pjlnu"]
+[ext_resource type="PackedScene" uid="uid://1tk7mqago26t" path="res://addons/GodotTools/ui/options_menu/options_menu.tscn" id="1_wlkxg"]
+[ext_resource type="Script" uid="uid://7dj8tqi63n1l" path="res://addons/GodotTools/ui/escape_menu/quit_game.gd" id="2_41r75"]
+
+[node name="EscapeMenu" type="PopupPanel"]
+initial_position = 2
+size = Vector2i(165, 91)
+visible = true
+transient_to_focused = true
+unresizable = false
+borderless = false
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 161.0
+offset_bottom = 87.0
+
+[node name="Options" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Options"
+
+[node name="Button" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Leave Game"
+script = ExtResource("1_pjlnu")
+
+[node name="Button2" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Exit to Desktop"
+script = ExtResource("2_41r75")
+
+[node name="PopupPanel" type="PopupPanel" parent="."]
+initial_position = 2
+size = Vector2i(500, 500)
+transient_to_focused = true
+unresizable = false
+borderless = false
+
+[node name="OptionsMenu" parent="PopupPanel" instance=ExtResource("1_wlkxg")]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 496.0
+offset_bottom = 496.0
+
+[connection signal="pressed" from="VBoxContainer/Options" to="PopupPanel" method="popup"]

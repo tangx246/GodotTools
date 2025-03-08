@@ -30,7 +30,6 @@ signal hp_changed()
 signal current_hp_reduced()
 
 func _enter_tree() -> void:
-	get_tree().process_frame
 	current_hp_changed.connect(_on_current_hp_changed)
 	current_hp_changed.connect(_death_check)
 	max_hp_changed.connect(_on_max_hp_changed)

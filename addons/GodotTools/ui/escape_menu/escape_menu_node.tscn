@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://b0530vhok3l00"]
+
+[ext_resource type="Script" uid="uid://ckmqds1f344x2" path="res://addons/GodotTools/ui/escape_menu/escape_menu_node.gd" id="1_2uih4"]
+[ext_resource type="PackedScene" uid="uid://bj7g4qji8x0c3" path="res://addons/GodotTools/ui/escape_menu/escape_menu.tscn" id="1_vo4b0"]
+
+[node name="EscapeMenuNode" type="Node"]
+script = ExtResource("1_2uih4")
+
+[node name="EscapeMenu" parent="." instance=ExtResource("1_vo4b0")]
+unique_name_in_owner = true
+auto_translate_mode = 1
+visible = false

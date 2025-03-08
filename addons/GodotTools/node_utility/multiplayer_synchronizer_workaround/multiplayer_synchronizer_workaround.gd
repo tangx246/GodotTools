@@ -24,7 +24,24 @@ var nodepath_to_cached_nodepath: Dictionary = {}
 class CachedNodePath:
 	var node: Node
 	var path_subname: StringName
-	var is_dictionary: bool
+	var is_dictionary: bool:
+		set(value):
+			is_dictionary = value
+			if is_dictionary:
+				resource_returner = get_resource_dictionary
+			else:
+				resource_returner = get_resource
+	var resource_returner: Callable
+	
+	func _init() -> void:
+		resource_returner = get_resource
+	
+	func get_resource(resource: Variant) -> Variant:
+		return resource
+		
+	func get_resource_dictionary(resource: Variant) -> Variant:
+		# resource is a Dictionary
+		return resource.duplicate(true)
 
 func _init() -> void:
 	# 3170 years
@@ -78,17 +95,7 @@ func tick() -> void:
 	if ticks != 0:
 		return
 	
-	dirty_properties.clear()
-	for path: NodePath in properties:
-		var cached: CachedNodePath = _get_cached_node_path(path)
-		var resource: Variant = cached.node.get(cached.path_subname)
-
-		if resource_memory[path] != resource:
-			if cached.is_dictionary:
-				resource_memory[path] = (resource as Dictionary).duplicate(true)
-			else:
-				resource_memory[path] = resource
-			dirty_properties[path] = resource
+	_do_compare()
 				
 	if not dirty_properties.is_empty():
 		ticks_since_change = 0
@@ -102,6 +109,16 @@ func tick() -> void:
 		if sleepy_ticks and ticks_since_change > sleepy_tick_threshold:
 			tick_rate = sleepy_tick_rate
 			ticks = randi() % tick_rate
+
+func _do_compare():
+	dirty_properties.clear()
+	for path: NodePath in properties:
+		var cached: CachedNodePath = _get_cached_node_path(path)
+		var resource: Variant = cached.node.get(cached.path_subname)
+
+		if resource_memory[path] != resource:
+			resource_memory[path] = cached.resource_returner.call(resource)
+			dirty_properties[path] = resource
 
 func _get_cached_node_path(path: NodePath) -> CachedNodePath:
 	if not nodepath_to_cached_nodepath.has(path):
