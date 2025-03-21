@@ -2,8 +2,14 @@ class_name Interactable
 extends Node3D
 
 @export var interact_time : float = 0
+## If true, will only trigger the signal on authority. Otherwise, triggers everywhere
+@export var authority_only: bool = true
 
 signal interacted(interactor: Interactor)
+signal no_param_interacted()
+
+func _ready() -> void:
+	interacted.connect(no_param_interacted.emit.unbind(1))
 
 func interact(interactor: Interactor):
 	interact_rpc.rpc(interactor.get_path())
@@ -14,5 +20,5 @@ func interact_rpc(interactor_path: NodePath):
 	if not interactor:
 		return
 
-	if is_multiplayer_authority():
+	if (not authority_only) or is_multiplayer_authority():
 		interacted.emit(interactor)

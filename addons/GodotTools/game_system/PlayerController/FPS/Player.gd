@@ -12,6 +12,8 @@ extends CharacterBody3D
 var jump_velocity_to_add : float = 0
 var mouse_movement : Vector2 = Vector2.ZERO
 
+signal hit_floor(fall_speed: float, fall_height: float)
+
 func get_input() -> Vector3:
 	var input_dir = Input.get_vector("Strafe Left", "Strafe Right", "Move Forward", "Move Backward")
 	var velocity2 = (input_dir * speed)
@@ -70,9 +72,16 @@ func _process(_delta: float) -> void:
 func _physics_process(delta):
 	velocity = get_input()
 	velocity += get_gravity() * delta
-	velocity -= get_gravity().normalized() * jump_velocity_to_add
+	var gravity_direction: Vector3 = get_gravity().normalized()
+	velocity -= gravity_direction * jump_velocity_to_add
 	jump_velocity_to_add = 0
 	
 	velocity = global_transform.basis * velocity
 	
+	var previously_in_air: bool = not is_on_floor()
+	var prev_velocity: Vector3 = velocity
 	move_and_slide()
+	
+	if previously_in_air and is_on_floor():
+		var fall_speed: float = prev_velocity.dot(gravity_direction)
+		hit_floor.emit(fall_speed, (fall_speed * fall_speed) / (2 * get_gravity().length()))

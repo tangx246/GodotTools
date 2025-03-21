@@ -15,12 +15,12 @@ func _ready() -> void:
 
 func set_renderers():
 	var renderers = find_children("", "VisualInstance3D", true, false)
-	for renderer in renderers:
+	for renderer: VisualInstance3D in renderers:
 		var mesh := renderer as MeshInstance3D
-		mesh.layers = fps_arms_layer if is_multiplayer_authority() else 0
-		mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-
-		replace_materials(mesh)
+		if mesh:
+			mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			replace_materials(mesh)
+		renderer.layers = fps_arms_layer if is_multiplayer_authority() else 0
 		
 func replace_materials(mesh: MeshInstance3D) -> void:
 	for i: int in range(mesh.get_surface_override_material_count()):

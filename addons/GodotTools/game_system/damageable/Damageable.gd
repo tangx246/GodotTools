@@ -69,11 +69,11 @@ func _get_modified_damage(original_amount: float, source: Node, collision_shape_
 func damage(amount: float, source: Node = null, ignore_damage_modifiers: bool = false, collision_shape_index: int = 0) -> float:
 	var modified_amount: float = amount if ignore_damage_modifiers else _get_modified_damage(amount, source, collision_shape_index)
 	
-	var prev_value = current_hp
-	current_hp = current_hp - modified_amount
-	
 	if not source:
 		source = get_parent()
+	
+	var prev_value = current_hp
+	current_hp = current_hp - modified_amount
 	
 	current_hp_changed_by_source.emit(prev_value, current_hp, source)
 

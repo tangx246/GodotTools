@@ -18,8 +18,18 @@ static func serialize(obj: Object, use_uid: bool = true) -> String:
 		else:
 			save_data[name] = obj.get(name)
 	
-	# Remove some extra stuff
-	for key: String in ["resource_path", "resource_name", "resource_local_to_scene"]:
+	# Remove some extra built-in stuff
+	for key: String in [
+		"resource_path", 
+		"resource_name", 
+		"resource_local_to_scene",
+		"auto_translate_mode",
+		"editor_description",
+		"physics_interpolation_mode",
+		"process_mode",
+		"process_physics_priority",
+		"process_priority",
+		"process_thread_group"]:
 		save_data.erase(key)
 	
 	return JSON.stringify(save_data, "", true, true)

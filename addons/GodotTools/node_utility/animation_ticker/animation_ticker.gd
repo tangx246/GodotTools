@@ -15,14 +15,20 @@ var original_wait_time: float
 func _init() -> void:
 	original_wait_time = wait_time
 
+var editor_wait_time: float = 0
 func _ready() -> void:
 	mixers = []
 	mixers.assign(root.find_children("", "AnimationMixer"))
 	
 	if Engine.is_editor_hint():
 		get_tree().process_frame.connect(func():
-			for mixer in mixers:
-				mixer.advance(get_process_delta_time()))
+			editor_wait_time += get_process_delta_time()
+			if editor_wait_time >= wait_time:
+				for mixer in mixers:
+					mixer.advance(editor_wait_time)
+					
+				editor_wait_time = 0
+		)
 
 	stop()
 	var timer: Timer = Timer.new()
