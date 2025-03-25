@@ -44,7 +44,9 @@ func _ready() -> void:
 	
 func _physics_process(_delta: float) -> void:
 	if shapecast.is_colliding():
-		interactable = _get_interactable(shapecast.get_collider(0), true)
+		var body = shapecast.get_collider(0)
+		if is_instance_valid(body) and not body.is_queued_for_deletion():
+			interactable = _get_interactable(body, true)
 	else:
 		interactable = null
 

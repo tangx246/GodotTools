@@ -1,6 +1,6 @@
 extends Control
 
-@onready var client: WSWebRTCSignalingClient = %Client
+@onready var client: WebsocketSignalingClient = %Client
 @onready var host: LineEdit = %Host
 @onready var room: LineEdit = %RoomSecret
 @onready var mesh: CheckBox = %Mesh
@@ -12,11 +12,7 @@ extends Control
 @onready var room_list: ItemList = %RoomList
 
 func _ready() -> void:
-	client.lobby_joined.connect(_lobby_joined)
-	client.lobby_sealed.connect(_lobby_sealed)
-	client.connected.connect(_connected)
-	client.disconnected.connect(_disconnected)
-	client.room_list_received.connect(_room_list_received)
+	_connect_signals(client)
 
 	multiplayer.connected_to_server.connect(_mp_server_connected)
 	multiplayer.connection_failed.connect(_mp_server_disconnect)
@@ -31,6 +27,13 @@ func _ready() -> void:
 	#get_tree().get_multiplayer().peer_disconnected.connect(_mp_peer_disconnected)
 
 	room_list.item_activated.connect(_on_room_list_activated)
+
+func _connect_signals(client: WebsocketSignalingClient):
+	client.lobby_joined.connect(_lobby_joined)
+	client.lobby_sealed.connect(_lobby_sealed)
+	client.connected.connect(_connected)
+	client.disconnected.connect(_disconnected)
+	client.room_list_received.connect(_room_list_received)
 
 func _mp_server_connected() -> void:
 	_log("[Multiplayer] Server connected (I am %d)" % client.rtc_mp.get_unique_id())
@@ -81,7 +84,12 @@ func _on_start_pressed(single_player: bool = false) -> void:
 		_log("Starting multiplayer multiprocess instance")
 		multiprocess.start_headless_process(false)
 	else:
-		client.start(_get_url(single_player), "", mesh.button_pressed)
+		var client_to_use: WebsocketSignalingClient
+		if single_player:
+			client_to_use = _create_singleplayer_client()
+		else:
+			client_to_use = client
+		client_to_use.start(_get_url(single_player), "", mesh.button_pressed)
 
 func _get_url(single_player: bool) -> String:
 	var url: String
@@ -96,7 +104,20 @@ func _on_join_pressed(single_player: bool = false) -> void:
 		_log("Please enter room code")
 		return
 
-	client.start(_get_url(single_player), room.text, mesh.button_pressed)
+	var client_to_use: WebsocketSignalingClient
+	if single_player:
+		client_to_use = _create_singleplayer_client()
+	else:
+		client_to_use = client
+
+	client_to_use.start(_get_url(single_player), room.text, mesh.button_pressed)
+
+func _create_singleplayer_client() -> LocalhostSignalingClient:
+	_log("Creating single player client")
+	var client_to_use: LocalhostSignalingClient = LocalhostSignalingClient.new()
+	add_child(client_to_use)
+	_connect_signals(client_to_use)
+	return client_to_use
 
 func _on_refresh_pressed() -> void:
 	client.start(host.text, "", mesh.button_pressed, false)

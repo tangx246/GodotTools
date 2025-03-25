@@ -1,6 +1,6 @@
 extends ItemList
 
-@onready var client: WSWebRTCSignalingClient = %Client
+@onready var client: WebsocketSignalingClient = %Client
 
 func _ready() -> void:
 	get_tree().get_multiplayer().peer_connected.connect(_on_peer_changed.unbind(1))

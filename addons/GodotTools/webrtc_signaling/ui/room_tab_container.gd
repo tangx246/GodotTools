@@ -1,6 +1,6 @@
 extends TabContainer
 
-@onready var client: WSWebRTCSignalingClient = %Client
+@onready var client: WebsocketSignalingClient = %Client
 
 func _ready() -> void:
 	current_tab = 0

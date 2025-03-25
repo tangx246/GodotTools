@@ -1,6 +1,5 @@
 extends HBoxContainer
 
-@onready var client: WSWebRTCSignalingClient = %Client
 @onready var multiprocess: Multiprocess = %Multiprocess
 
 func _ready() -> void:

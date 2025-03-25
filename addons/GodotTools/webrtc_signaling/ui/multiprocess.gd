@@ -2,7 +2,6 @@ class_name Multiprocess
 extends Node
 
 @onready var clientui: Node = $".."
-@onready var client: WSWebRTCSignalingClient = %Client
 
 const GROUP: StringName = "Multiprocess"
 const PATTERN: String = "[Signaling] Joined lobby "
