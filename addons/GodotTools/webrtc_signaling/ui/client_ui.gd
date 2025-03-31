@@ -36,7 +36,7 @@ func _connect_signals(client: WebsocketSignalingClient):
 	client.room_list_received.connect(_room_list_received)
 
 func _mp_server_connected() -> void:
-	_log("[Multiplayer] Server connected (I am %d)" % client.rtc_mp.get_unique_id())
+	_log("[Multiplayer] Server connected (I am %d)" % multiplayer.get_unique_id())
 
 
 func _mp_server_disconnect() -> void:
@@ -123,6 +123,8 @@ func _on_refresh_pressed() -> void:
 	client.start(host.text, "", mesh.button_pressed, false)
 
 func _on_stop_pressed() -> void:
+	if multiprocess.is_multiprocess_instance_running():
+		multiprocess.kill_headless_process()
 	client.stop()
 
 func _on_start_game_pressed():

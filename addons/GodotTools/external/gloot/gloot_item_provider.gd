@@ -7,11 +7,22 @@ extends ItemProvider
 const KEY_STACK_SIZE = "stack_size"
 
 func _ready() -> void:
-	for inventory in inventories:
-		inventory.contents_changed.connect(refresh_item_count)
-		inventory.item_property_changed.connect(refresh_item_count.unbind(2))
-		
 	refresh_item_count()
+
+func _enter_tree() -> void:
+	await get_tree().process_frame
+	for inventory in inventories:
+		if not inventory.contents_changed.is_connected(refresh_item_count):
+			inventory.contents_changed.connect(refresh_item_count)
+		if not inventory.item_property_changed.is_connected(refresh_item_count.unbind(2)):
+			inventory.item_property_changed.connect(refresh_item_count.unbind(2))
+
+func _exit_tree() -> void:
+	for inventory in inventories:
+		if inventory.contents_changed.is_connected(refresh_item_count):
+			inventory.contents_changed.disconnect(refresh_item_count)
+		if inventory.item_property_changed.is_connected(refresh_item_count.unbind(2)):
+			inventory.item_property_changed.disconnect(refresh_item_count.unbind(2))
 
 func peek_item() -> InventoryItem:
 	return _get_items().pop_front()

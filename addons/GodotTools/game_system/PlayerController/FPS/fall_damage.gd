@@ -18,5 +18,5 @@ func _exit_tree() -> void:
 func _on_fell(fall_speed: float, fall_height: float):
 	if fall_speed > 0:
 		damageable.damage(fall_damage_curve.sample_baked(fall_height),
-			null, true)
+			self, true)
 		#print("Fall speed: %s. Fell from: %s" % [fall_speed, fall_height])

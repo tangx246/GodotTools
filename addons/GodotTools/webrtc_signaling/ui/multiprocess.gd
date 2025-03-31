@@ -56,7 +56,7 @@ func _on_peer_disconnected(id: int):
 		get_tree().quit()
 
 func _exit_tree() -> void:
-	_kill_headless_process()
+	kill_headless_process()
 	
 	if multiplayer.peer_disconnected.is_connected(_on_peer_disconnected):
 		multiplayer.peer_disconnected.disconnect(_on_peer_disconnected)
@@ -72,9 +72,9 @@ func _process_observer(pipe: FileAccess, is_error: bool) -> void:
 		if line.begins_with(PATTERN):
 			_on_server_created.call_deferred(line.lstrip(PATTERN))
 			
-	_kill_headless_process()
+	kill_headless_process()
 
-func _kill_headless_process():
+func kill_headless_process():
 	if is_multiprocess_instance_running():
 		var pid: int = output["pid"]
 		print("Killing headless process %s" % pid)
@@ -83,7 +83,7 @@ func _kill_headless_process():
 
 var output: Dictionary
 func start_headless_process(single_player: bool):
-	_kill_headless_process()
+	kill_headless_process()
 	
 	var params: Array[String] = ["--headless", AUTOHOST_PARAM]
 	if single_player:

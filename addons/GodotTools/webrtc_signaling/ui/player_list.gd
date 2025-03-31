@@ -9,6 +9,6 @@ func _ready() -> void:
 	
 func _on_peer_changed() -> void:
 	clear()
-	add_item("%s (Me)" % client.rtc_mp.get_unique_id())
-	for peer: int in client.rtc_mp.get_peers():
+	add_item("%s (Me)" % multiplayer.get_unique_id())
+	for peer: int in multiplayer.get_peers():
 		add_item(str(peer))
