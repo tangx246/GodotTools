@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cpwp4xx6mv5p"]
+[gd_scene load_steps=8 format=3 uid="uid://cpwp4xx6mv5p"]
 
 [ext_resource type="Script" uid="uid://dopyo7y588l7r" path="res://addons/GodotTools/webrtc_signaling/ui/client_ui.gd" id="1"]
 [ext_resource type="Script" uid="uid://cfgcyyb8hg7re" path="res://addons/GodotTools/webrtc_signaling/client/multiplayer_client.gd" id="2"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://cpy6eglnf65da" path="res://addons/GodotTools/webrtc_signaling/ui/room_tab_container.gd" id="3_1n8go"]
 [ext_resource type="Script" uid="uid://dkbofririgxoe" path="res://addons/GodotTools/webrtc_signaling/ui/player_list.gd" id="4_blxr0"]
 [ext_resource type="Script" uid="uid://bd441qkfic0y1" path="res://addons/GodotTools/webrtc_signaling/ui/authority_actions.gd" id="4_dx57n"]
+[ext_resource type="PackedScene" uid="uid://1tk7mqago26t" path="res://addons/GodotTools/ui/options_menu/options_menu.tscn" id="5_chhbd"]
 
 [node name="ClientUI" type="Control"]
 layout_mode = 3
@@ -67,6 +68,24 @@ unique_name_in_owner = true
 layout_mode = 2
 button_pressed = true
 text = "Multiprocess"
+
+[node name="Options" type="Button" parent="VBoxContainer/TabContainer/Host Join UI/Connect"]
+layout_mode = 2
+text = "⚙"
+
+[node name="PopupPanel" type="PopupPanel" parent="VBoxContainer/TabContainer/Host Join UI/Connect/Options"]
+auto_translate_mode = 1
+title = "Options"
+initial_position = 2
+size = Vector2i(1000, 500)
+unresizable = false
+borderless = false
+
+[node name="OptionsMenu" parent="VBoxContainer/TabContainer/Host Join UI/Connect/Options/PopupPanel" instance=ExtResource("5_chhbd")]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 996.0
+offset_bottom = 496.0
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/TabContainer/Host Join UI"]
 layout_mode = 2
@@ -149,6 +168,7 @@ script = ExtResource("4_blxr0")
 layout_mode = 2
 size_flags_vertical = 3
 
+[connection signal="pressed" from="VBoxContainer/TabContainer/Host Join UI/Connect/Options" to="VBoxContainer/TabContainer/Host Join UI/Connect/Options/PopupPanel" method="popup"]
 [connection signal="pressed" from="VBoxContainer/TabContainer/Host Join UI/HBoxContainer2/Start" to="." method="_on_start_pressed"]
 [connection signal="pressed" from="VBoxContainer/TabContainer/Host Join UI/HBoxContainer2/Refresh" to="." method="_on_refresh_pressed"]
 [connection signal="pressed" from="VBoxContainer/TabContainer/Host Join UI/HBoxContainer2/Start Game" to="." method="_on_start_game_pressed"]
