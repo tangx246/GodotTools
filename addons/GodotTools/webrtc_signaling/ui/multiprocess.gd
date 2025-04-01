@@ -33,7 +33,7 @@ func _enter_tree() -> void:
 	add_to_group(GROUP)
 	
 	if is_multiprocess_instance():
-		await get_tree().create_timer(1).timeout
+		await get_tree().process_frame
 		var single_player: bool = is_multiprocess_instance_single_player()
 		print("Multiprocess Server started. Autohosting. Singleplayer: %s" % single_player)
 		clientui._on_start_pressed(single_player)
@@ -70,7 +70,7 @@ func _process_observer(pipe: FileAccess, is_error: bool) -> void:
 			print("[Multiprocess] %s" % line)
 
 		if line.begins_with(PATTERN):
-			_on_server_created.call_deferred(line.lstrip(PATTERN))
+			_on_server_created.call_deferred(line.trim_prefix(PATTERN))
 			
 	kill_headless_process()
 
@@ -94,7 +94,6 @@ func start_headless_process(single_player: bool):
 	WorkerThreadPoolExtended.add_task(_process_observer.bind(output["stderr"], true))
 
 func _on_server_created(lobby: String):
-	await get_tree().create_timer(1).timeout
 	clientui.room.text = lobby
 	
 	var single_player: bool = is_local_instance_single_player(self)

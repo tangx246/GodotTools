@@ -196,6 +196,7 @@ func _join_lobby(peer: Peer, lobby: String, mesh: bool) -> bool:
 			lobby += char(_alfnum[rand.randi_range(0, ALFNUM.length() - 1)])
 		lobbies[lobby] = Lobby.new(peer.id, mesh)
 	elif not lobbies.has(lobby):
+		printerr("Peer %s attempted to join lobby %s that does not exist" % [peer, lobby])
 		return false
 	lobbies[lobby].join(peer)
 	peer.lobby = lobby
@@ -210,6 +211,7 @@ func _parse_msg(peer: Peer) -> bool:
 	var parsed: Dictionary = JSON.parse_string(pkt_str)
 	if typeof(parsed) != TYPE_DICTIONARY or not parsed.has("type") or not parsed.has("id") or \
 		typeof(parsed.get("data")) != TYPE_STRING:
+		printerr("Parse failed: %s" % pkt_str)
 		return false
 	# Godot 4.4 changed is_valid_int behavior
 	#if not str(parsed.type).`() or not str(parsed.id).is_valid_int():
@@ -227,11 +229,16 @@ func _parse_msg(peer: Peer) -> bool:
 
 	if msg.type == Message.JOIN:
 		if peer.lobby:  # Peer must not have joined a lobby already!
+			printerr("Parse failed: %s" % pkt_str)
 			return false
 
-		return _join_lobby(peer, msg.data, msg.id == 0)
+		var joined: bool = _join_lobby(peer, msg.data, msg.id == 0)
+		if not joined:
+			printerr("Join failed: %s" % pkt_str)
+		return joined
 
 	if not lobbies.has(peer.lobby):  # Lobby not found?
+		printerr("Parse failed: %s" % pkt_str)
 		return false
 
 	var lobby: Lobby = lobbies[peer.lobby]
@@ -245,9 +252,11 @@ func _parse_msg(peer: Peer) -> bool:
 		dest_id = lobby.host
 
 	if not peers.has(dest_id):  # Destination ID not connected.
+		printerr("Parse failed: %s" % pkt_str)
 		return false
 
 	if peers[dest_id].lobby != peer.lobby:  # Trying to contact someone not in same lobby.
+		printerr("Parse failed: %s" % pkt_str)
 		return false
 
 	if msg.type in [Message.OFFER, Message.ANSWER, Message.CANDIDATE]:
@@ -255,4 +264,5 @@ func _parse_msg(peer: Peer) -> bool:
 		peers[dest_id].send(msg.type, source, msg.data)
 		return true
 
+	printerr("Parse failed: %s" % pkt_str)
 	return false  # Unknown message.
