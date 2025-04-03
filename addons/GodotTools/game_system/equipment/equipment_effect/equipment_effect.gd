@@ -1,9 +1,12 @@
-class_name ConsumableEffect
+class_name EquipmentEffect
 extends Resource
 
-func apply(consumer: Node):
+func apply(root: Node) -> void:
 	printerr("Unimplemented")
-
+	
+func unapply(root: Node) -> void:
+	printerr("Unimplemented")
+	
 func get_text() -> String:
 	return "Unimplemented"
 
