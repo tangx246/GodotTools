@@ -5,6 +5,8 @@ extends Node2D
 @onready var navigation_agent: NavigationAgent2D = get_node("NavigationAgent2D")
 var movement_delta: float
 
+var move_direction: Vector2 = Vector2.RIGHT
+
 func _ready() -> void:
 	navigation_agent.velocity_computed.connect(Callable(_on_velocity_computed))
 
@@ -28,3 +30,7 @@ func _physics_process(delta):
 
 func _on_velocity_computed(safe_velocity: Vector2) -> void:
 	global_position = global_position.move_toward(global_position + safe_velocity, movement_delta)
+	if safe_velocity.x > 0:
+		move_direction = Vector2.RIGHT
+	else:
+		move_direction = Vector2.LEFT
