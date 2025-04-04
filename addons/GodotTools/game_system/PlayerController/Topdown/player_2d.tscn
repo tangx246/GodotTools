@@ -1,0 +1,37 @@
+[gd_scene load_steps=6 format=3 uid="uid://bojqubq7741g1"]
+
+[ext_resource type="Script" uid="uid://bd35kbmertl0n" path="res://addons/GodotTools/game_system/PlayerController/Topdown/player_2d.gd" id="1_cpd6d"]
+[ext_resource type="Script" uid="uid://bgxjal58paq31" path="res://addons/GodotTools/node_utility/multiplayer_synchronizer_workaround/multiplayer_synchronizer_workaround.gd" id="2_5vgil"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cpd6d"]
+size = Vector2(15, 15)
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_cpd6d"]
+size = Vector2(16, 16)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_rd6ly"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+
+[node name="Player2D" type="CharacterBody2D"]
+script = ExtResource("1_cpd6d")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+unique_name_in_owner = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_cpd6d")
+
+[node name="Model" type="Node2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="Model"]
+texture = SubResource("PlaceholderTexture2D_cpd6d")
+
+[node name="MultiplayerSynchronizerWorkaround" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_rd6ly")
+script = ExtResource("2_5vgil")
+metadata/_custom_type_script = "uid://bgxjal58paq31"
