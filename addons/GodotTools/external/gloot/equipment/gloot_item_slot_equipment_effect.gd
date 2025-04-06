@@ -12,9 +12,6 @@ func _ready() -> void:
 	item_slots.assign(root.find_children("", "ItemSlot"))
 
 func _enter_tree() -> void:
-	if not can_process():
-		return
-	
 	await get_tree().process_frame
 	for item_slot in item_slots:
 		if not item_slot.item_equipped.is_connected(_on_item_equipped):
