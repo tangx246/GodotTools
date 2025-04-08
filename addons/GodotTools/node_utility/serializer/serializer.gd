@@ -11,8 +11,7 @@ static func serialize(obj: Object, use_uid: bool = true) -> String:
 		
 		if name == "script":
 			if use_uid:
-				# We save the String representation because Godot loses precision info... On an int...
-				save_data[name] = str(ResourceLoader.get_resource_uid(obj.get_script().resource_path))
+				save_data[name] = ResourceUID.id_to_text(ResourceLoader.get_resource_uid(obj.get_script().resource_path))
 			else:
 				save_data[name] = obj.get_script().resource_path
 		else:
@@ -40,13 +39,7 @@ static func deserialize(data: String) -> Object:
 	
 static func _deserialize(parsed: Dictionary) -> Object:
 	var parsed_script: String = parsed["script"]
-	var path_int: int = int(parsed_script)
-	var path: String
-	if path_int:
-		path = ResourceUID.id_to_text(path_int)
-	else:
-		path = parsed_script
-	var script: Script = load(path)
+	var script: Script = load(parsed_script)
 	parsed.erase("script")
 
 	var obj = script.new()
