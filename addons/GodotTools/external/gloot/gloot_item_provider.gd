@@ -2,6 +2,12 @@ class_name GlootItemProvider
 extends ItemProvider
 
 @export var item_type : String
+@export var root: Node:
+	set(value):
+		root = value
+		_disconnect_signals()
+		find_inventories()
+		_connect_signals()
 @onready var inventories : Array[Inventory] = find_inventories()
 
 const KEY_STACK_SIZE = "stack_size"
@@ -11,13 +17,19 @@ func _ready() -> void:
 
 func _enter_tree() -> void:
 	await get_tree().process_frame
+	_connect_signals()
+
+func _exit_tree() -> void:
+	_disconnect_signals()
+
+func _connect_signals() -> void:
 	for inventory in inventories:
 		if not inventory.contents_changed.is_connected(refresh_item_count):
 			inventory.contents_changed.connect(refresh_item_count)
 		if not inventory.item_property_changed.is_connected(refresh_item_count.unbind(2)):
 			inventory.item_property_changed.connect(refresh_item_count.unbind(2))
 
-func _exit_tree() -> void:
+func _disconnect_signals() -> void:
 	for inventory in inventories:
 		if inventory.contents_changed.is_connected(refresh_item_count):
 			inventory.contents_changed.disconnect(refresh_item_count)
@@ -69,9 +81,6 @@ func refresh_item_count():
 	item_count = count
 
 func find_inventories() -> Array[Inventory]:
-	var parent : Node = get_parent()
-	while (parent is not PhysicsBody3D and parent is not NavigationNode3D):
-		parent = parent.get_parent()
 	var _inventories : Array[Inventory] = []
-	_inventories.assign(parent.find_children("", "Inventory"))
+	_inventories.assign(root.find_children("", "Inventory"))
 	return _inventories
