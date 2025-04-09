@@ -17,6 +17,7 @@ func _ready() -> void:
 
 func _spawn_function(resource_path: String) -> Node:
 	if not instantiated:
+		printerr("Pre-instantiation state invalid. Loading screen appears to have failed")
 		var new_scene: PackedScene = ResourceLoader.load(resource_path)
 		instantiated = new_scene.instantiate()
 	

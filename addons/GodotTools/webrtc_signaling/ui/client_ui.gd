@@ -112,9 +112,9 @@ func _on_join_pressed(single_player: bool = false) -> void:
 
 	client_to_use.start(_get_url(single_player), room.text, mesh.button_pressed)
 
-func _create_singleplayer_client() -> LocalhostSignalingClient:
+func _create_singleplayer_client() -> LocalhostSignalingClientWS:
 	_log("Creating single player client")
-	var client_to_use: LocalhostSignalingClient = LocalhostSignalingClient.new()
+	var client_to_use: LocalhostSignalingClientWS = LocalhostSignalingClientWS.new()
 	add_child(client_to_use)
 	_connect_signals(client_to_use)
 	return client_to_use
