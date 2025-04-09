@@ -7,6 +7,11 @@ var sealed := false
 const port: int = 25743
 
 func _init() -> void:
+	var buffer_size: int = 65535 * 32
+	rtc_mp.inbound_buffer_size = buffer_size
+	rtc_mp.outbound_buffer_size = buffer_size
+	rtc_mp.max_queued_packets = buffer_size
+	
 	connected.connect(_connected)
 	disconnected.connect(_disconnected)
 
