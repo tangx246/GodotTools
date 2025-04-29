@@ -50,7 +50,7 @@ func _init() -> void:
 	properties = replication_config.get_properties()
 	_positionrotation_to_transform(properties)
 
-	ticks = randi() % tick_rate
+	tick_shift = randi() % 10000
 	original_tick_rate = tick_rate
 
 func _positionrotation_to_transform(node_paths: Array[NodePath]):
@@ -88,11 +88,10 @@ func _exit_tree() -> void:
 
 # NodePath to Variant
 var dirty_properties: Dictionary = {}
-var ticks: int
 var ticks_since_change: int
+var tick_shift: int
 func tick() -> void:
-	ticks = (ticks + 1) % tick_rate
-	if ticks != 0:
+	if ((Engine.get_physics_frames() + tick_shift) % tick_rate) != 0:
 		return
 	
 	_do_compare()
@@ -108,7 +107,6 @@ func tick() -> void:
 		
 		if sleepy_ticks and ticks_since_change > sleepy_tick_threshold:
 			tick_rate = sleepy_tick_rate
-			ticks = randi() % tick_rate
 
 func _do_compare():
 	dirty_properties.clear()
