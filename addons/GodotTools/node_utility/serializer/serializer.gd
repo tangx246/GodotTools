@@ -1,5 +1,18 @@
 class_name Serializer
 
+# Workaround for https://github.com/godotengine/godot/issues/75617#issuecomment-2640078921
+static var uid_cache: Dictionary[String, int] = {}
+static func _init_uid_cache():
+	if not uid_cache.is_empty():
+		return
+	var f := FileAccess.open("res://.godot/uid_cache.bin", FileAccess.READ)
+	var count := f.get_32()
+	for i in count:
+		var id := f.get_64()
+		var leng = f.get_32()
+		var buffer := f.get_buffer(leng)
+		uid_cache[buffer.get_string_from_ascii()] = id
+
 static func serialize(obj: Object, use_uid: bool = true) -> String:
 	var save_data: Dictionary[String, Variant] = {}
 	var property_list: Array[Dictionary] = obj.get_property_list()
@@ -11,7 +24,15 @@ static func serialize(obj: Object, use_uid: bool = true) -> String:
 		
 		if name == "script":
 			if use_uid:
-				save_data[name] = ResourceUID.id_to_text(ResourceLoader.get_resource_uid(obj.get_script().resource_path))
+				_init_uid_cache()
+				var res_path: String = obj.get_script().resource_path
+				# See _init_uid_cache()
+				#var resource_uid: int = ResourceLoader.get_resource_uid(res_path)
+				var resource_uid: int = uid_cache[res_path]
+				if resource_uid == -1:
+					printerr("Could not find Resource UID for %s" % res_path)
+				save_data[name] = ResourceUID.id_to_text(resource_uid)
+				print("Saved: %s %s" % [save_data[name], ResourceLoader.get_resource_uid(obj.get_script().resource_path)])
 			else:
 				save_data[name] = obj.get_script().resource_path
 		else:
