@@ -3,7 +3,8 @@ extends GlootItemProvider
 
 var specific_item: InventoryItem
 
-func _init(item: InventoryItem):
+func _init(root: Node, item: InventoryItem):
+	self.root = root
 	specific_item = item
 
 func use_item(count: int) -> int:
