@@ -7,6 +7,7 @@ extends Node
 var effect_stack: Array[EquipmentEffect] = []
 
 const KEY_EFFECTS: String = "effects"
+const KEY_MAX_POSITIVE_EFFECTS: String = "positive_effect_slots"
 
 func _ready() -> void:
 	item_slots.assign(root.find_children("", "ItemSlot"))
