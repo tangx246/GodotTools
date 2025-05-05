@@ -53,12 +53,15 @@ func _offer_created(type: String, data: String, id: int) -> void:
 
 func _connected(id: int, use_mesh: bool) -> void:
 	print("Connected %d, mesh: %s" % [id, use_mesh])
+	var error: Error
 	#if use_mesh:
 	#	printerr("Mesh currently unsupported")
 	if id == 1:
-		rtc_mp.create_server(port)
+		error = rtc_mp.create_server(port)
 	else:
-		rtc_mp.create_client("127.0.0.1", port)
+		error = rtc_mp.create_client("127.0.0.1", port)
+	if error != Error.OK:
+		printerr("Error creating peer: %s" % error)
 	get_tree().get_multiplayer().multiplayer_peer = rtc_mp
 
 
