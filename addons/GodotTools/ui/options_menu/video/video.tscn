@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://bwate1hp34pw2"]
+[gd_scene load_steps=3 format=3 uid="uid://bwate1hp34pw2"]
 
 [ext_resource type="Script" uid="uid://dihamk6x2yj4j" path="res://addons/GodotTools/ui/options_menu/video/fullscreen.gd" id="1_1jr12"]
+[ext_resource type="Script" uid="uid://bar6acb3bvxfq" path="res://addons/GodotTools/ui/options_menu/video/ui_scale.gd" id="2_uhq4o"]
 
 [node name="Video" type="VBoxContainer"]
 offset_right = 242.0
@@ -23,3 +24,31 @@ popup/item_1/id = 1
 popup/item_2/text = "Fullscreen"
 popup/item_2/id = 2
 script = ExtResource("1_1jr12")
+
+[node name="UI Scale" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI Scale"]
+layout_mode = 2
+text = "UI Scale"
+
+[node name="HSlider" type="HSlider" parent="UI Scale"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_vertical = 1
+min_value = 0.5
+max_value = 5.0
+step = 0.1
+value = 1.0
+script = ExtResource("2_uhq4o")
+
+[node name="Label2" type="Label" parent="UI Scale"]
+layout_mode = 2
+text = "1.0"
+
+[node name="Button" type="Button" parent="UI Scale"]
+layout_mode = 2
+text = "Apply"
+
+[connection signal="text_changed" from="UI Scale/HSlider" to="UI Scale/Label2" method="set_text"]
+[connection signal="pressed" from="UI Scale/Button" to="UI Scale/HSlider" method="apply"]

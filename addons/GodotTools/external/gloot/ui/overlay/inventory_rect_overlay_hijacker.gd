@@ -12,14 +12,18 @@ const CtrlInventoryItemRect = preload("uid://cw2nqo82wqs4i")
 
 signal drag_end()
 
-func _ready() -> void:
+func _enter_tree() -> void:
 	await get_tree().process_frame
+	if not is_inside_tree():
+		return
 	for child in root.find_children("", "Node", true, false):
 		Signals.safe_connect(self, child.child_order_changed, _on_child_order_changed, CONNECT_DEFERRED)
 	_on_child_order_changed()
 
 var last_refreshed: int = -1
 func _on_child_order_changed() -> void:
+	if not is_inside_tree():
+		return
 	await get_tree().process_frame
 	var current_tick: int = Engine.get_process_frames()
 	if current_tick == last_refreshed:

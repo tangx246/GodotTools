@@ -4,6 +4,7 @@ extends CharacterBody3D
 @export var speed : float = 10
 @export var jump_height : float = 2.4
 @export var mouse_look_speed : float = 0.002
+@export var joy_look_speed: float = 2
 
 @export var stand_state_controller : StandState
 @export var lean_controller : Lean
@@ -62,7 +63,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		mouse_movement.x -= event.relative.x * mouse_look_speed
 		mouse_movement.y -= event.relative.y * mouse_look_speed
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	var look_input = Input.get_vector("Look Left", "Look Right", "Look Down", "Look Up")
+	mouse_movement.x -= look_input.x * delta * joy_look_speed
+	mouse_movement.y += look_input.y * delta * joy_look_speed
+	
 	rotate_y(mouse_movement.x)
 	mouse_movement.x = 0
 	camera.rotate_x(mouse_movement.y)

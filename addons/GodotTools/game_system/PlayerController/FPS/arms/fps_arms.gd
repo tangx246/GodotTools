@@ -23,6 +23,7 @@ func set_renderers():
 		renderer.layers = fps_arms_layer if is_multiplayer_authority() else 0
 		
 func replace_materials(mesh: MeshInstance3D) -> void:
+	assert(not mesh.material_override, "Mesh should not have a geometry material override")
 	for i: int in range(mesh.get_surface_override_material_count()):
 		var material: Material = mesh.get_active_material(i)
 		if material is ShaderMaterial:

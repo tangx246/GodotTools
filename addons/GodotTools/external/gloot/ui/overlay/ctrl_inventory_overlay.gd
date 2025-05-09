@@ -6,7 +6,7 @@ var item: InventoryItem:
 		return get_parent().item
 signal refresh
 
-func _ready() -> void:
+func _enter_tree() -> void:
 	var ancestor: Node = get_parent()
 	while ancestor != null and not ancestor is CtrlItemSlot:
 		ancestor = ancestor.get_parent()
