@@ -7,7 +7,7 @@ extends MultiplayerSpawner
 const group : StringName = "PlayerSpawner"
 
 ## Emitted when the player is currently spawning, but before being added to the scene tree.
-## Authority-related processing should happen here7yAFL
+## Authority-related processing should happen here
 signal player_spawning(id: int, player: Node)
 
 func _init() -> void:
