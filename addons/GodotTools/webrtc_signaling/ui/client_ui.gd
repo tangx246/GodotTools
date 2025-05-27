@@ -134,6 +134,7 @@ func _on_start_game_pressed():
 		_log("Starting single player multiprocess instance")
 		multiprocess.start_headless_process(true)
 	elif MultiplayerSceneSwitcher.switch_scenes(self, main.gameScene):
+		client.seal_lobby()
 		multiplayerUiRoot.visible = false
 	else:
 		_log("Cannot start game without authority")

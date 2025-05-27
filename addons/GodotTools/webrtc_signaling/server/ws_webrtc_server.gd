@@ -16,7 +16,7 @@ enum Message {
 const TIMEOUT = 30000
 
 ## A sealed room will be closed after this time (in milliseconds).
-const SEAL_TIME = 10000
+const SEAL_TIME = 0
 
 ## All alphanumeric characters.
 const ALFNUM = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
@@ -183,6 +183,7 @@ func poll() -> void:
 			for p: Peer in lobbies[k].peers:
 				p.ws.close()
 				to_remove.push_back(p.id)
+			lobbies.erase(k)
 
 	# Remove stale peers
 	for id: int in to_remove:

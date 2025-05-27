@@ -8,7 +8,6 @@ extends ItemProvider
 		_disconnect_signals()
 		find_inventories()
 		_connect_signals()
-@onready var inventories : Array[Inventory] = find_inventories()
 
 const KEY_STACK_SIZE = "stack_size"
 
@@ -23,14 +22,14 @@ func _exit_tree() -> void:
 	_disconnect_signals()
 
 func _connect_signals() -> void:
-	for inventory in inventories:
+	for inventory in find_inventories():
 		if not inventory.contents_changed.is_connected(refresh_item_count):
 			inventory.contents_changed.connect(refresh_item_count)
 		if not inventory.item_property_changed.is_connected(refresh_item_count.unbind(2)):
 			inventory.item_property_changed.connect(refresh_item_count.unbind(2))
 
 func _disconnect_signals() -> void:
-	for inventory in inventories:
+	for inventory in find_inventories():
 		if inventory.contents_changed.is_connected(refresh_item_count):
 			inventory.contents_changed.disconnect(refresh_item_count)
 		if inventory.item_property_changed.is_connected(refresh_item_count.unbind(2)):
@@ -64,7 +63,7 @@ func should_provide_item(item: InventoryItem) -> bool:
 
 func _get_items() -> Array[InventoryItem]:
 	var items : Array[InventoryItem] = []
-	for inventory in inventories:
+	for inventory in find_inventories():
 		for item in inventory.get_items():
 			if should_provide_item(item):
 				items.append(item)
@@ -82,5 +81,5 @@ func refresh_item_count():
 
 func find_inventories() -> Array[Inventory]:
 	var _inventories : Array[Inventory] = []
-	_inventories.assign(root.find_children("", "Inventory"))
+	_inventories.assign(root.find_children("", "Inventory", true, false))
 	return _inventories
