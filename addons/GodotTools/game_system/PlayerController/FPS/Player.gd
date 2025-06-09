@@ -14,6 +14,7 @@ var jump_velocity_to_add : float = 0
 var mouse_movement : Vector2 = Vector2.ZERO
 
 signal hit_floor(fall_speed: float, fall_height: float)
+signal mouse_looked(x_angle: float, y_angle: float)
 
 func get_input() -> Vector3:
 	var input_dir = Input.get_vector("Strafe Left", "Strafe Right", "Move Forward", "Move Backward")
@@ -69,9 +70,12 @@ func _process(delta: float) -> void:
 	mouse_movement.y += look_input.y * delta * joy_look_speed
 	
 	rotate_y(mouse_movement.x)
-	mouse_movement.x = 0
+	var prev_rotation_x: float = camera.rotation.x
 	camera.rotate_x(mouse_movement.y)
 	camera.rotation.x = clampf(camera.rotation.x, -PI/2, PI/2)
+
+	mouse_looked.emit(mouse_movement.x, camera.rotation.x - prev_rotation_x)
+	mouse_movement.x = 0
 	mouse_movement.y = 0
 
 func _physics_process(delta):

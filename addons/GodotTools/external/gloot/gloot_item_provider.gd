@@ -82,4 +82,6 @@ func refresh_item_count():
 func find_inventories() -> Array[Inventory]:
 	var _inventories : Array[Inventory] = []
 	_inventories.assign(root.find_children("", "Inventory", true, false))
+	if root is Inventory:
+		_inventories.append(root)
 	return _inventories

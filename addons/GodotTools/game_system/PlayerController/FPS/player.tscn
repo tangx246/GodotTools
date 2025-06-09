@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://ctk2635m14tdu"]
+[gd_scene load_steps=18 format=3 uid="uid://ctk2635m14tdu"]
 
 [ext_resource type="Script" uid="uid://bx7cfjui4lrwd" path="res://addons/GodotTools/game_system/PlayerController/FPS/Player.gd" id="1_b5cvv"]
 [ext_resource type="Script" uid="uid://bgxjal58paq31" path="res://addons/GodotTools/node_utility/multiplayer_synchronizer_workaround/multiplayer_synchronizer_workaround.gd" id="2_iyc1q"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://dwhrkrfmgnock" path="res://addons/GodotTools/game_system/PlayerController/FPS/lean.gd" id="5_g1hu3"]
 [ext_resource type="Script" uid="uid://ww7s23i6ue1j" path="res://addons/GodotTools/game_system/PlayerController/FPS/screen_shake.gd" id="6_dyw3o"]
 [ext_resource type="Script" uid="uid://cnlsabwbhwb18" path="res://addons/GodotTools/game_system/PlayerController/FPS/arms/fps_arms.gd" id="7_sf4bq"]
+[ext_resource type="Script" uid="uid://bvgpdyhpihset" path="res://addons/GodotTools/game_system/PlayerController/FPS/weapon_sway.gd" id="8_r2t8n"]
 [ext_resource type="Material" uid="uid://deouhx0fsblr5" path="res://addons/GodotTools/game_system/PlayerController/FPS/arms/fps_arms_toon_material.tres" id="9_cntxa"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fq6a0"]
@@ -99,7 +100,12 @@ noise = SubResource("FastNoiseLite_lmai6")
 
 [node name="Camera3D" type="Camera3D" parent="StandState/Recoil/Lean/ScreenShake"]
 
-[node name="FPS Arms" type="Node3D" parent="StandState/Recoil/Lean/ScreenShake/Camera3D"]
+[node name="WeaponSway" type="Node3D" parent="StandState/Recoil/Lean/ScreenShake/Camera3D" node_paths=PackedStringArray("root")]
+script = ExtResource("8_r2t8n")
+root = NodePath("../../../../../..")
+metadata/_custom_type_script = "uid://bvgpdyhpihset"
+
+[node name="FPS Arms" type="Node3D" parent="StandState/Recoil/Lean/ScreenShake/Camera3D/WeaponSway"]
 script = ExtResource("7_sf4bq")
 shader_material = ExtResource("9_cntxa")
 

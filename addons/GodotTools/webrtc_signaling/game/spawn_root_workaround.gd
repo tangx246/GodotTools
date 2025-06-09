@@ -8,6 +8,7 @@ func _ready():
 	if is_multiplayer_authority():
 		for child in get_children():
 			child.owner = null
-			child.reparent(target_node)
+			remove_child(child)
+			target_node.add_child(child, true)
 
 	queue_free()

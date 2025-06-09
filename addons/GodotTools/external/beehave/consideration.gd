@@ -7,6 +7,7 @@ extends Node
 ## Invert the value of this consideration (i.e. 1 - value) [br]
 ## e.g. 0.1 becomes 0.9
 @export var invert: bool = false
+@export var debug: bool = false
 
 var value: float = 0:
 	set(val):
@@ -22,6 +23,12 @@ func _ready() -> void:
 	timer.wait_time = tick_rate
 	timer.timeout.connect(func(): tick(timer.wait_time))
 	add_child(timer)
+
+	set_process(debug)
+
+func _process(_delta: float) -> void:
+	if debug:
+		print("%s: %.2f" % [name, value])
 
 func tick(delta: float) -> void:
 	printerr("Unimplemented")
