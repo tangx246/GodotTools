@@ -123,6 +123,7 @@ func _on_refresh_pressed() -> void:
 	client.start(host.text, "", mesh.button_pressed, false)
 
 func _on_stop_pressed() -> void:
+	print("Stop pressed")
 	if multiprocess.is_multiprocess_instance_running():
 		multiprocess.kill_headless_process()
 	client.stop()
@@ -148,6 +149,11 @@ func _on_start_game_pressed_rpc():
 	_on_start_game_pressed()
 
 func _on_room_list_activated(id: int) -> void:
+	var current_state: WebSocketPeer.State = client.ws.get_ready_state()
+	if current_state != WebSocketPeer.State.STATE_CLOSED:
+		print("Client state %s is not closed" % current_state)
+		return
+
 	var room: String = room_list.get_item_metadata(id)
 	client.start(host.text, room, mesh.button_pressed)
 

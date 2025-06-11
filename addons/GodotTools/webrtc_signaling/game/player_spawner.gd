@@ -3,6 +3,7 @@ extends MultiplayerSpawner
 
 ## Players spawn in first
 @export var playerScene : PackedScene
+@export var shifter: SpawnerShifter
 
 const group : StringName = "PlayerSpawner"
 
@@ -25,6 +26,8 @@ func _ready():
 
 func _player_spawn(id: int):
 	var instantiated = playerScene.instantiate()
+	if shifter:
+		shifter.shift(instantiated)
 	instantiated.set_multiplayer_authority(id)
 	player_spawning.emit(id, instantiated)
 	return instantiated

@@ -56,6 +56,7 @@ func _on_peer_disconnected(id: int):
 		get_tree().quit()
 
 func _exit_tree() -> void:
+	print("Multiprocess exiting tree")
 	kill_headless_process()
 	
 	if multiplayer.peer_disconnected.is_connected(_on_peer_disconnected):
@@ -71,7 +72,8 @@ func _process_observer(pipe: FileAccess, is_error: bool) -> void:
 
 		if line.begins_with(PATTERN):
 			_on_server_created.call_deferred(line.trim_prefix(PATTERN))
-			
+
+	print("Process observer complete. %s" % pipe.get_error())
 	kill_headless_process()
 
 func kill_headless_process():

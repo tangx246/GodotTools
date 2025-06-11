@@ -38,19 +38,21 @@ static func serialize(obj: Object, use_uid: bool = true) -> String:
 	
 	return JSON.stringify(save_data, "", true, true)
 
-static func deserialize(data: String) -> Object:
+static func deserialize(data: String, obj: Object = null) -> Object:
 	var parsed: Dictionary = JSON.parse_string(data)
-	return _deserialize(parsed)
+	return _deserialize(parsed, obj)
 	
-static func _deserialize(parsed: Dictionary) -> Object:
+static func _deserialize(parsed: Dictionary, obj: Object = null) -> Object:
 	var parsed_script: String = parsed["script"]
 	var script: Script = load(parsed_script)
 	parsed.erase("script")
 
-	var obj = script.new()
+	if obj == null:
+		obj = script.new()
+	assert(is_instance_of(obj, script), "%s must be an instance of %s" % [obj.get_script(), script])
 	
 	for key: String in parsed:
-		var value: Variant = _parse_object(parsed[key])
+		var value: Variant = _parse_object(parsed[key], obj.get(key))
 		if typeof(value) in [TYPE_ARRAY, TYPE_DICTIONARY]:
 			obj.get(key).assign(value)
 		else:
@@ -58,7 +60,7 @@ static func _deserialize(parsed: Dictionary) -> Object:
 		
 	return obj
 
-static func _parse_object(value: Variant) -> Variant:
+static func _parse_object(value: Variant, possible_source_obj: Variant) -> Variant:
 	# Possibly an object. Start parsing
 	if value is String:
 		var json: JSON = JSON.new()
@@ -66,12 +68,13 @@ static func _parse_object(value: Variant) -> Variant:
 		if parse_success == OK:
 			var possible_object: Variant = json.data
 			if possible_object != null and possible_object is Dictionary and possible_object.has("script"):
-				value = _deserialize(possible_object)
+				value = _deserialize(possible_object, possible_source_obj)
 	elif value is Array:
 		for i in range(value.size()):
-			value[i] = _parse_object(value[i])
+			var src_obj: Variant = possible_source_obj[i] if possible_source_obj.size() > i else null
+			value[i] = _parse_object(value[i], src_obj)
 	elif value is Dictionary:
 		for key in value:
-			value[key] = _parse_object(value[key])
+			value[key] = _parse_object(value[key], possible_source_obj.get(key))
 			
 	return value

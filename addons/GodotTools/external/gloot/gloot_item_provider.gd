@@ -5,9 +5,7 @@ extends ItemProvider
 @export var root: Node:
 	set(value):
 		root = value
-		_disconnect_signals()
-		find_inventories()
-		_connect_signals()
+		_connect_signals.call_deferred()
 
 const KEY_STACK_SIZE = "stack_size"
 
@@ -18,22 +16,10 @@ func _enter_tree() -> void:
 	await get_tree().process_frame
 	_connect_signals()
 
-func _exit_tree() -> void:
-	_disconnect_signals()
-
 func _connect_signals() -> void:
 	for inventory in find_inventories():
-		if not inventory.contents_changed.is_connected(refresh_item_count):
-			inventory.contents_changed.connect(refresh_item_count)
-		if not inventory.item_property_changed.is_connected(refresh_item_count.unbind(2)):
-			inventory.item_property_changed.connect(refresh_item_count.unbind(2))
-
-func _disconnect_signals() -> void:
-	for inventory in find_inventories():
-		if inventory.contents_changed.is_connected(refresh_item_count):
-			inventory.contents_changed.disconnect(refresh_item_count)
-		if inventory.item_property_changed.is_connected(refresh_item_count.unbind(2)):
-			inventory.item_property_changed.disconnect(refresh_item_count.unbind(2))
+		Signals.safe_connect(self, inventory.contents_changed, refresh_item_count)
+		Signals.safe_connect(self, inventory.item_property_changed, refresh_item_count.unbind(2))
 
 func peek_item() -> InventoryItem:
 	return _get_items().pop_front()
@@ -81,6 +67,8 @@ func refresh_item_count():
 
 func find_inventories() -> Array[Inventory]:
 	var _inventories : Array[Inventory] = []
+	if not root.is_inside_tree():
+		return _inventories
 	_inventories.assign(root.find_children("", "Inventory", true, false))
 	if root is Inventory:
 		_inventories.append(root)
