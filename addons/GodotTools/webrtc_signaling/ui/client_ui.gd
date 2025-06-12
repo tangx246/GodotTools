@@ -49,7 +49,7 @@ func _mp_peer_connected(id: int) -> void:
 func _mp_peer_disconnected(id: int) -> void:
 	_log("[Multiplayer] Peer %d disconnected" % id)
 	if id == MultiplayerPeer.TARGET_PEER_SERVER:
-		multiplayerUiRoot.visible = true
+		_on_stop_pressed()
 
 func _connected(id: int, use_mesh: bool) -> void:
 	_log("[Signaling] Server connected with ID: %d. Mesh: %s" % [id, use_mesh])

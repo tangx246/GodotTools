@@ -21,6 +21,7 @@ func get_input() -> Vector3:
 	var velocity2 = (input_dir * speed)
 	return Vector3(velocity2.x, velocity.y, velocity2.y)
 
+var mouse_captured: bool = false
 func _enter_tree() -> void:
 	await get_tree().process_frame
 	if not is_inside_tree():
@@ -30,12 +31,13 @@ func _enter_tree() -> void:
 		process_mode = PROCESS_MODE_INHERIT
 		camera.make_current()
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+		mouse_captured = true
 	else:
 		process_mode = PROCESS_MODE_DISABLED
 		camera.clear_current(true)
 
 func _exit_tree():
-	if is_multiplayer_authority():
+	if mouse_captured:
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 func _unhandled_input(event: InputEvent) -> void:

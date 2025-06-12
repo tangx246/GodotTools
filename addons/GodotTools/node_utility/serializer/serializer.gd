@@ -47,9 +47,8 @@ static func _deserialize(parsed: Dictionary, obj: Object = null) -> Object:
 	var script: Script = load(parsed_script)
 	parsed.erase("script")
 
-	if obj == null:
+	if obj == null or not is_instance_of(obj, script):
 		obj = script.new()
-	assert(is_instance_of(obj, script), "%s must be an instance of %s" % [obj.get_script(), script])
 	
 	for key: String in parsed:
 		var value: Variant = _parse_object(parsed[key], obj.get(key))
