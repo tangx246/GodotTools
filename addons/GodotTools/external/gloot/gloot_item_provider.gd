@@ -5,7 +5,8 @@ extends ItemProvider
 @export var root: Node:
 	set(value):
 		root = value
-		_connect_signals.call_deferred()
+		if is_inside_tree():
+			_connect_signals()
 
 const KEY_STACK_SIZE = "stack_size"
 
@@ -13,10 +14,13 @@ func _ready() -> void:
 	refresh_item_count()
 
 func _enter_tree() -> void:
-	await get_tree().process_frame
 	_connect_signals()
 
 func _connect_signals() -> void:
+	await get_tree().process_frame
+	if not is_inside_tree():
+		return
+
 	for inventory in find_inventories():
 		Signals.safe_connect(self, inventory.contents_changed, refresh_item_count)
 		Signals.safe_connect(self, inventory.item_property_changed, refresh_item_count.unbind(2))

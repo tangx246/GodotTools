@@ -21,7 +21,11 @@ func get_input() -> Vector3:
 	var velocity2 = (input_dir * speed)
 	return Vector3(velocity2.x, velocity.y, velocity2.y)
 
-func _ready():	
+func _enter_tree() -> void:
+	await get_tree().process_frame
+	if not is_inside_tree():
+		return
+	
 	if is_multiplayer_authority():
 		process_mode = PROCESS_MODE_INHERIT
 		camera.make_current()

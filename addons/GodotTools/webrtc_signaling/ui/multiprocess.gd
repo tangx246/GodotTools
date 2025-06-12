@@ -34,6 +34,8 @@ func _enter_tree() -> void:
 	
 	if is_multiprocess_instance():
 		await get_tree().process_frame
+		if not is_inside_tree():
+			return
 		var single_player: bool = is_multiprocess_instance_single_player()
 		print("Multiprocess Server started. Autohosting. Singleplayer: %s" % single_player)
 		clientui._on_start_pressed(single_player)

@@ -74,17 +74,16 @@ func _positionrotation_to_transform(node_paths: Array[NodePath]):
 			node_paths.append(transform_nodepath)
 
 func _enter_tree() -> void:
+	await get_tree().process_frame
+	if not is_inside_tree():
+		return
+
 	if is_multiplayer_authority():
 		for path: NodePath in properties:
 			resource_memory[path] = null
 
 		if properties.size() > 0:
-			get_tree().physics_frame.connect(tick.call_deferred)
-
-func _exit_tree() -> void:
-	if is_multiplayer_authority():
-		if get_tree().physics_frame.is_connected(tick.call_deferred):
-			get_tree().physics_frame.disconnect(tick.call_deferred)
+			Signals.safe_connect(self, get_tree().physics_frame, tick.call_deferred)
 
 # NodePath to Variant
 var dirty_properties: Dictionary = {}

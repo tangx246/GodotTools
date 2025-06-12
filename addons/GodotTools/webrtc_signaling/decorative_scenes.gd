@@ -8,6 +8,8 @@ extends Node
 var decorative_items: Array[Node]
 func _enter_tree() -> void:
 	await get_tree().process_frame
+	if not is_inside_tree():
+		return
 	decorative_items = get_children()
 	gameRoot.child_order_changed.connect(_on_child_order_changed, CONNECT_ONE_SHOT)
 	client.disconnected.connect(_on_server_disconnected)

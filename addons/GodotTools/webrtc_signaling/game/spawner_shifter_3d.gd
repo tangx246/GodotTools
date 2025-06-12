@@ -12,5 +12,5 @@ func shift(node: Node):
 		return
 
 	var node3d = node as Node3D
-	node3d.global_position += direction * distance * index
+	node3d.position += direction * distance * index
 	index += 1

@@ -9,13 +9,15 @@ extends TweenObjectTo
 @export var lean_state : LEAN_STATE = LEAN_STATE.NONE:
 	set(value):
 		lean_state = value
-		lean_state_changed.emit(lean_transition_speed)
-		if lean_state == LEAN_STATE.LEFT:
-			_tween_lean_to(relative_lean_left_position, standing_lean_left_position.rotation, lean_transition_speed)
-		elif lean_state == LEAN_STATE.RIGHT:
-			_tween_lean_to(relative_lean_right_position, standing_lean_right_position.rotation, lean_transition_speed)
-		else:
-			_tween_lean_to(Vector3.ZERO, Vector3.ZERO, lean_transition_speed)
+		
+		if is_inside_tree():
+			lean_state_changed.emit(lean_transition_speed)
+			if lean_state == LEAN_STATE.LEFT:
+				_tween_lean_to(relative_lean_left_position, standing_lean_left_position.rotation, lean_transition_speed)
+			elif lean_state == LEAN_STATE.RIGHT:
+				_tween_lean_to(relative_lean_right_position, standing_lean_right_position.rotation, lean_transition_speed)
+			else:
+				_tween_lean_to(Vector3.ZERO, Vector3.ZERO, lean_transition_speed)
 			
 enum LEAN_STATE { NONE, LEFT, RIGHT }
 
@@ -24,7 +26,11 @@ signal lean_state_changed(transition_time: float)
 var relative_lean_left_position : Vector3
 var relative_lean_right_position : Vector3
 
-func _ready():
+func _enter_tree() -> void:
+	await get_tree().process_frame
+	if not is_inside_tree():
+		return
+
 	relative_lean_left_position = standing_lean_left_position.position - stand_position.position
 	relative_lean_right_position = standing_lean_right_position.position - stand_position.position
 

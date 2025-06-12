@@ -14,6 +14,9 @@ func _ready() -> void:
 
 func _enter_tree() -> void:
 	await get_tree().process_frame
+	if not is_inside_tree():
+		return
+	
 	for item_slot in item_slots:
 		if not item_slot.item_equipped.is_connected(_on_item_equipped):
 			item_slot.item_equipped.connect(_on_item_equipped)

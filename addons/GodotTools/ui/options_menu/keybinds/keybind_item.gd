@@ -16,6 +16,9 @@ var action: StringName:
 
 func _enter_tree() -> void:
 	await get_tree().process_frame
+	if not is_inside_tree():
+		return
+	
 	add_button.pressed.connect(_on_bind_requested)
 	set_process_input(false)
 	popup.unfocusable = true

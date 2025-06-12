@@ -22,6 +22,9 @@ func _ready() -> void:
 
 func _enter_tree() -> void:
 	await get_tree().process_frame
+	if not is_inside_tree():
+		return
+	
 	if not tree.animation_finished.is_connected(_on_anim_finished):
 		tree.animation_finished.connect(_on_anim_finished)
 		

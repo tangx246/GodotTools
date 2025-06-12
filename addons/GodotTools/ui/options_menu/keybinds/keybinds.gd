@@ -18,6 +18,9 @@ func _ready():
 		
 func _enter_tree() -> void:
 	await get_tree().process_frame
+	if not is_inside_tree():
+		return
+	
 	reset_to_defaults.pressed.connect(_on_reset_to_defaults)
 
 func _exit_tree() -> void:

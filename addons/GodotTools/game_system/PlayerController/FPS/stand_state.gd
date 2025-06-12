@@ -28,8 +28,10 @@ extends TweenObjectTo
 	set(value):
 		var prev_value = stand_state
 		stand_state = value
-		_set_collider()
-		_transition_stand_state(prev_value, value)
+		
+		if is_inside_tree():
+			_set_collider()
+			_transition_stand_state(prev_value, value)
 enum STAND_STATE {STAND, CROUCH, PRONE}
 
 signal stand_state_changed(transition_time: float)
@@ -39,7 +41,11 @@ func _set_collider():
 	for i in range(colliders.size()):
 		colliders[i].disabled = i != stand_state
 
-func _ready():
+func _enter_tree() -> void:
+	await get_tree().process_frame
+	if not is_inside_tree():
+		return
+	
 	_set_collider()
 	body.set(speed_var, stand_speed)
 

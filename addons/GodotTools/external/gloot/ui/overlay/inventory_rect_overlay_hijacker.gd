@@ -22,9 +22,9 @@ func _enter_tree() -> void:
 
 var last_refreshed: int = -1
 func _on_child_order_changed() -> void:
+	await Engine.get_main_loop().process_frame
 	if not is_inside_tree():
 		return
-	await get_tree().process_frame
 	var current_tick: int = Engine.get_process_frames()
 	if current_tick == last_refreshed:
 		return

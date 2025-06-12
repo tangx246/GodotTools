@@ -8,7 +8,11 @@ extends TextureRect
 var gradient_texture = texture as GradientTexture2D
 var gradient = gradient_texture.gradient as Gradient
 
-func _ready() -> void:
+func _enter_tree() -> void:
+	await get_tree().process_frame
+	if not is_inside_tree():
+		return
+	
 	damageable.current_hp_changed_by_source.connect(_oh_hp_changed)
 	gradient.set_offset(0, 1)
 	

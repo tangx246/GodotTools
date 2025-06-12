@@ -4,12 +4,12 @@ extends Node3D
 @export var fov: float = 75:
 	set(value):
 		fov = value
-		set_renderers()
+		set_renderers.call_deferred()
 @export var shader_material: ShaderMaterial
 
 func _ready() -> void:
 	for child: Node in find_children("", "Node", true, false):
-		child.child_order_changed.connect(set_renderers)
+		Signals.safe_connect(self, child.child_order_changed, set_renderers)
 
 	set_renderers()
 
@@ -20,7 +20,8 @@ func set_renderers():
 		if mesh:
 			mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 			replace_materials(mesh)
-		renderer.layers = fps_arms_layer if is_multiplayer_authority() else 0
+		if is_inside_tree():
+			renderer.layers = fps_arms_layer if is_multiplayer_authority() else 0
 		
 func replace_materials(mesh: MeshInstance3D) -> void:
 	assert(not mesh.material_override, "Mesh should not have a geometry material override")

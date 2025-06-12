@@ -103,6 +103,7 @@ noise = SubResource("FastNoiseLite_lmai6")
 [node name="WeaponSway" type="Node3D" parent="StandState/Recoil/Lean/ScreenShake/Camera3D" node_paths=PackedStringArray("root")]
 script = ExtResource("8_r2t8n")
 root = NodePath("../../../../../..")
+sway_factor = 0.5
 metadata/_custom_type_script = "uid://bvgpdyhpihset"
 
 [node name="FPS Arms" type="Node3D" parent="StandState/Recoil/Lean/ScreenShake/Camera3D/WeaponSway"]

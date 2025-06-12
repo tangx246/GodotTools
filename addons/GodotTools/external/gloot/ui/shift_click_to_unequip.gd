@@ -6,6 +6,9 @@ const CtrlInventoryItemRect = preload("res://addons/gloot/ui/ctrl_inventory_item
 
 func _enter_tree() -> void:
 	await get_tree().process_frame
+	if not is_inside_tree():
+		return
+
 	for slot: CtrlItemSlotEx in root.find_children("", "CtrlItemSlotEx"):
 		for child in slot.find_children("", "Node", true, false):
 			if child is CtrlInventoryItemRect:
