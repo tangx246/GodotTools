@@ -13,6 +13,7 @@ func _enter_tree() -> void:
 	decorative_items = get_children()
 	gameRoot.child_order_changed.connect(_on_child_order_changed, CONNECT_ONE_SHOT)
 	client.disconnected.connect(_on_server_disconnected)
+	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 	
 func _exit_tree() -> void:
 	if gameRoot.child_order_changed.is_connected(_on_child_order_changed):
@@ -34,3 +35,7 @@ func _on_server_disconnected() -> void:
 		for child in decorative_items:
 			if child.get_parent() != self:
 				add_child(child)
+
+func _on_peer_disconnected(id: int) -> void:
+	if id == MultiplayerPeer.TARGET_PEER_SERVER:
+		_on_server_disconnected()
