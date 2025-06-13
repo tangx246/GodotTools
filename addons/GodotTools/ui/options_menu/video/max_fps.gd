@@ -16,15 +16,3 @@ func _on_text_changed(_new_text: String):
 	print("Setting max FPS to %s" % text_int)
 	Engine.max_fps = text_int
 	PlayerPrefs.set_value(KEY, text_int)
-
-# func _on_item_selected(item: int):
-# 	if item == 0:
-# 		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
-# 	elif item == 1:
-# 		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED)
-# 	elif item == 2:
-# 		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ADAPTIVE)
-# 	elif item == 3:
-# 		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_MAILBOX)
-		
-# 	PlayerPrefs.set_value(KEY, item)

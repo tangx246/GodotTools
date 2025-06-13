@@ -61,9 +61,13 @@ text = "VSync"
 
 [node name="OptionButton" type="OptionButton" parent="VSync"]
 layout_mode = 2
-tooltip_text = "Adaptive behaves like Disabled when the framerate drops below the screen's refresh rate to reduce stuttering (tearing may be visible). Otherwise, vertical synchronization is enabled to avoid tearing.
+tooltip_text = "Adaptive behaves like Disabled when the framerate drops below the screen's refresh rate to reduce stuttering (tearing may be visible).
+Otherwise, vertical synchronization is enabled to avoid tearing.
 
-Mailbox displays the most recent image in the queue on vertical blanking intervals, while rendering to the other images (no tearing is visible). Framerate is unlimited. Although not guaranteed, the images can be rendered as fast as possible, which may reduce input lag"
+
+Mailbox displays the most recent image in the queue on vertical blanking intervals, while rendering to the other images (no tearing is visible).
+Framerate is unlimited.
+Although not guaranteed, the images can be rendered as fast as possible, which may reduce input lag"
 item_count = 4
 popup/item_0/text = "Disabled"
 popup/item_0/id = 0
