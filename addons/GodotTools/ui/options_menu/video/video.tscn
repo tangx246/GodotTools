@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://bwate1hp34pw2"]
+[gd_scene load_steps=5 format=3 uid="uid://bwate1hp34pw2"]
 
 [ext_resource type="Script" uid="uid://dihamk6x2yj4j" path="res://addons/GodotTools/ui/options_menu/video/fullscreen.gd" id="1_1jr12"]
 [ext_resource type="Script" uid="uid://bar6acb3bvxfq" path="res://addons/GodotTools/ui/options_menu/video/ui_scale.gd" id="2_uhq4o"]
+[ext_resource type="Script" uid="uid://c5gcy4a76qj3w" path="res://addons/GodotTools/ui/options_menu/video/vsync.gd" id="3_7usyl"]
+[ext_resource type="Script" uid="uid://dko0u4j26kde3" path="res://addons/GodotTools/ui/options_menu/video/max_fps.gd" id="4_ij5xy"]
 
 [node name="Video" type="VBoxContainer"]
 offset_right = 242.0
@@ -49,6 +51,41 @@ text = "1.0"
 [node name="Button" type="Button" parent="UI Scale"]
 layout_mode = 2
 text = "Apply"
+
+[node name="VSync" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VSync"]
+layout_mode = 2
+text = "VSync"
+
+[node name="OptionButton" type="OptionButton" parent="VSync"]
+layout_mode = 2
+tooltip_text = "Adaptive behaves like Disabled when the framerate drops below the screen's refresh rate to reduce stuttering (tearing may be visible). Otherwise, vertical synchronization is enabled to avoid tearing.
+
+Mailbox displays the most recent image in the queue on vertical blanking intervals, while rendering to the other images (no tearing is visible). Framerate is unlimited. Although not guaranteed, the images can be rendered as fast as possible, which may reduce input lag"
+item_count = 4
+popup/item_0/text = "Disabled"
+popup/item_0/id = 0
+popup/item_1/text = "Enabled"
+popup/item_1/id = 1
+popup/item_2/text = "Adaptive"
+popup/item_2/id = 2
+popup/item_3/text = "Mailbox"
+popup/item_3/id = 3
+script = ExtResource("3_7usyl")
+
+[node name="Max FPS" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Max FPS"]
+layout_mode = 2
+text = "Max FPS"
+
+[node name="TextEdit" type="LineEdit" parent="Max FPS"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+script = ExtResource("4_ij5xy")
 
 [connection signal="text_changed" from="UI Scale/HSlider" to="UI Scale/Label2" method="set_text"]
 [connection signal="pressed" from="UI Scale/Button" to="UI Scale/HSlider" method="apply"]
