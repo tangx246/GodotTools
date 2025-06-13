@@ -64,6 +64,11 @@ func _exit_tree() -> void:
 	if multiplayer.peer_disconnected.is_connected(_on_peer_disconnected):
 		multiplayer.peer_disconnected.disconnect(_on_peer_disconnected)
 
+	if stdio_observer and stdio_observer.is_started():
+		stdio_observer.wait_to_finish()
+	if stderr_observer and stderr_observer.is_started():
+		stderr_observer.wait_to_finish()
+
 func _process_observer(pipe: FileAccess, is_error: bool) -> void:
 	while pipe.is_open() and pipe.get_error() == OK:
 		var line: String = pipe.get_line()
@@ -84,8 +89,12 @@ func kill_headless_process():
 		print("Killing headless process %s" % pid)
 		OS.kill(pid)
 		output = {}
+		stdio_observer.wait_to_finish()
+		stderr_observer.wait_to_finish()
 
 var output: Dictionary
+var stdio_observer: Thread
+var stderr_observer: Thread
 func start_headless_process(single_player: bool):
 	kill_headless_process()
 	
@@ -94,8 +103,10 @@ func start_headless_process(single_player: bool):
 		params.append(SINGLEPLAYER_PARAM)
 	output = OS.execute_with_pipe(OS.get_executable_path(), params)
 	local_instance_single_player = single_player
-	WorkerThreadPoolExtended.add_task(_process_observer.bind(output["stdio"], false))
-	WorkerThreadPoolExtended.add_task(_process_observer.bind(output["stderr"], true))
+	stdio_observer = Thread.new()
+	stdio_observer.start(_process_observer.bind(output["stdio"], false))
+	stderr_observer = Thread.new()
+	stderr_observer.start(_process_observer.bind(output["stderr"], true))
 
 func _on_server_created(lobby: String):
 	clientui.room.text = lobby
