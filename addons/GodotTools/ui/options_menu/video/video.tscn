@@ -87,8 +87,8 @@ layout_mode = 2
 text = "Max FPS"
 
 [node name="TextEdit" type="LineEdit" parent="Max FPS"]
-custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+expand_to_text_length = true
 script = ExtResource("4_ij5xy")
 
 [connection signal="text_changed" from="UI Scale/HSlider" to="UI Scale/Label2" method="set_text"]
