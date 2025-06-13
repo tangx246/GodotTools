@@ -8,6 +8,8 @@ extends Node3D
 @export var reduce_tick_camera_distance: float = 30
 ## Number of frames to tick at when past the reduced tick distance threshold
 @export var reduced_tick_frames: int = 1000
+## Number of frames to tick at when close to the camera
+@export var short_distance_tick_frames: int = 3
 @export var camera_distance_tick_rate: int = 100
 
 @export_group("Editor Only")
@@ -18,15 +20,13 @@ extends Node3D
 		if Engine.is_editor_hint():
 			set_physics_process(track_target_in_editor)
 				
-var distance_check_ticks: int = 0
-var idle_ticks: int = 0
+var tick_variance: int
 var reduce_tick_camera_distance_squared: float
 var track_target_callable: Callable
 var camera: Camera3D
 func _ready() -> void:
 	reduce_tick_camera_distance_squared = reduce_tick_camera_distance * reduce_tick_camera_distance
-	distance_check_ticks = randi() % camera_distance_tick_rate
-	idle_ticks = randi() % reduced_tick_frames
+	tick_variance = randi() % 10000
 
 	if Engine.is_editor_hint():
 		track_target_callable = track_target_editor
@@ -44,20 +44,17 @@ func _physics_process(_delta: float) -> void:
 		if not camera:
 			return
 	
-	distance_check_ticks = (distance_check_ticks + 1) % camera_distance_tick_rate
-	if distance_check_ticks == 0:
+	var ticks: int = Engine.get_physics_frames() + tick_variance
+	if ticks % camera_distance_tick_rate == 0:
 		var new_short_distance: bool = camera.global_position.distance_squared_to(global_position) < reduce_tick_camera_distance_squared
 		
 		if short_distance != new_short_distance:
-			idle_ticks = randi() % reduced_tick_frames
 			short_distance = new_short_distance
 	
-	if short_distance:
+	if short_distance and ticks % short_distance_tick_frames == 0:
 		track_target_callable.call()
-	else:
-		idle_ticks = (idle_ticks + 1) % reduced_tick_frames
-		if idle_ticks == 0:
-			track_target_callable.call()
+	elif ticks % reduced_tick_frames == 0:
+		track_target_callable.call()
 
 func track_target() -> void:
 	WorkerThreadPoolExtended.add_task(_calculate_offset.bind(target.global_transform, localOffset))

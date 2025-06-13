@@ -69,5 +69,5 @@ func _calculate_new_pos_and_look(pos: Vector3, safe_velocity: Vector3, delta: fl
 func _move_to(target: Vector3):
 	global_position = target
 
-func is_on_floor():
+func is_on_floor() -> bool:
 	return true

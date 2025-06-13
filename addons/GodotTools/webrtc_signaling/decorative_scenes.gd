@@ -11,12 +11,10 @@ func _enter_tree() -> void:
 	if not is_inside_tree():
 		return
 	decorative_items = get_children()
-	gameRoot.child_order_changed.connect(_on_child_order_changed)
+	Signals.safe_connect(self, gameRoot.child_order_changed, _on_child_order_changed)
+	Signals.safe_connect(self, multiplayer.peer_disconnected, _on_peer_disconnected)
 	
 func _exit_tree() -> void:
-	if gameRoot.child_order_changed.is_connected(_on_child_order_changed):
-		gameRoot.child_order_changed.disconnect(_on_child_order_changed)
-		
 	for child in decorative_items:
 		child.queue_free()
 	
@@ -25,7 +23,9 @@ func _on_child_order_changed() -> void:
 		for child in decorative_items:
 			if child.get_parent() == self:
 				remove_child(child)
-	else:
+
+func _on_peer_disconnected(peer_id: int) -> void:
+	if peer_id == MultiplayerPeer.TARGET_PEER_SERVER:
 		for child in decorative_items:
 			if child.get_parent() != self:
 				add_child(child)
