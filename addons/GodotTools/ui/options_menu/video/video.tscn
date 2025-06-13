@@ -1,9 +1,13 @@
-[gd_scene load_steps=5 format=3 uid="uid://bwate1hp34pw2"]
+[gd_scene load_steps=9 format=3 uid="uid://bwate1hp34pw2"]
 
 [ext_resource type="Script" uid="uid://dihamk6x2yj4j" path="res://addons/GodotTools/ui/options_menu/video/fullscreen.gd" id="1_1jr12"]
 [ext_resource type="Script" uid="uid://bar6acb3bvxfq" path="res://addons/GodotTools/ui/options_menu/video/ui_scale.gd" id="2_uhq4o"]
 [ext_resource type="Script" uid="uid://c5gcy4a76qj3w" path="res://addons/GodotTools/ui/options_menu/video/vsync.gd" id="3_7usyl"]
 [ext_resource type="Script" uid="uid://dko0u4j26kde3" path="res://addons/GodotTools/ui/options_menu/video/max_fps.gd" id="4_ij5xy"]
+[ext_resource type="Script" uid="uid://00ohn4wwffd3" path="res://addons/GodotTools/ui/options_menu/video/scaling_3d_mode.gd" id="5_lc6vd"]
+[ext_resource type="Script" uid="uid://bweaf5qurmqt8" path="res://addons/GodotTools/ui/options_menu/video/3d_scaling.gd" id="5_lfsxg"]
+[ext_resource type="Script" uid="uid://c2q2tbwnr7lcx" path="res://addons/GodotTools/ui/options_menu/video/3d_scale.gd" id="7_dqmb0"]
+[ext_resource type="Script" uid="uid://ma0ctpmkjngh" path="res://addons/GodotTools/ui/options_menu/video/fsr_scale.gd" id="8_qq6na"]
 
 [node name="Video" type="VBoxContainer"]
 offset_right = 242.0
@@ -44,14 +48,6 @@ step = 0.1
 value = 1.0
 script = ExtResource("2_uhq4o")
 
-[node name="Label2" type="Label" parent="UI Scale"]
-layout_mode = 2
-text = "1.0"
-
-[node name="Button" type="Button" parent="UI Scale"]
-layout_mode = 2
-text = "Apply"
-
 [node name="VSync" type="HBoxContainer" parent="."]
 layout_mode = 2
 
@@ -91,5 +87,48 @@ layout_mode = 2
 expand_to_text_length = true
 script = ExtResource("4_ij5xy")
 
-[connection signal="text_changed" from="UI Scale/HSlider" to="UI Scale/Label2" method="set_text"]
-[connection signal="pressed" from="UI Scale/Button" to="UI Scale/HSlider" method="apply"]
+[node name="3D Scaling" type="VBoxContainer" parent="."]
+layout_mode = 2
+script = ExtResource("5_lfsxg")
+
+[node name="Scaling Mode" type="HBoxContainer" parent="3D Scaling"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="3D Scaling/Scaling Mode"]
+layout_mode = 2
+text = "Scaling Mode"
+
+[node name="ScalingModeOption" type="OptionButton" parent="3D Scaling/Scaling Mode"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("5_lc6vd")
+
+[node name="FreeRangeScale" type="HBoxContainer" parent="3D Scaling"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Label" type="Label" parent="3D Scaling/FreeRangeScale"]
+layout_mode = 2
+text = "Resolution Scale"
+
+[node name="HSlider" type="HSlider" parent="3D Scaling/FreeRangeScale"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_vertical = 1
+min_value = 0.1
+max_value = 5.0
+step = 0.1
+value = 1.0
+script = ExtResource("7_dqmb0")
+
+[node name="FSRScale" type="HBoxContainer" parent="3D Scaling"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Label" type="Label" parent="3D Scaling/FSRScale"]
+layout_mode = 2
+text = "Resolution Scale"
+
+[node name="OptionButton" type="OptionButton" parent="3D Scaling/FSRScale"]
+layout_mode = 2
+script = ExtResource("8_qq6na")
