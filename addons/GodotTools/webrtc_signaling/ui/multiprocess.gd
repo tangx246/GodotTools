@@ -89,8 +89,8 @@ func kill_headless_process():
 		print("Killing headless process %s" % pid)
 		OS.kill(pid)
 		output = {}
-		stdio_observer.wait_to_finish()
-		stderr_observer.wait_to_finish()
+		stdio_observer.wait_to_finish.call_deferred()
+		stderr_observer.wait_to_finish.call_deferred()
 
 var output: Dictionary
 var stdio_observer: Thread

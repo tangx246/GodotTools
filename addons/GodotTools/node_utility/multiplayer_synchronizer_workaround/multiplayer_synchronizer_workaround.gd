@@ -130,13 +130,16 @@ func _get_cached_node_path(path: NodePath) -> CachedNodePath:
 @rpc("authority", "call_remote", "reliable")
 func sync_properties(synced_properties: Dictionary) -> void:
 	for path: NodePath in synced_properties:
-		var value: Variant = synced_properties[path]
-		var cached: CachedNodePath = _get_cached_node_path(path)
-		var node: Node = cached.node
-		if not node or not is_instance_valid(node):
-			print("Node not found %s" % path)
-			return
-		
-		node.set(cached.path_subname, value)
+		_get_cached_node_path(path)
+		WorkerThreadPoolExtended.add_task(_sync_property.bind(path, synced_properties))
 
-	delta_synchronized.emit()
+func _sync_property(path: NodePath, synced_properties: Dictionary):
+	var value: Variant = synced_properties[path]
+	var cached: CachedNodePath = _get_cached_node_path(path)
+	var node: Node = cached.node
+	if not node or not is_instance_valid(node):
+		print("Node not found %s" % path)
+		return
+	
+	node.set.call_deferred(cached.path_subname, value)
+	delta_synchronized.emit.call_deferred()

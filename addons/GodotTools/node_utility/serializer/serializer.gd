@@ -61,7 +61,7 @@ static func _deserialize(parsed: Dictionary, obj: Object = null) -> Object:
 
 static func _parse_object(value: Variant, possible_source_obj: Variant) -> Variant:
 	# Possibly an object. Start parsing
-	if value is String:
+	if possible_source_obj is not String and value is String:
 		var json: JSON = JSON.new()
 		var parse_success: Error = json.parse(value)
 		if parse_success == OK:
