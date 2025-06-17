@@ -13,7 +13,8 @@ func _cleaner(working_task_ids: Array[int]):
 		WorkerThreadPool.wait_for_task_completion(task_id)
 
 func _exit_tree():
-	waiter_thread.wait_to_finish()
+	if waiter_thread.is_started():
+		waiter_thread.wait_to_finish()
 
 func _process(_delta: float) -> void:
 	if not waiter_thread.is_alive() and task_ids.size() > 0:

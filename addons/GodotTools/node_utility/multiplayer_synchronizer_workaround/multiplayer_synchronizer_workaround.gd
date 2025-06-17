@@ -138,7 +138,7 @@ func _get_resource(cached: CachedNodePath) -> Variant:
 @rpc("authority", "call_remote", "reliable")
 func sync_properties(synced_properties: Dictionary[NodePath, Variant]) -> void:
 	for path: NodePath in synced_properties:
-		WorkerThreadPoolExtended.add_task(_sync_property.bind(path, synced_properties))
+		_sync_property(path, synced_properties)
 
 func _sync_property(path: NodePath, synced_properties: Dictionary):
 	var value: Variant = synced_properties[path]

@@ -57,13 +57,13 @@ func _physics_process(_delta: float) -> void:
 		track_target_callable.call()
 
 func track_target() -> void:
-	WorkerThreadPoolExtended.add_task(_calculate_offset.bind(target.global_transform, localOffset))
+	_calculate_offset(target.global_transform, localOffset)
 
 func track_target_editor() -> void:
 	_calculate_offset.bind(target.global_transform, localOffset).call()
 
 func _calculate_offset(target_transform: Transform3D, offset: Vector3) -> void:
-	_set_transform.call_deferred(target_transform.translated_local(offset))
+	_set_transform(target_transform.translated_local(offset))
 	
 func _set_transform(target_transform: Transform3D) -> void:
 	global_transform = target_transform

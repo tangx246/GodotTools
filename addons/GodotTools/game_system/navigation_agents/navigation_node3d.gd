@@ -58,7 +58,7 @@ func _stick_to_floor() -> void:
 
 func _on_velocity_computed(safe_velocity: Vector3):	
 	velocity = safe_velocity
-	WorkerThreadPoolExtended.add_task(_calculate_new_pos_and_look.bind(global_position, safe_velocity, speed * get_physics_process_delta_time()))
+	_calculate_new_pos_and_look(global_position, safe_velocity, speed * get_physics_process_delta_time())
 
 func _calculate_new_pos_and_look(pos: Vector3, safe_velocity: Vector3, delta: float) -> void:
 	if safe_velocity.length_squared() > 0.01:

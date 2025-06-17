@@ -11,13 +11,13 @@ func _ready() -> void:
 				if light.get_param(Light3D.PARAM_RANGE) > 10:
 					light.set_param(Light3D.PARAM_RANGE, 10)
 				light.distance_fade_enabled = true
-				light.distance_fade_begin = 15
-				light.distance_fade_length = 10
-				light.distance_fade_shadow = 0
+				light.distance_fade_begin = minf(15, light.distance_fade_begin)
+				light.distance_fade_length = minf(10, light.distance_fade_length)
+				light.distance_fade_shadow = minf(0, light.distance_fade_shadow)
 			else:
-				light.distance_fade_begin = 15
-				light.distance_fade_length = 10
-				light.distance_fade_shadow = 15				
+				light.distance_fade_begin = minf(15, light.distance_fade_begin)
+				light.distance_fade_length = minf(10, light.distance_fade_length)
+				light.distance_fade_shadow = minf(15, light.distance_fade_shadow)				
 	
 	# Everything past here are static checks that shouldn't run in a regular build
 	if not OS.has_feature("editor"):
