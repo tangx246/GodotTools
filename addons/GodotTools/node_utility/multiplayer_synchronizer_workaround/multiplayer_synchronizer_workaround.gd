@@ -16,11 +16,12 @@ var root: Node
 var original_tick_rate: int
 
 # Maps NodePath to Variant
-var resource_memory: Dictionary[NodePath, Variant] = {}
 var properties: Array[NodePath]
-var nodepath_to_cached_nodepath: Dictionary[NodePath, CachedNodePath] = {}
+var cached_nodepaths: Array[CachedNodePath]
+var nodepath_to_cached_nodepaths: Dictionary[NodePath, CachedNodePath] = {}
 
 class CachedNodePath:
+	var node_path: NodePath
 	var node: Node
 	var path_subname: StringName
 	var is_dictionary: bool:
@@ -31,6 +32,7 @@ class CachedNodePath:
 			else:
 				resource_returner = get_resource
 	var resource_returner: Callable
+	var memory: Variant
 	
 	func _init() -> void:
 		resource_returner = get_resource
@@ -77,19 +79,19 @@ func _enter_tree() -> void:
 	
 	for path: NodePath in properties:
 		var cached := CachedNodePath.new()
+		cached.node_path = path
 		cached.node = root.get_node(path)
 		cached.path_subname = path.get_subname(0)
 		cached.is_dictionary = cached.node.get(cached.path_subname) is Dictionary
-		nodepath_to_cached_nodepath[path] = cached
+		cached.memory = null
+		cached_nodepaths.append(cached)
+		nodepath_to_cached_nodepaths[path] = cached
 	
 	await get_tree().process_frame
 	if not is_inside_tree():
 		return
 
 	if is_multiplayer_authority():
-		for path: NodePath in properties:
-			resource_memory[path] = null
-
 		if properties.size() > 0:
 			Signals.safe_connect(self, get_tree().physics_frame, tick)
 
@@ -117,34 +119,30 @@ func tick() -> void:
 			tick_rate = sleepy_tick_rate
 
 func _do_compare() -> void:
-	for path: NodePath in properties:
-		var cached: CachedNodePath = _get_cached_node_path(path)
+	for cached: CachedNodePath in cached_nodepaths:
 		var resource: Variant = _get_resource(cached)
 
-		_compare(resource_memory[path], resource, path, cached)
+		_compare(resource, cached)
 			
-func _compare(previous: Variant, actual: Variant, path: NodePath, cached: CachedNodePath) -> void:
-	if previous != actual:
-		_refresh_cache_and_update(path, cached.resource_returner.call(actual))
+func _compare(actual: Variant, cached: CachedNodePath) -> void:
+	if cached.memory != actual:
+		cached.memory = cached.resource_returner.call(actual)
+		_refresh_cache_and_update(cached, cached.resource_returner.call(actual))
 
-func _refresh_cache_and_update(path: NodePath, actual: Variant) -> void:
-	resource_memory[path] = actual
-	dirty_properties[path] = actual
+func _refresh_cache_and_update(cached: CachedNodePath, actual: Variant) -> void:
+	dirty_properties[cached.node_path] = actual
 
 func _get_resource(cached: CachedNodePath) -> Variant:
 	return cached.node.get(cached.path_subname)
 
-func _get_cached_node_path(path: NodePath) -> CachedNodePath:
-	return nodepath_to_cached_nodepath[path]
-
 @rpc("authority", "call_remote", "reliable")
-func sync_properties(synced_properties: Dictionary) -> void:
+func sync_properties(synced_properties: Dictionary[NodePath, Variant]) -> void:
 	for path: NodePath in synced_properties:
 		WorkerThreadPoolExtended.add_task(_sync_property.bind(path, synced_properties))
 
 func _sync_property(path: NodePath, synced_properties: Dictionary):
 	var value: Variant = synced_properties[path]
-	var cached: CachedNodePath = _get_cached_node_path(path)
+	var cached: CachedNodePath = nodepath_to_cached_nodepaths[path]
 	var node: Node = cached.node
 	if not node or not is_instance_valid(node):
 		print("Node not found %s" % path)
