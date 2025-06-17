@@ -1,0 +1,64 @@
+[gd_scene load_steps=5 format=3 uid="uid://diui0md87wd4i"]
+
+[ext_resource type="Script" uid="uid://rwb46eabjflh" path="res://addons/GodotTools/player_prefs/saveload/back.gd" id="1_wcuka"]
+[ext_resource type="PackedScene" uid="uid://m1iwdhcp8xt5" path="res://addons/GodotTools/player_prefs/saveload/save_game_view.tscn" id="1_wflld"]
+[ext_resource type="Script" uid="uid://b8vuo0815m4li" path="res://addons/GodotTools/player_prefs/saveload/save_list.gd" id="2_mfwxm"]
+[ext_resource type="Script" uid="uid://dudme5agoiwuc" path="res://addons/GodotTools/player_prefs/saveload/new_save.gd" id="4_l5mav"]
+
+[node name="SaveLoadWindow" type="Window"]
+auto_translate_mode = 1
+mode = 3
+title = "Save/Load"
+initial_position = 1
+size = Vector2i(1280, 720)
+transient = true
+exclusive = true
+borderless = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Back"
+script = ExtResource("1_wcuka")
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Saved Games"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(1000, 650)
+layout_mode = 2
+
+[node name="SaveList" type="VBoxContainer" parent="VBoxContainer/ScrollContainer"]
+layout_mode = 2
+script = ExtResource("2_mfwxm")
+
+[node name="SaveGameView" parent="VBoxContainer/ScrollContainer/SaveList" instance=ExtResource("1_wflld")]
+layout_mode = 2
+
+[node name="SaveGameView2" parent="VBoxContainer/ScrollContainer/SaveList" instance=ExtResource("1_wflld")]
+layout_mode = 2
+
+[node name="SaveGameView3" parent="VBoxContainer/ScrollContainer/SaveList" instance=ExtResource("1_wflld")]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="NewSaveName" type="LineEdit" parent="VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Save Name"
+expand_to_text_length = true
+
+[node name="New Save" type="Button" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "New Save"
+script = ExtResource("4_l5mav")
