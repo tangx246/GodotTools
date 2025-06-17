@@ -14,6 +14,10 @@ func _ready() -> void:
 				light.distance_fade_begin = 15
 				light.distance_fade_length = 10
 				light.distance_fade_shadow = 0
+			else:
+				light.distance_fade_begin = 15
+				light.distance_fade_length = 10
+				light.distance_fade_shadow = 15				
 	
 	# Everything past here are static checks that shouldn't run in a regular build
 	if not OS.has_feature("editor"):

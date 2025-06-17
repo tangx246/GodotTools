@@ -2,6 +2,7 @@ class_name SaveData
 
 @export var time_saved: float
 @export var data: String
+@export var name: String
 
 func _init(data: String = "") -> void:
 	time_saved = Time.get_unix_time_from_system()

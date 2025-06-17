@@ -2,7 +2,7 @@
 class_name MultiplayerSynchronizerWorkaround
 extends MultiplayerSynchronizer
 
-@onready var root: Node = get_node(root_path)
+var root: Node
 @export var tick_rate: int = 1
 
 @export_group("Sleepy ticks")
@@ -13,13 +13,12 @@ extends MultiplayerSynchronizer
 ## How many ticks before this synchronizer is considered sleepy
 @export var sleepy_tick_threshold: int = 300
 
-
 var original_tick_rate: int
 
 # Maps NodePath to Variant
-var resource_memory: Dictionary = {}
+var resource_memory: Dictionary[NodePath, Variant] = {}
 var properties: Array[NodePath]
-var nodepath_to_cached_nodepath: Dictionary = {}
+var nodepath_to_cached_nodepath: Dictionary[NodePath, CachedNodePath] = {}
 
 class CachedNodePath:
 	var node: Node
@@ -74,6 +73,15 @@ func _positionrotation_to_transform(node_paths: Array[NodePath]):
 			node_paths.append(transform_nodepath)
 
 func _enter_tree() -> void:
+	root = get_node(root_path)
+	
+	for path: NodePath in properties:
+		var cached := CachedNodePath.new()
+		cached.node = root.get_node(path)
+		cached.path_subname = path.get_subname(0)
+		cached.is_dictionary = cached.node.get(cached.path_subname) is Dictionary
+		nodepath_to_cached_nodepath[path] = cached
+	
 	await get_tree().process_frame
 	if not is_inside_tree():
 		return
@@ -83,10 +91,10 @@ func _enter_tree() -> void:
 			resource_memory[path] = null
 
 		if properties.size() > 0:
-			Signals.safe_connect(self, get_tree().physics_frame, tick.call_deferred)
+			Signals.safe_connect(self, get_tree().physics_frame, tick)
 
 # NodePath to Variant
-var dirty_properties: Dictionary = {}
+var dirty_properties: Dictionary[NodePath, Variant] = {}
 var ticks_since_change: int
 var tick_shift: int
 func tick() -> void:
@@ -101,36 +109,37 @@ func tick() -> void:
 			tick_rate = original_tick_rate
 		
 		sync_properties.rpc(dirty_properties)
+		dirty_properties.clear()
 	else:
 		ticks_since_change += 1
 		
 		if sleepy_ticks and ticks_since_change > sleepy_tick_threshold:
 			tick_rate = sleepy_tick_rate
 
-func _do_compare():
-	dirty_properties.clear()
+func _do_compare() -> void:
 	for path: NodePath in properties:
 		var cached: CachedNodePath = _get_cached_node_path(path)
-		var resource: Variant = cached.node.get(cached.path_subname)
+		var resource: Variant = _get_resource(cached)
 
-		if resource_memory[path] != resource:
-			resource_memory[path] = cached.resource_returner.call(resource)
-			dirty_properties[path] = resource
+		_compare(resource_memory[path], resource, path, cached)
+			
+func _compare(previous: Variant, actual: Variant, path: NodePath, cached: CachedNodePath) -> void:
+	if previous != actual:
+		_refresh_cache_and_update(path, cached.resource_returner.call(actual))
+
+func _refresh_cache_and_update(path: NodePath, actual: Variant) -> void:
+	resource_memory[path] = actual
+	dirty_properties[path] = actual
+
+func _get_resource(cached: CachedNodePath) -> Variant:
+	return cached.node.get(cached.path_subname)
 
 func _get_cached_node_path(path: NodePath) -> CachedNodePath:
-	if not nodepath_to_cached_nodepath.has(path):
-		var cached := CachedNodePath.new()
-		cached.node = root.get_node(path)
-		cached.path_subname = path.get_subname(0)
-		cached.is_dictionary = cached.node.get(cached.path_subname) is Dictionary
-		nodepath_to_cached_nodepath[path] = cached
-
 	return nodepath_to_cached_nodepath[path]
 
 @rpc("authority", "call_remote", "reliable")
 func sync_properties(synced_properties: Dictionary) -> void:
 	for path: NodePath in synced_properties:
-		_get_cached_node_path(path)
 		WorkerThreadPoolExtended.add_task(_sync_property.bind(path, synced_properties))
 
 func _sync_property(path: NodePath, synced_properties: Dictionary):

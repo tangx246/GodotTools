@@ -61,7 +61,7 @@ func test_quicksave_quickload() -> void:
 	assert_eq(all_saves.size(), 1, "Only one save should exist")
 	assert_eq(all_saves[0].data, testdata, "Quicksave should show up in all save list")
 
-	sg.save(0, "Quicksave")
+	sg.save("Quicksave", 0)
 	all_saves = sg.get_all_saves()
 	assert_eq(all_saves.size(), 1, "Quicksave should be overriden")
 	assert_eq(all_saves[0].data, "Quicksave", "Quicksave should be overriden")
@@ -70,19 +70,19 @@ func test_save() -> void:
 	sg.quicksave("Quicksave")
 	sg.qs.time_saved = 1
 	
-	sg.save(1, "Newsave")
+	sg.save("Newsave", 1)
 	sg.saves[0].time_saved = 2
 	var all_saves = sg.get_all_saves()
 	assert_eq(all_saves.size(), 2, "2 saves")
 	assert_eq(all_saves[1].data, "Quicksave", "Quicksave should remain the same")
 	assert_eq(all_saves[0].data, "Newsave", "New save")
 
-	sg.save(1, "Overwritequicksave")
+	sg.save("Overwritequicksave", 1)
 	sg.qs.time_saved = 3
 	all_saves = sg.get_all_saves()
 	assert_eq(get_data(all_saves), ["Overwritequicksave", "Newsave"])
 
-	sg.save(1, "Overwritenewsave")
+	sg.save("Overwritenewsave", 1)
 	sg.saves[0].time_saved = 4
 	all_saves = sg.get_all_saves()
 	assert_eq(get_data(all_saves), ["Overwritenewsave", "Overwritequicksave"])

@@ -8,6 +8,8 @@ var qs: SaveData
 const SAVES_KEY: String = "Saves"
 var saves: Array[SaveData]
 
+signal save_changed
+
 func _ready() -> void:
 	var qs_string: String = kvs.get_value(QUICKSAVE_KEY, "")
 	if !qs_string.is_empty():
@@ -29,16 +31,19 @@ func get_all_saves() -> Array[SaveData]:
 
 func quicksave(data: String) -> void:
 	qs = SaveData.new(data)
+	qs.name = QUICKSAVE_KEY
 	var stringified: String = qs.to_string()
 	kvs.set_value(QUICKSAVE_KEY, stringified)
+	save_changed.emit()
 
 func quickload() -> SaveData:
 	return qs
 
-func save(index: int, data: String) -> void:
+# index of -1 or > get_all_saves().size() will create a new save
+func save(data: String, index: int = -1, name: String = "") -> void:
 	var sd: SaveData
 	var all_saves: Array[SaveData] = get_all_saves()
-	if index >= all_saves.size():
+	if index >= all_saves.size() or index < 0:
 		sd = SaveData.new(data)
 		saves.append(sd)
 	else:
@@ -49,7 +54,20 @@ func save(index: int, data: String) -> void:
 	else:
 		var saves_index: int = saves.find(sd)
 		sd = SaveData.new(data)
+		sd.name = name
 		saves[saves_index] = sd
 
 		var stringified: String = JSON.stringify(saves)
 		kvs.set_value(SAVES_KEY, stringified)
+		save_changed.emit()
+
+func delete(index: int) -> void:
+	var sd: SaveData = get_all_saves()[index]
+	if sd == qs:
+		qs = null
+		kvs.set_value(QUICKSAVE_KEY, "")
+		save_changed.emit()
+	else:
+		saves.erase(sd)
+		kvs.set_value(SAVES_KEY, JSON.stringify(saves))
+		save_changed.emit()
