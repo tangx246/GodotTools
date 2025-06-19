@@ -74,7 +74,7 @@ func _positionrotation_to_transform(node_paths: Array[NodePath]):
 			var transform_nodepath: NodePath = NodePath("%s:transform" % key)
 			node_paths.append(transform_nodepath)
 
-func _enter_tree() -> void:
+func _enter_tree() -> void:	
 	root = get_node(root_path)
 	
 	for path: NodePath in properties:
@@ -86,7 +86,7 @@ func _enter_tree() -> void:
 		cached.memory = null
 		cached_nodepaths.append(cached)
 		nodepath_to_cached_nodepaths[path] = cached
-	
+		
 	await get_tree().process_frame
 	if not is_inside_tree():
 		return
