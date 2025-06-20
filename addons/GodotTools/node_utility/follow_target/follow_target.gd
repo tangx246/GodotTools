@@ -9,7 +9,7 @@ extends Node3D
 ## Number of frames to tick at when past the reduced tick distance threshold
 @export var reduced_tick_frames: int = 1000
 ## Number of frames to tick at when close to the camera
-@export var short_distance_tick_frames: int = 3
+@export var short_distance_tick_frames: int = 10
 @export var camera_distance_tick_rate: int = 100
 
 @export_group("Editor Only")
@@ -46,15 +46,18 @@ func _physics_process(_delta: float) -> void:
 	
 	var ticks: int = Engine.get_physics_frames() + tick_variance
 	if ticks % camera_distance_tick_rate == 0:
-		var new_short_distance: bool = camera.global_position.distance_squared_to(global_position) < reduce_tick_camera_distance_squared
-		
-		if short_distance != new_short_distance:
-			short_distance = new_short_distance
+		_camera_distance_check()
 	
 	if short_distance and ticks % short_distance_tick_frames == 0:
 		track_target_callable.call()
 	elif ticks % reduced_tick_frames == 0:
 		track_target_callable.call()
+
+func _camera_distance_check() -> void:
+	var new_short_distance: bool = camera.global_position.distance_squared_to(global_position) < reduce_tick_camera_distance_squared
+		
+	if short_distance != new_short_distance:
+		short_distance = new_short_distance
 
 func track_target() -> void:
 	_calculate_offset(target.global_transform, localOffset)

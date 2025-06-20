@@ -31,7 +31,7 @@ func _process(_delta: float) -> void:
 		print("%s: %.2f" % [name, value])
 
 func tick(delta: float) -> void:
-	printerr("Unimplemented")
+	assert(false, "Unimplemented")
 
 func _transform(input: float) -> float:
 	var transformed: float = input

@@ -22,7 +22,7 @@ func _enter_tree() -> void:
 			item_slot.item_equipped.connect(_on_item_equipped)
 		if not item_slot.cleared.is_connected(_on_item_unequipped):
 			item_slot.cleared.connect(_on_item_unequipped)
-	_refresh()
+	_refresh.call_deferred()
 
 func _exit_tree() -> void:
 	for item_slot in item_slots:
