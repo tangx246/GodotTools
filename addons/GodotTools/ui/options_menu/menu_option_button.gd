@@ -19,7 +19,7 @@ func _get_options() -> Dictionary[int, MenuOption]:
 func _set_option(id: int):
 	assert(false, "Unimplemented")
 
-class MenuOption:
+class MenuOption extends RefCounted:
 	var index: int
 	var id: int
 	var text: String

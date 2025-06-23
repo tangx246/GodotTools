@@ -10,7 +10,7 @@ func _enter_tree():
 func _exit_tree():
 	remove_custom_type("FPSController")
 
-class JoyEvent:
+class JoyEvent extends RefCounted:
 	var axis: JoyAxis
 	var axis_val: float
 	

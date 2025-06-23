@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://cpwp4xx6mv5p"]
+[gd_scene load_steps=9 format=3 uid="uid://cpwp4xx6mv5p"]
 
 [ext_resource type="Script" uid="uid://dopyo7y588l7r" path="res://addons/GodotTools/webrtc_signaling/ui/client_ui.gd" id="1"]
 [ext_resource type="Script" uid="uid://cfgcyyb8hg7re" path="res://addons/GodotTools/webrtc_signaling/client/multiplayer_client.gd" id="2"]
 [ext_resource type="Script" uid="uid://dgwrvhb6ws5ss" path="res://addons/GodotTools/webrtc_signaling/ui/multiprocess.gd" id="2_nwvpy"]
 [ext_resource type="Script" uid="uid://cpy6eglnf65da" path="res://addons/GodotTools/webrtc_signaling/ui/room_tab_container.gd" id="3_1n8go"]
+[ext_resource type="Script" uid="uid://b8idntjaigery" path="res://addons/GodotTools/webrtc_signaling/ui/playerinfo/playerinfo.gd" id="3_ikfcm"]
 [ext_resource type="Script" uid="uid://dkbofririgxoe" path="res://addons/GodotTools/webrtc_signaling/ui/player_list.gd" id="4_blxr0"]
 [ext_resource type="Script" uid="uid://bd441qkfic0y1" path="res://addons/GodotTools/webrtc_signaling/ui/authority_actions.gd" id="4_dx57n"]
 [ext_resource type="PackedScene" uid="uid://1tk7mqago26t" path="res://addons/GodotTools/ui/options_menu/options_menu.tscn" id="5_chhbd"]
@@ -20,6 +21,11 @@ script = ExtResource("1")
 [node name="Multiprocess" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("2_nwvpy")
+
+[node name="PlayerInfo" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("3_ikfcm")
+metadata/_custom_type_script = "uid://b8idntjaigery"
 
 [node name="Client" type="Node" parent="."]
 unique_name_in_owner = true
@@ -82,10 +88,8 @@ unresizable = false
 borderless = false
 
 [node name="OptionsMenu" parent="VBoxContainer/TabContainer/Host Join UI/Connect/Options/PopupPanel" instance=ExtResource("5_chhbd")]
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 996.0
-offset_bottom = 496.0
+offset_right = 1000.0
+offset_bottom = 500.0
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/TabContainer/Host Join UI"]
 layout_mode = 2

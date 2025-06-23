@@ -20,7 +20,7 @@ var properties: Array[NodePath]
 var cached_nodepaths: Array[CachedNodePath]
 var nodepath_to_cached_nodepaths: Dictionary[NodePath, CachedNodePath] = {}
 
-class CachedNodePath:
+class CachedNodePath extends RefCounted:
 	var node_path: NodePath
 	var node: Node
 	var path_subname: StringName
