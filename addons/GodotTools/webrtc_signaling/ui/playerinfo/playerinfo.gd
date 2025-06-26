@@ -40,13 +40,15 @@ func get_player_name() -> String:
 	if is_multiplayer_authority():
 		return "server"
 	else:
-		if SteamInit.get_steam():
-			return SteamInit.get_steam().getPersonaName()
+		var steam = SteamInit.get_steam()
+		if steam:
+			return steam.getPersonaName()
 		return "player"
 
 func get_steam_id() -> String:
-	if SteamInit.get_steam():
-		return str(SteamInit.get_steam().getSteamID())
+	var steam = SteamInit.get_steam()
+	if steam:
+		return str(steam.getSteamID())
 	else:
 		return ""
 

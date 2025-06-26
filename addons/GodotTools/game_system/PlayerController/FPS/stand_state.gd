@@ -81,6 +81,14 @@ func _transition_stand_state(prevValue: STAND_STATE, value: STAND_STATE):
 			await _tween_camera_root_to(crouch_position.position, crouch_transition_speed)
 			body.set(speed_var, crouch_speed)
 
+func refresh_speed() -> void:
+	if stand_state == STAND_STATE.STAND:
+		body.set(speed_var, stand_speed)
+	elif stand_state == STAND_STATE.CROUCH:
+		body.set(speed_var, crouch_speed)
+	elif stand_state == STAND_STATE.PRONE:
+		body.set(speed_var, prone_speed)
+
 func walk(walking: bool):
 	if stand_state == STAND_STATE.STAND:
 		if walking:

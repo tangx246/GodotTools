@@ -7,12 +7,13 @@ enum EffectType {
 }
 
 func apply(root: Node) -> void:
-	printerr("Unimplemented")
+	assert(false, "Unimplemented")
 	
 func unapply(root: Node) -> void:
-	printerr("Unimplemented")
+	assert(false, "Unimplemented")
 	
 func get_text() -> String:
+	assert(false, "Unimplemented")
 	return "Unimplemented"
 
 func get_effect_type() -> EffectType:

@@ -12,9 +12,11 @@ var avatar: Texture2D
 signal updated
 
 func fetch_avatar() -> void:
-	if SteamInit.get_steam() and steam_id != "":
-		SteamInit.get_steam().avatar_loaded.connect(_on_loaded_avatar)
-		SteamInit.get_steam().getPlayerAvatar(SteamInit.get_steam().AVATAR_SMALL, int(steam_id))
+	var steam = SteamInit.get_steam()
+	if steam and steam_id != "":
+		if not steam.avatar_loaded.is_connected(_on_loaded_avatar):
+			steam.avatar_loaded.connect(_on_loaded_avatar)
+		steam.getPlayerAvatar(steam.AVATAR_SMALL, int(steam_id))
 
 func _on_loaded_avatar(user_id: int, avatar_size: int, avatar_buffer: PackedByteArray) -> void:
 	if user_id != int(steam_id):
