@@ -18,8 +18,11 @@ func _request_refresh() -> void:
 
 @rpc("any_peer", "call_local", "reliable")
 func _request_refresh_rpc():
-	var save_games: Array[SaveData] = SaveGames.get_all_saves()
-	_refresh.rpc(JSON.stringify(save_games))
+	var save_games: Array[SaveData] = SaveGames.get_mutable_saves()
+	for save_game in save_games:
+		# Scrub the data so that we can fit them in the RPC call without buffer overflow
+		save_game.data = ""
+	_refresh.rpc_id(multiplayer.get_remote_sender_id(), JSON.stringify(save_games))
 
 @rpc("authority", "call_local", "reliable")
 func _refresh(save_games_stringified: String):

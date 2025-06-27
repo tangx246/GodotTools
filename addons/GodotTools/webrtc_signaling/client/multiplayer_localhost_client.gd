@@ -37,20 +37,6 @@ func stop() -> void:
 	rtc_mp.close()
 	close()
 
-
-func _new_ice_candidate(mid_name: String, index_name: int, sdp_name: String, id: int) -> void:
-	send_candidate(id, mid_name, index_name, sdp_name)
-
-
-func _offer_created(type: String, data: String, id: int) -> void:
-	if not rtc_mp.has_peer(id):
-		return
-	print("created", type)
-	rtc_mp.get_peer(id).connection.set_local_description(type, data)
-	if type == "offer": send_offer(id, data)
-	else: send_answer(id, data)
-
-
 func _connected(id: int, use_mesh: bool) -> void:
 	print("Connected %d, mesh: %s" % [id, use_mesh])
 	var error: Error

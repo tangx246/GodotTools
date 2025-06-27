@@ -3,7 +3,6 @@ extends Node
 
 @export var root: Node
 @onready var gameRoot: Node = %GameRoot
-@onready var client: WebsocketSignalingClient = root.find_children("", "WebsocketSignalingClient")[0]
 
 var decorative_items: Array[Node]
 func _enter_tree() -> void:

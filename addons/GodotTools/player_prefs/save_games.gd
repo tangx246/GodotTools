@@ -1,25 +1,28 @@
 extends Node
 
-var kvs: KeyValueStore = KeyValueStore.new("user://save_games.save")
-
-const QUICKSAVE_KEY: String = "Quicksave"
-var qs: SaveData
-
-const SAVES_KEY: String = "Saves"
+const SAVE_PATH: StringName = "user://saves"
 var saves: Array[SaveData]
+
+const QUICKSAVE_PATH: StringName = "%s/quicksave.json" % SAVE_PATH
+var qs: SaveData
 
 signal save_changed
 
 func _ready() -> void:
-	var qs_string: String = kvs.get_value(QUICKSAVE_KEY, "")
-	if !qs_string.is_empty():
-		qs = SaveData.deserialize(qs_string)
+	if not DirAccess.dir_exists_absolute(SAVE_PATH):
+		var err := DirAccess.make_dir_absolute(SAVE_PATH)
+		if err:
+			printerr("Error creating directory %s" % SAVE_PATH)
+			return
 
-	var saves_string: String = kvs.get_value(SAVES_KEY, "[]")
-	var saves_parsed: Array = JSON.parse_string(saves_string)
-	for i in range(saves_parsed.size()):
-		saves_parsed[i] = SaveData.deserialize(saves_parsed[i])
-	saves.assign(saves_parsed)
+	saves = []
+	for file_name in DirAccess.get_files_at(SAVE_PATH):
+		var path := "%s/%s" % [SAVE_PATH, file_name]
+		var sd: SaveData = SaveData.load(path)
+		if path == QUICKSAVE_PATH:
+			qs = sd
+		else:
+			saves.append(sd)
 
 func get_all_saves() -> Array[SaveData]:
 	var ret: Array[SaveData] = []
@@ -28,12 +31,17 @@ func get_all_saves() -> Array[SaveData]:
 	ret.append_array(saves)
 	ret.sort_custom(func(a: SaveData, b: SaveData): return a.time_saved > b.time_saved)
 	return ret
+	
+## Same with get_all_saves(), except the SaveData can be edited
+func get_mutable_saves() -> Array[SaveData]:
+	var ret: Array[SaveData] = []
+	ret.assign(get_all_saves().map(func(s: SaveData): return s.duplicate(true)))
+	return ret
 
 func quicksave(data: String) -> void:
 	qs = SaveData.new(data)
-	qs.name = QUICKSAVE_KEY
-	var stringified: String = qs.to_string()
-	kvs.set_value(QUICKSAVE_KEY, stringified)
+	qs.name = "Quicksave"
+	qs.save(QUICKSAVE_PATH)
 	save_changed.emit()
 
 func quickload() -> SaveData:
@@ -56,18 +64,19 @@ func save(data: String, index: int = -1, name: String = "") -> void:
 		sd = SaveData.new(data)
 		sd.name = name
 		saves[saves_index] = sd
-
-		var stringified: String = JSON.stringify(saves)
-		kvs.set_value(SAVES_KEY, stringified)
+		sd.save(_get_save_path(sd))
 		save_changed.emit()
 
 func delete(index: int) -> void:
 	var sd: SaveData = get_all_saves()[index]
 	if sd == qs:
 		qs = null
-		kvs.set_value(QUICKSAVE_KEY, "")
+		SaveData.remove(QUICKSAVE_PATH)
 		save_changed.emit()
 	else:
 		saves.erase(sd)
-		kvs.set_value(SAVES_KEY, JSON.stringify(saves))
+		sd.remove(_get_save_path(sd))
 		save_changed.emit()
+
+func _get_save_path(sd: SaveData) -> String:
+	return "%s/%s.json" % [SAVE_PATH, sd.time_saved]
