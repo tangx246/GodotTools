@@ -44,7 +44,13 @@ func _create_peer(id: int) -> WebRTCPeerConnection:
 	# as it requires much greater resources to host (all traffic goes through
 	# the TURN server, instead of only performing the initial connection).
 	peer.initialize({
-		"iceServers": [ { "urls": ["stun:stun.l.google.com:19302"] } ]
+		"iceServers": [ { "urls": [
+			"stun:stun.l.google.com:19302",
+			"stun:stun1.l.google.com:19302",
+			"stun:stun2.l.google.com:19302",
+			"stun:stun3.l.google.com:19302",
+			"stun:stun4.l.google.com:19302",
+		] } ]
 	})
 	peer.session_description_created.connect(_offer_created.bind(id))
 	peer.ice_candidate_created.connect(_new_ice_candidate.bind(id))

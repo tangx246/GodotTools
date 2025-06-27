@@ -13,8 +13,9 @@ func _enter_tree() -> void:
 	if not is_inside_tree():
 		return
 	
-	damageable.current_hp_changed_by_source.connect(_oh_hp_changed)
-	gradient.set_offset(0, 1)
+	if is_multiplayer_authority():
+		damageable.current_hp_changed_by_source.connect(_oh_hp_changed)
+		gradient.set_offset(0, 1)
 	
 var tween: Tween
 func _oh_hp_changed(prev_value: float, value: float, source: Node):

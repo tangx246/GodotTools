@@ -8,7 +8,7 @@ signal load_requested(save: SaveData)
 func _ready() -> void:
 	visibility_changed.connect(_request_refresh)
 
-	Signals.safe_connect(self, SaveGames.save_changed, _request_refresh_rpc)
+	Signals.safe_connect(self, SaveGames.save_changed, _request_refresh)
 
 func _request_refresh() -> void:
 	if not visible:
