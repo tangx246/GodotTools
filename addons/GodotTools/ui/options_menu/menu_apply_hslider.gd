@@ -1,6 +1,8 @@
 class_name MenuApplyHSlider
 extends HSlider
 
+@export var default_value: float = 1.0
+
 func _get_key() -> String:
 	assert(false, "Unimplemented")
 	return ""
@@ -9,7 +11,7 @@ func _apply_setting(value: float) -> void:
 	assert(false, "Unimplemented")
 
 func _enter_tree() -> void:
-	value = PlayerPrefs.get_value(_get_key(), 1.0)
+	value = PlayerPrefs.get_value(_get_key(), default_value)
 	apply()
 
 func _ready() -> void:

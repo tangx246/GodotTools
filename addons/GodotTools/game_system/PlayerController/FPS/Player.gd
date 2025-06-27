@@ -67,8 +67,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		stand_state_controller.sprint(false)
 	
 	if event is InputEventMouseMotion:
-		mouse_movement.x -= event.relative.x * mouse_look_speed
-		mouse_movement.y -= event.relative.y * mouse_look_speed
+		mouse_movement.x -= event.relative.x * mouse_look_speed * PlayerPrefs.get_value(MouseLookSensitivity.MOUSE_LOOK_KEY, 1.0)
+		mouse_movement.y -= event.relative.y * mouse_look_speed * PlayerPrefs.get_value(MouseLookSensitivity.MOUSE_LOOK_KEY, 1.0)
 
 func _process(delta: float) -> void:
 	var look_input = Input.get_vector("Look Left", "Look Right", "Look Down", "Look Up")

@@ -17,7 +17,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		else:
 			current_player_idx  = (current_player_idx - 1) % players.size()
 	if event is InputEventMouseMotion:
-		rotate_y(-event.relative.x * .002)
+		rotate_y(-event.relative.x * .002 * PlayerPrefs.get_value(MouseLookSensitivity.MOUSE_LOOK_KEY, 1.0))
 
 func _process(_delta: float) -> void:
 	var current_player: Node3D = players[current_player_idx] if current_player_idx < players.size() else null
