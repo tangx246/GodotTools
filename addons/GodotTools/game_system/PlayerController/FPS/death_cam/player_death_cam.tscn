@@ -5,7 +5,14 @@
 [node name="PlayerDeathCam" type="Node3D"]
 script = ExtResource("1_dqw0y")
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="Pitch" type="Node3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 0.969676, 0.244394, 0, -0.244394, 0.969676, 0, 1.45536, 1.58069)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="Pitch"]
+unique_name_in_owner = true
+spring_length = 2.0
+margin = 0.1
+
+[node name="Camera3D" type="Camera3D" parent="Pitch/SpringArm3D"]
+unique_name_in_owner = true
 cull_mask = 1048551
