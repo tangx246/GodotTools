@@ -7,6 +7,7 @@ extends Node3D
 @export var min_distance: float = 2
 @export var max_distance: float = 5
 
+var current_distance: float
 var players: Array[Node3D]
 var current_player_idx: int = 0
 
@@ -17,6 +18,7 @@ func _enter_tree() -> void:
 	
 	players.assign(get_tree().get_nodes_in_group("player"))
 	cam.make_current()
+	current_distance = spring_arm.spring_length
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
 func _exit_tree() -> void:
@@ -30,16 +32,22 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
 			current_player_idx  = (current_player_idx - 1) % players.size()
 		elif event.button_index == MOUSE_BUTTON_WHEEL_UP:
-			_zoom(-.2)
+			_zoom(-.4)
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-			_zoom(.2)
+			_zoom(.4)
 	if event is InputEventMouseMotion:
 		rotate_y(-event.relative.x * .002 * PlayerPrefs.get_value(MouseLookSensitivity.MOUSE_LOOK_KEY, 1.0))
 		pitch.rotate_x(-event.relative.y * .002 * PlayerPrefs.get_value(MouseLookSensitivity.MOUSE_LOOK_KEY, 1.0))
 		pitch.rotation.x = clampf(pitch.rotation.x, -PI/4, PI/4)
 
+var tween: Tween
 func _zoom(amount: float) -> void:
-	spring_arm.spring_length = clampf(spring_arm.spring_length + amount, min_distance, max_distance)
+	if tween:
+		tween.kill()
+	
+	current_distance = clampf(current_distance + amount, min_distance, max_distance)
+	tween = create_tween()
+	tween.tween_property(spring_arm, "spring_length", current_distance, .2)
 
 func _process(_delta: float) -> void:
 	var current_player: Node3D = players[current_player_idx] if current_player_idx < players.size() else null
