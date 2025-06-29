@@ -1,6 +1,6 @@
 extends Control
 
-@onready var client: WebsocketSignalingClient = %Client
+@onready var client: SignalingClient = %Client
 @onready var host: LineEdit = %Host
 @onready var room: LineEdit = %RoomSecret
 @onready var mesh: CheckBox = %Mesh
@@ -28,7 +28,7 @@ func _ready() -> void:
 
 	room_list.item_activated.connect(_on_room_list_activated)
 
-func _connect_signals(client: WebsocketSignalingClient):
+func _connect_signals(client: SignalingClient):
 	client.lobby_joined.connect(_lobby_joined)
 	client.lobby_sealed.connect(_lobby_sealed)
 	client.connected.connect(_connected)
@@ -85,7 +85,7 @@ func _on_start_pressed(single_player: bool = false) -> void:
 		_log("Starting multiplayer multiprocess instance")
 		multiprocess.start_headless_process(false)
 	else:
-		var client_to_use: WebsocketSignalingClient
+		var client_to_use: SignalingClient
 		if single_player:
 			client_to_use = _create_singleplayer_client()
 		else:
@@ -105,7 +105,7 @@ func _on_join_pressed(single_player: bool = false) -> void:
 		_log("Please enter room code")
 		return
 
-	var client_to_use: WebsocketSignalingClient
+	var client_to_use: SignalingClient
 	if single_player:
 		client_to_use = _create_singleplayer_client()
 	else:

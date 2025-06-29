@@ -1,6 +1,6 @@
 extends TabContainer
 
-@onready var client: WebsocketSignalingClient = %Client
+@onready var client: SignalingClient = %Client
 
 func _enter_tree() -> void:
 	await get_tree().process_frame
@@ -15,7 +15,7 @@ func _exit_tree() -> void:
 		get_tree().node_added.disconnect(_on_node_added)
 
 func _on_node_added(node: Node) -> void:
-	if node is WebsocketSignalingClient:
+	if node is SignalingClient:
 		node.connected.connect(_on_connected)
 		node.disconnected.connect(_on_disconnected)
 

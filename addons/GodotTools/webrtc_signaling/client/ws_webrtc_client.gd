@@ -1,5 +1,5 @@
 class_name WebsocketSignalingClient
-extends Node
+extends SignalingClient
 
 enum Message {
 	JOIN,
@@ -22,17 +22,11 @@ var code := 1000
 var reason := "Unknown"
 var old_state := WebSocketPeer.STATE_CLOSED
 
-signal lobby_joined(lobby: String)
-signal connected(id: int, use_mesh: bool)
-signal disconnected()
 signal peer_connected(id: int)
 signal peer_disconnected(id: int)
 signal offer_received(id: int, offer: String)
 signal answer_received(id: int, answer: String)
 signal candidate_received(id: int, mid: String, index: int, sdp: String)
-signal lobby_sealed()
-signal room_list_received(room_list: Dictionary)
-
 
 func connect_to_url(url: String) -> void:
 	close()

@@ -1,7 +1,7 @@
 class_name PlayerInfo
 extends Node
 
-@onready var client: WebsocketSignalingClient = %Client
+@onready var client: SignalingClient = %Client
 
 const Player = preload("uid://cuytk13ncwovs")
 var players: Dictionary[int, Player] = {}
