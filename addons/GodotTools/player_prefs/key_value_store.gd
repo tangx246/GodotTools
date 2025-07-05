@@ -4,6 +4,8 @@ extends Node
 var values : Dictionary = {}
 var savePath : String = ""
 
+signal value_changed(key: String)
+
 func _init(savePath: String):
 	self.savePath = savePath
 	assert(not savePath.is_empty(), "savePath must be set")
@@ -42,6 +44,7 @@ func save():
 	
 func set_value(key: String, value: Variant, save: bool = true):
 	values[key] = value
+	value_changed.emit(key)
 	
 	if save:
 		save()
@@ -57,6 +60,7 @@ func has_key(key: String) -> bool:
 	
 func delete_key(key: String, save: bool = true):
 	values.erase(key)
-	
+	value_changed.emit(key)
+
 	if save:
 		save()

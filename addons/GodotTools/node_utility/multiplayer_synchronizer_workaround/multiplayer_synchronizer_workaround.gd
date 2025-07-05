@@ -15,6 +15,8 @@ var root: Node
 
 var original_tick_rate: int
 
+const COMPRESSION_METHOD = FileAccess.COMPRESSION_ZSTD
+
 # Maps NodePath to Variant
 var properties: Array[NodePath]
 var cached_nodepaths: Array[CachedNodePath]
@@ -110,13 +112,19 @@ func tick() -> void:
 		if tick_rate == sleepy_tick_rate:
 			tick_rate = original_tick_rate
 		
-		sync_properties.rpc(dirty_properties)
+		SuperMultiplayerSynchronizer.push_sync(self, dirty_properties)
+		#sync_properties.rpc(_compress(dirty_properties))
 		dirty_properties.clear()
 	else:
 		ticks_since_change += 1
 		
 		if sleepy_ticks and ticks_since_change > sleepy_tick_threshold:
 			tick_rate = sleepy_tick_rate
+
+func _compress(dict: Dictionary[NodePath, Variant]) -> PackedByteArray:
+	var original: PackedByteArray = var_to_bytes(dict)
+	var compressed: PackedByteArray = original.compress(COMPRESSION_METHOD)
+	return compressed
 
 func _do_compare() -> void:
 	for cached: CachedNodePath in cached_nodepaths:
@@ -136,7 +144,8 @@ func _get_resource(cached: CachedNodePath) -> Variant:
 	return cached.node.get(cached.path_subname)
 
 @rpc("authority", "call_remote", "reliable")
-func sync_properties(synced_properties: Dictionary[NodePath, Variant]) -> void:
+func sync_properties(compressed: PackedByteArray) -> void:
+	var synced_properties: Dictionary[NodePath, Variant] = bytes_to_var(compressed.decompress(1024, COMPRESSION_METHOD))
 	for path: NodePath in synced_properties:
 		_sync_property(path, synced_properties)
 

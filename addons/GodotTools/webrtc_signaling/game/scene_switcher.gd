@@ -11,6 +11,9 @@ var ready_peers: int
 var load_screen: LoadScreen
 var instantiated: Node
 
+func _enter_tree() -> void:
+	Signals.safe_connect(self, multiplayer.server_disconnected, _clear_loading_screen)
+
 func _ready() -> void:
 	add_to_group(GROUP)
 	get_level_spawner().spawn_function = _spawn_function
@@ -81,10 +84,15 @@ func start_scene_switch(resource_path: String) -> void:
 	load_screen.state = LoadScreen.State.INITIALIZING_EVERYTHING
 	instantiated.ready.connect(func():
 		print("Loaded in %f seconds" % ((Time.get_ticks_usec() - started) / 1000000.0))
-		load_screen.queue_free()
+		_clear_loading_screen()
 	, CONNECT_ONE_SHOT)
 
 	load_complete.rpc_id(get_multiplayer_authority())
+
+func _clear_loading_screen() -> void:
+	if load_screen:
+		load_screen.queue_free()
+		load_screen = null
 
 func await_resource_load(resource_path: String) -> bool:
 	var err := ResourceLoader.load_threaded_request(resource_path, "", true)

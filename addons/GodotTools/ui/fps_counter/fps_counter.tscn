@@ -2,19 +2,26 @@
 
 [ext_resource type="Script" uid="uid://b5v3nlcqbcjxk" path="res://addons/GodotTools/ui/fps_counter/fps_counter.gd" id="1_okvfo"]
 
-[node name="FpsCounter" type="Panel"]
+[node name="FPS Counter" type="Node"]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 50
 script = ExtResource("1_okvfo")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
-layout_mode = 0
-offset_right = 40.0
+[node name="FPS Counter" type="HBoxContainer" parent="CanvasLayer"]
+z_index = 4096
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -70.0
 offset_bottom = 40.0
+grow_horizontal = 0
 
-[node name="Label" type="Label" parent="HBoxContainer"]
+[node name="Label" type="Label" parent="CanvasLayer/FPS Counter"]
 layout_mode = 2
 text = "FPS:"
 
-[node name="FPSCounter" type="Label" parent="HBoxContainer"]
+[node name="FPSCounter" type="Label" parent="CanvasLayer/FPS Counter"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "10"

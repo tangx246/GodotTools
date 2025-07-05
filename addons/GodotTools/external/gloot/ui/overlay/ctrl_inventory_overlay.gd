@@ -3,7 +3,12 @@ extends Control
 
 var item: InventoryItem:
 	get():
-		return get_parent().item
+		var parent = get_parent()
+		if is_instance_valid(parent):
+			if is_instance_valid(parent.item):
+				return parent.item
+
+		return null
 signal refresh
 
 func _enter_tree() -> void:

@@ -11,9 +11,6 @@ func _ready() -> void:
 	Signals.safe_connect(self, SaveGames.save_changed, _request_refresh)
 
 func _request_refresh() -> void:
-	if not visible:
-		return
-	
 	_request_refresh_rpc.rpc_id(MultiplayerPeer.TARGET_PEER_SERVER)
 
 @rpc("any_peer", "call_local", "reliable")
@@ -22,7 +19,7 @@ func _request_refresh_rpc():
 	for save_game in save_games:
 		# Scrub the data so that we can fit them in the RPC call without buffer overflow
 		save_game.data = ""
-	_refresh.rpc_id(multiplayer.get_remote_sender_id(), JSON.stringify(save_games))
+	_refresh.rpc(JSON.stringify(save_games))
 
 @rpc("authority", "call_local", "reliable")
 func _refresh(save_games_stringified: String):

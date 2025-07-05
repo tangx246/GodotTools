@@ -1,9 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://bwate1hp34pw2"]
+[gd_scene load_steps=10 format=3 uid="uid://bwate1hp34pw2"]
 
 [ext_resource type="Script" uid="uid://dihamk6x2yj4j" path="res://addons/GodotTools/ui/options_menu/video/fullscreen.gd" id="1_1jr12"]
 [ext_resource type="Script" uid="uid://bar6acb3bvxfq" path="res://addons/GodotTools/ui/options_menu/video/ui_scale.gd" id="2_uhq4o"]
 [ext_resource type="Script" uid="uid://c5gcy4a76qj3w" path="res://addons/GodotTools/ui/options_menu/video/vsync.gd" id="3_7usyl"]
 [ext_resource type="Script" uid="uid://dko0u4j26kde3" path="res://addons/GodotTools/ui/options_menu/video/max_fps.gd" id="4_ij5xy"]
+[ext_resource type="Script" uid="uid://c5x45fo5mbv0y" path="res://addons/GodotTools/ui/options_menu/video/show_fps.gd" id="5_75amb"]
 [ext_resource type="Script" uid="uid://00ohn4wwffd3" path="res://addons/GodotTools/ui/options_menu/video/scaling_3d_mode.gd" id="5_lc6vd"]
 [ext_resource type="Script" uid="uid://bweaf5qurmqt8" path="res://addons/GodotTools/ui/options_menu/video/3d_scaling.gd" id="5_lfsxg"]
 [ext_resource type="Script" uid="uid://c2q2tbwnr7lcx" path="res://addons/GodotTools/ui/options_menu/video/3d_scale.gd" id="7_dqmb0"]
@@ -86,6 +87,17 @@ text = "Max FPS"
 layout_mode = 2
 expand_to_text_length = true
 script = ExtResource("4_ij5xy")
+
+[node name="Show FPS" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Show FPS"]
+layout_mode = 2
+text = "Show FPS"
+
+[node name="CheckButton" type="CheckButton" parent="Show FPS"]
+layout_mode = 2
+script = ExtResource("5_75amb")
 
 [node name="3D Scaling" type="VBoxContainer" parent="."]
 layout_mode = 2

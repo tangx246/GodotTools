@@ -72,11 +72,11 @@ func delete(index: int) -> void:
 	if sd == qs:
 		qs = null
 		SaveData.remove(QUICKSAVE_PATH)
-		save_changed.emit()
 	else:
 		saves.erase(sd)
 		sd.remove(_get_save_path(sd))
-		save_changed.emit()
+
+	save_changed.emit()
 
 func _get_save_path(sd: SaveData) -> String:
 	return "%s/%s.json" % [SAVE_PATH, sd.time_saved]
