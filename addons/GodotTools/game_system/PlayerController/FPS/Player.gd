@@ -22,11 +22,7 @@ func get_input() -> Vector3:
 	return Vector3(velocity2.x, velocity.y, velocity2.y)
 
 var mouse_captured: bool = false
-func _enter_tree() -> void:
-	await get_tree().process_frame
-	if not is_inside_tree():
-		return
-	
+func _ready() -> void:
 	if is_multiplayer_authority():
 		process_mode = PROCESS_MODE_INHERIT
 		camera.make_current()

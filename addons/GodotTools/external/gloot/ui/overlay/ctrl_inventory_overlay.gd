@@ -11,11 +11,7 @@ var item: InventoryItem:
 		return null
 signal refresh
 
-func _enter_tree() -> void:
-	await get_tree().process_frame
-	if not is_inside_tree():
-		return
-	
+func _ready() -> void:
 	var ancestor: Node = get_parent()
 	while ancestor != null and not ancestor is CtrlItemSlot:
 		ancestor = ancestor.get_parent()

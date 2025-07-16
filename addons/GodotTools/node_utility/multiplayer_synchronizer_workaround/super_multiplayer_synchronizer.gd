@@ -26,6 +26,10 @@ func sync_properties(compressed: PackedByteArray, size: int) -> void:
 			not msw.root or not is_instance_valid(msw.root) or not msw.root.is_inside_tree():
 			continue
 		
+		if multiplayer.get_remote_sender_id() != msw.get_multiplayer_authority():
+			print("Received sync from non-authority %s" % msw.get_path())
+			return
+		
 		for path: NodePath in packet.dirty_properties:
 			_sync_property(msw, path, packet.dirty_properties)
 

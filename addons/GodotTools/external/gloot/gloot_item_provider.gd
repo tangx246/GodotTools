@@ -11,16 +11,10 @@ extends ItemProvider
 const KEY_STACK_SIZE = "stack_size"
 
 func _ready() -> void:
+	_connect_signals()
 	refresh_item_count()
 
-func _enter_tree() -> void:
-	_connect_signals()
-
 func _connect_signals() -> void:
-	await get_tree().process_frame
-	if not is_inside_tree():
-		return
-
 	for inventory in find_inventories():
 		Signals.safe_connect(self, inventory.contents_changed, refresh_item_count)
 		Signals.safe_connect(self, inventory.item_property_changed, refresh_item_count.unbind(2))
@@ -71,7 +65,7 @@ func refresh_item_count():
 
 func find_inventories() -> Array[Inventory]:
 	var _inventories : Array[Inventory] = []
-	if not root.is_inside_tree():
+	if is_instance_valid(root) and not root.is_inside_tree():
 		return _inventories
 	_inventories.assign(root.find_children("", "Inventory", true, false))
 	if root is Inventory:

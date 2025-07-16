@@ -11,7 +11,7 @@ const SINGLEPLAYER_PARAM: String = "--singleplayer"
 var local_instance_single_player: bool = false
 var first_peer_id: int = -1
 
-func is_multiprocess_instance() -> bool:
+static func is_multiprocess_instance() -> bool:
 	return AUTOHOST_PARAM in OS.get_cmdline_args()
 	
 func is_multiprocess_instance_running() -> bool:
@@ -29,9 +29,10 @@ static func get_first_instance(root: Node) -> Multiprocess:
 static func is_rpc_safe(root: Node) -> bool:
 	return get_first_instance(root).is_multiprocess_instance()
 
-func _enter_tree() -> void:
+func _init() -> void:
 	add_to_group(GROUP)
-	
+
+func _enter_tree() -> void:
 	if is_multiprocess_instance():
 		await get_tree().process_frame
 		if not is_inside_tree():
@@ -64,11 +65,6 @@ func _exit_tree() -> void:
 	if multiplayer.peer_disconnected.is_connected(_on_peer_disconnected):
 		multiplayer.peer_disconnected.disconnect(_on_peer_disconnected)
 
-	if stdio_observer and stdio_observer.is_started():
-		stdio_observer.wait_to_finish()
-	if stderr_observer and stderr_observer.is_started():
-		stderr_observer.wait_to_finish()
-
 func _process_observer(pipe: FileAccess, is_error: bool) -> void:
 	while pipe.is_open() and pipe.get_error() == OK:
 		var line: String = pipe.get_line()
@@ -89,8 +85,10 @@ func kill_headless_process():
 		print("Killing headless process %s" % pid)
 		OS.kill(pid)
 		output = {}
-		stdio_observer.wait_to_finish.call_deferred()
-		stderr_observer.wait_to_finish.call_deferred()
+		if stdio_observer and stdio_observer.is_started():
+			stdio_observer.wait_to_finish.call_deferred()
+		if stderr_observer and stderr_observer.is_started():
+			stderr_observer.wait_to_finish.call_deferred()
 
 var output: Dictionary
 var stdio_observer: Thread

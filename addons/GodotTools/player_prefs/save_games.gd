@@ -17,6 +17,8 @@ func _ready() -> void:
 
 	saves = []
 	for file_name in DirAccess.get_files_at(SAVE_PATH):
+		if not file_name.to_lower().ends_with(".json"):
+			continue
 		var path := "%s/%s" % [SAVE_PATH, file_name]
 		var sd: SaveData = SaveData.load(path)
 		if path == QUICKSAVE_PATH:

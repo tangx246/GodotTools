@@ -1,12 +1,16 @@
-[gd_scene load_steps=9 format=3 uid="uid://dr242bojmpc28"]
+[gd_scene load_steps=11 format=3 uid="uid://dr242bojmpc28"]
 
 [ext_resource type="Script" uid="uid://b6vjf0k66niqq" path="res://addons/GodotTools/webrtc_signaling/main.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://5p1bp2kcs0py" path="res://addons/GodotTools/webrtc_signaling/ui/main_ui.tscn" id="1_rhk73"]
 [ext_resource type="PackedScene" uid="uid://dluwl3qbyrbs4" path="res://addons/GodotTools/webrtc_signaling/ui/loading_screen.tscn" id="3_84oe2"]
 [ext_resource type="Script" uid="uid://bgxjal58paq31" path="res://addons/GodotTools/node_utility/multiplayer_synchronizer_workaround/multiplayer_synchronizer_workaround.gd" id="3_ck0me"]
 [ext_resource type="Script" uid="uid://cf0y37ury0rop" path="res://addons/GodotTools/webrtc_signaling/decorative_scenes.gd" id="4_vnl57"]
+[ext_resource type="Script" uid="uid://d08r2b0bp63oy" path="res://scenes/main_menu.gd" id="5_egv6r"]
 [ext_resource type="Script" uid="uid://i68o564070pq" path="res://addons/GodotTools/webrtc_signaling/game/scene_switcher.gd" id="5_j5sg8"]
 [ext_resource type="PackedScene" uid="uid://ylgniiud18f4" path="res://addons/GodotTools/ui/fps_counter/fps_counter.tscn" id="7_nbkvf"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_ghh5o"]
+font_size = 32
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ax6q8"]
 properties/0/path = NodePath(".:visible")
@@ -22,6 +26,68 @@ loading_screen = ExtResource("3_84oe2")
 metadata/_custom_type_script = "uid://i68o564070pq"
 
 [node name="Control" parent="." instance=ExtResource("1_rhk73")]
+
+[node name="MainMenu" type="Control" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("5_egv6r")
+
+[node name="Label" type="Label" parent="Control/MainMenu"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -136.5
+offset_top = -176.715
+offset_right = 136.5
+offset_bottom = -155.715
+grow_horizontal = 2
+grow_vertical = 2
+text = "GAME TITLE"
+label_settings = SubResource("LabelSettings_ghh5o")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/MainMenu"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -124.0
+offset_top = 83.5101
+offset_right = 124.0
+offset_bottom = 195.51
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="NewSinglePlayerGame" type="Button" parent="Control/MainMenu/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Start Single Player Game"
+
+[node name="Multiplayer" type="Button" parent="Control/MainMenu/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Multiplayer"
+
+[node name="OptionsButton" type="Button" parent="Control/MainMenu/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Options"
+
+[node name="Exit" type="Button" parent="Control/MainMenu/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Exit to Desktop"
 
 [node name="MultiplayerUiSynchronizer" type="MultiplayerSynchronizer" parent="."]
 root_path = NodePath("../Control")

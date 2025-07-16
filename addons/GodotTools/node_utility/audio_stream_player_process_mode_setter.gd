@@ -2,11 +2,7 @@ class_name AudioStreamPlayerProcessModeSetter
 extends Node
 
 func _enter_tree() -> void:
-	get_tree().node_added.connect(_on_node_added)
-
-func _exit_tree() -> void:
-	if get_tree().node_added.is_connected(_on_node_added):
-		get_tree().node_added.disconnect(_on_node_added)
+	Signals.safe_connect(self, get_tree().node_added, _on_node_added)
 
 func _on_node_added(node: Node) -> void:
 	if node is AudioStreamPlayer3D or node is AudioStreamPlayer:

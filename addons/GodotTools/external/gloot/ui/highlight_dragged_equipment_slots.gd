@@ -6,11 +6,7 @@ extends Node
 
 const CtrlDragable = preload("res://addons/gloot/ui/ctrl_dragable.gd")
 
-func _enter_tree() -> void:
-	await get_tree().process_frame
-	if not is_inside_tree():
-		return
-	
+func _ready() -> void:
 	for slot: CtrlItemSlotEx in root.find_children("", "CtrlItemSlotEx"):
 		Signals.safe_connect(self, CtrlDragable.dragable_grabbed, func(item_rect, _offset): _on_dragged(item_rect.item, slot))
 		Signals.safe_connect(self, CtrlDragable.dragable_dropped, func(_a, _b, _c): _on_dropped(slot))

@@ -41,11 +41,7 @@ func _set_collider():
 	for i in range(colliders.size()):
 		colliders[i].disabled = i != stand_state
 
-func _enter_tree() -> void:
-	await get_tree().process_frame
-	if not is_inside_tree():
-		return
-	
+func _ready() -> void:
 	_set_collider()
 	body.set(speed_var, stand_speed)
 

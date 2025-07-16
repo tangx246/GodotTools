@@ -69,28 +69,6 @@ layout_mode = 2
 button_pressed = true
 text = "Mesh"
 
-[node name="MultiprocessCheckbox" type="CheckBox" parent="VBoxContainer/TabContainer/Host Join UI/Connect"]
-unique_name_in_owner = true
-layout_mode = 2
-button_pressed = true
-text = "Multiprocess"
-
-[node name="Options" type="Button" parent="VBoxContainer/TabContainer/Host Join UI/Connect"]
-layout_mode = 2
-text = "⚙"
-
-[node name="PopupPanel" type="PopupPanel" parent="VBoxContainer/TabContainer/Host Join UI/Connect/Options"]
-auto_translate_mode = 1
-title = "Options"
-initial_position = 2
-size = Vector2i(1000, 500)
-unresizable = false
-borderless = false
-
-[node name="OptionsMenu" parent="VBoxContainer/TabContainer/Host Join UI/Connect/Options/PopupPanel" instance=ExtResource("5_chhbd")]
-offset_right = 1000.0
-offset_bottom = 500.0
-
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/TabContainer/Host Join UI"]
 layout_mode = 2
 
@@ -105,6 +83,34 @@ text = "Refresh Room List"
 [node name="Start Game" type="Button" parent="VBoxContainer/TabContainer/Host Join UI/HBoxContainer2"]
 layout_mode = 2
 text = "Start Single Player Game"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TabContainer/Host Join UI/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 2
+
+[node name="MultiprocessCheckbox" type="CheckBox" parent="VBoxContainer/TabContainer/Host Join UI/HBoxContainer2/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+text = "Multiprocess"
+
+[node name="Options" type="Button" parent="VBoxContainer/TabContainer/Host Join UI/HBoxContainer2/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "⚙"
+
+[node name="PopupPanel" type="PopupPanel" parent="VBoxContainer/TabContainer/Host Join UI/HBoxContainer2/HBoxContainer/Options"]
+auto_translate_mode = 1
+title = "Options"
+initial_position = 2
+size = Vector2i(1000, 500)
+unresizable = false
+borderless = false
+
+[node name="OptionsMenu" parent="VBoxContainer/TabContainer/Host Join UI/HBoxContainer2/HBoxContainer/Options/PopupPanel" instance=ExtResource("5_chhbd")]
+offset_right = 1000.0
+offset_bottom = 500.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TabContainer/Host Join UI"]
 visible = false
@@ -172,10 +178,10 @@ script = ExtResource("4_blxr0")
 layout_mode = 2
 size_flags_vertical = 3
 
-[connection signal="pressed" from="VBoxContainer/TabContainer/Host Join UI/Connect/Options" to="VBoxContainer/TabContainer/Host Join UI/Connect/Options/PopupPanel" method="popup"]
 [connection signal="pressed" from="VBoxContainer/TabContainer/Host Join UI/HBoxContainer2/Start" to="." method="_on_start_pressed"]
 [connection signal="pressed" from="VBoxContainer/TabContainer/Host Join UI/HBoxContainer2/Refresh" to="." method="_on_refresh_pressed"]
 [connection signal="pressed" from="VBoxContainer/TabContainer/Host Join UI/HBoxContainer2/Start Game" to="." method="_on_start_game_pressed"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/Host Join UI/HBoxContainer2/HBoxContainer/Options" to="VBoxContainer/TabContainer/Host Join UI/HBoxContainer2/HBoxContainer/Options/PopupPanel" method="popup"]
 [connection signal="pressed" from="VBoxContainer/TabContainer/Host Join UI/HBoxContainer/Join Room" to="." method="_on_join_pressed"]
 [connection signal="pressed" from="VBoxContainer/TabContainer/In Room UI/HBoxContainer/Stop" to="." method="_on_stop_pressed"]
 [connection signal="pressed" from="VBoxContainer/TabContainer/In Room UI/HBoxContainer/Peers" to="." method="_on_peers_pressed"]

@@ -6,6 +6,8 @@ extends UtilityDecorator
 var _exp: Expression
 func _ready() -> void:
 	super()
+	if not is_inside_tree():
+		return
 
 	_exp = Expression.new()
 	_exp.parse(expression, ["considerations"])

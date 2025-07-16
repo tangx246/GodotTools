@@ -10,21 +10,17 @@ signal player_info_updated
 
 const GROUP: StringName = "PlayerInfo"
 
-func _enter_tree() -> void:
-	await get_tree().process_frame
-	if not is_inside_tree():
-		return
-
-	Signals.safe_connect(self, multiplayer.connected_to_server, _connected_to_server)
-	Signals.safe_connect(self, multiplayer.peer_connected, _peer_connected)
-	Signals.safe_connect(self, client.disconnected, _disconnected)
-
 func _disconnected() -> void:
 	players = {}
 	player_info_updated.emit()
 
-func _ready() -> void:
+func _init() -> void:
 	add_to_group(GROUP)
+
+func _ready() -> void:
+	Signals.safe_connect(self, multiplayer.connected_to_server, _connected_to_server)
+	Signals.safe_connect(self, multiplayer.peer_connected, _peer_connected)
+	Signals.safe_connect(self, client.disconnected, _disconnected)
 
 func _connected_to_server() -> void:
 	_submit_player_info()

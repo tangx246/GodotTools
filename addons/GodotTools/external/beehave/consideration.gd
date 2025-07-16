@@ -18,10 +18,10 @@ var value: float = 0:
 signal value_changed(value: float)
 
 func _ready() -> void:
-	var timer: Timer = Timer.new()
+	var timer = Timer.new()
 	timer.autostart = true
 	timer.wait_time = tick_rate
-	timer.timeout.connect(func(): tick(timer.wait_time))
+	Signals.safe_connect(self, timer.timeout, func(): tick(timer.wait_time))
 	add_child(timer)
 
 	set_process(debug)

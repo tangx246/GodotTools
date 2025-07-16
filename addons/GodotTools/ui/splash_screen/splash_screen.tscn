@@ -1,0 +1,46 @@
+[gd_scene load_steps=5 format=3 uid="uid://d0o6dl5x2olg5"]
+
+[ext_resource type="Script" uid="uid://8eardn67rv01" path="res://addons/GodotTools/ui/splash_screen/splash_screen.gd" id="1_1lxvh"]
+[ext_resource type="Texture2D" uid="uid://dpc2cw5gn7mxi" path="res://addons/GodotTools/ui/splash_screen/icon-dark.png" id="2_cajow"]
+[ext_resource type="PackedScene" uid="uid://1tk7mqago26t" path="res://addons/GodotTools/ui/options_menu/options_menu.tscn" id="3_vtsff"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cajow"]
+bg_color = Color(0.141176, 0.141176, 0.141176, 1)
+
+[node name="SplashScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_1lxvh")
+images = Array[Texture2D]([ExtResource("2_cajow")])
+
+[node name="Background" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_cajow")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch_mode = 6
+
+[node name="OptionsMenu" parent="." instance=ExtResource("3_vtsff")]
+visible = false
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+grow_horizontal = 1
+grow_vertical = 1

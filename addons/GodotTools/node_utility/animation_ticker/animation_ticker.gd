@@ -21,7 +21,7 @@ func _ready() -> void:
 	mixers.assign(root.find_children("", "AnimationMixer"))
 	
 	if Engine.is_editor_hint():
-		get_tree().process_frame.connect(func():
+		Signals.safe_connect(self, get_tree().process_frame, func():
 			editor_wait_time += get_process_delta_time()
 			if editor_wait_time >= wait_time:
 				for mixer in mixers:
@@ -41,12 +41,12 @@ func _ready() -> void:
 
 	timer.wait_time = distance_update_tick
 	timer.one_shot = false
-	timer.timeout.connect(_distance_update)
+	Signals.safe_connect(self, timer.timeout, _distance_update)
 	timer.start()
 	_distance_update()
 
 	start()
-	timeout.connect(_on_tick.call_deferred)
+	Signals.safe_connect(self, timeout, _on_tick, CONNECT_DEFERRED)
 
 func _on_tick():
 	for mixer in mixers:

@@ -11,11 +11,7 @@ var current_distance: float
 var players: Array[Node3D]
 var current_player_idx: int = 0
 
-func _enter_tree() -> void:
-	await get_tree().process_frame
-	if not is_inside_tree():
-		return
-	
+func _ready() -> void:
 	players.assign(get_tree().get_nodes_in_group("player"))
 	cam.make_current()
 	current_distance = spring_arm.spring_length

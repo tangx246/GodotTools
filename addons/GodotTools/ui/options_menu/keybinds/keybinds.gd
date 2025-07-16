@@ -15,18 +15,9 @@ func _ready():
 		var item: KeybindItem = keybind_item.instantiate()
 		bind_list.add_child(item)
 		item.action = action
+
+	Signals.safe_connect(self, reset_to_defaults.pressed, _on_reset_to_defaults)
 		
-func _enter_tree() -> void:
-	await get_tree().process_frame
-	if not is_inside_tree():
-		return
-	
-	reset_to_defaults.pressed.connect(_on_reset_to_defaults)
-
-func _exit_tree() -> void:
-	if reset_to_defaults.pressed.is_connected(_on_reset_to_defaults):
-		reset_to_defaults.pressed.disconnect(_on_reset_to_defaults)
-
 func _on_reset_to_defaults() -> void:
 	for child in bind_list.get_children():
 		var item: KeybindItem = child

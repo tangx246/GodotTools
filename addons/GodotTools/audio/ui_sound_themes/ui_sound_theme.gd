@@ -21,17 +21,17 @@ func _ready():
 	player.play()
 
 func _enter_tree() -> void:
-	get_tree().node_added.connect(_on_node_added)
+	Signals.safe_connect(self, get_tree().node_added, _on_node_added)
 	
 func _on_node_added(node: Node):
 	if node is BaseButton:
 		var theme: SoundTheme = _get_theme(node)
 		if theme.button_down:
-			node.button_down.connect(_play.bind(node, theme.button_down))
+			Signals.safe_connect(self, node.button_down, _play.bind(node, theme.button_down))
 		if theme.button_up:
-			node.button_up.connect(_play.bind(node, theme.button_up))
+			Signals.safe_connect(self, node.button_up, _play.bind(node, theme.button_up))
 		if theme.button_hover:
-			node.mouse_entered.connect(_play.bind(node, theme.button_hover))
+			Signals.safe_connect(self, node.mouse_entered, _play.bind(node, theme.button_hover))
 
 func _play(node: Node, stream: AudioStream):
 	if node is BaseButton:

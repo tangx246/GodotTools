@@ -26,11 +26,7 @@ signal lean_state_changed(transition_time: float)
 var relative_lean_left_position : Vector3
 var relative_lean_right_position : Vector3
 
-func _enter_tree() -> void:
-	await get_tree().process_frame
-	if not is_inside_tree():
-		return
-
+func _ready() -> void:
 	relative_lean_left_position = standing_lean_left_position.position - stand_position.position
 	relative_lean_right_position = standing_lean_right_position.position - stand_position.position
 

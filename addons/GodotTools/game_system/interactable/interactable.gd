@@ -8,8 +8,8 @@ extends Node3D
 signal interacted(interactor: Interactor)
 signal no_param_interacted()
 
-func _ready() -> void:
-	interacted.connect(no_param_interacted.emit.unbind(1))
+func _enter_tree() -> void:
+	Signals.safe_connect(self, interacted, no_param_interacted.emit.unbind(1))
 
 func interact(interactor: Interactor):
 	interact_rpc.rpc(interactor.get_path())

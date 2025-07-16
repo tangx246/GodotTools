@@ -11,25 +11,10 @@ const KEY_MAX_POSITIVE_EFFECTS: String = "positive_effect_slots"
 
 func _ready() -> void:
 	item_slots.assign(root.find_children("", "ItemSlot"))
-
-func _enter_tree() -> void:
-	await get_tree().process_frame
-	if not is_inside_tree():
-		return
-	
 	for item_slot in item_slots:
-		if not item_slot.item_equipped.is_connected(_on_item_equipped):
-			item_slot.item_equipped.connect(_on_item_equipped)
-		if not item_slot.cleared.is_connected(_on_item_unequipped):
-			item_slot.cleared.connect(_on_item_unequipped)
+		Signals.safe_connect(self, item_slot.item_equipped, _on_item_equipped)
+		Signals.safe_connect(self, item_slot.cleared, _on_item_unequipped)
 	_refresh.call_deferred()
-
-func _exit_tree() -> void:
-	for item_slot in item_slots:
-		if item_slot.item_equipped.is_connected(_on_item_equipped):
-			item_slot.item_equipped.disconnect(_on_item_equipped)
-		if item_slot.cleared.is_connected(_on_item_unequipped):
-			item_slot.cleared.disconnect(_on_item_unequipped)
 
 func _on_item_equipped() -> void:
 	_refresh.call_deferred()

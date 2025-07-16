@@ -11,7 +11,7 @@ extends DamageModifier
 ## Maps collision_index: int to damage_modifier: float
 var damage_modifiers_dict: Dictionary
 
-func _ready() -> void:
+func _enter_tree() -> void:
 	damage_modifiers_dict = {}
 	for modifier in damage_modifiers:
 		damage_modifiers_dict[modifier.collision_index] = modifier.modifier

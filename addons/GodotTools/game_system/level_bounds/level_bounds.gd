@@ -35,12 +35,7 @@ func _ready() -> void:
 	collision_shape.shape = shape
 	collision_shape.global_position = aabb.get_center()
 
-func _enter_tree() -> void:
-	body_exited.connect(_on_body_exited)
-
-func _exit_tree() -> void:
-	if body_exited.is_connected(_on_body_exited):
-		body_exited.disconnect(_on_body_exited)
+	Signals.safe_connect(self, body_exited, _on_body_exited)
 
 func _on_body_exited(body: Node) -> void:
 	if is_instance_valid(body) and not body.is_queued_for_deletion() and body.is_inside_tree():

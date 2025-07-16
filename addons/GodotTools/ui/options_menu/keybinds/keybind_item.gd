@@ -14,18 +14,11 @@ var action: StringName:
 		_load_if_available()
 		_refresh_action()
 
-func _enter_tree() -> void:
-	await get_tree().process_frame
-	if not is_inside_tree():
-		return
-	
-	add_button.pressed.connect(_on_bind_requested)
+func _ready() -> void:
 	set_process_input(false)
+
+	Signals.safe_connect(self, add_button.pressed, _on_bind_requested)
 	popup.unfocusable = true
-	
-func _exit_tree() -> void:
-	if add_button.pressed.is_connected(_on_bind_requested):
-		add_button.pressed.disconnect(_on_bind_requested)
 
 func _input(event: InputEvent) -> void:
 	if event is not InputEventMouseMotion:

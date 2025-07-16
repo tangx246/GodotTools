@@ -13,10 +13,13 @@ func _ready() -> void:
 	timer = Timer.new()
 	timer.autostart = false
 	timer.wait_time = damage_tick_rate
-	timer.timeout.connect(func():
-		damageable.damage(damage_per_second / damage_tick_rate, self, true)
-	)
 	add_child(timer)
+
+	Signals.safe_connect(self, timer.timeout, func():
+		if is_instance_valid(damageable) and damageable.is_inside_tree():
+			damageable.damage(damage_per_second / damage_tick_rate, self, true)
+	)
+
 
 func start() -> void:
 	timer.start()

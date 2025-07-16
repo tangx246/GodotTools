@@ -14,7 +14,7 @@ var utility: float = 0:
 
 func _ready() -> void:
 	for c in considerations:
-		c.value_changed.connect(calculate_utility.unbind(1))
+		Signals.safe_connect(self, c.value_changed, calculate_utility.unbind(1))
 	calculate_utility.call_deferred()
 
 func get_class_name() -> Array[StringName]:

@@ -14,8 +14,10 @@ var instantiated: Node
 func _enter_tree() -> void:
 	Signals.safe_connect(self, multiplayer.server_disconnected, _clear_loading_screen)
 
-func _ready() -> void:
+func _init() -> void:
 	add_to_group(GROUP)
+
+func _ready() -> void:
 	get_level_spawner().spawn_function = _spawn_function
 
 func _spawn_function(resource_path: String) -> Node:

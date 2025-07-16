@@ -5,15 +5,11 @@ extends CharacterBody3D
 @export var tick_rate: int = 1
 var navigation_agent: NavigationAgent3D
 
-func _enter_tree() -> void:
-	navigation_agent = get_node("NavigationAgent3D")
-	navigation_agent.velocity_computed.connect(_on_velocity_computed)
-
-func _exit_tree() -> void:
-	navigation_agent.velocity_computed.disconnect(_on_velocity_computed)
-
 func _ready() -> void:
 	ticks = randi() % tick_rate
+
+	navigation_agent = get_node("NavigationAgent3D")
+	Signals.safe_connect(self, navigation_agent.velocity_computed, _on_velocity_computed)
 
 func set_movement_target(movement_target: Vector3):
 	navigation_agent.set_target_position(movement_target)

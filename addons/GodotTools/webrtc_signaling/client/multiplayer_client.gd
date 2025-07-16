@@ -43,7 +43,7 @@ func _create_peer(id: int) -> WebRTCPeerConnection:
 	# in which case TURN is required. TURN generally does not have public servers available,
 	# as it requires much greater resources to host (all traffic goes through
 	# the TURN server, instead of only performing the initial connection).
-	peer.initialize({
+	var error: Error = peer.initialize({
 		"iceServers": [ { "urls": [
 			"stun:stun.l.google.com:19302",
 			"stun:stun1.l.google.com:19302",
@@ -52,11 +52,17 @@ func _create_peer(id: int) -> WebRTCPeerConnection:
 			"stun:stun4.l.google.com:19302",
 		] } ]
 	})
+	if error != Error.OK:
+		push_error("WebRTCPeer initialization failed: %s" % error)
 	peer.session_description_created.connect(_offer_created.bind(id))
 	peer.ice_candidate_created.connect(_new_ice_candidate.bind(id))
-	rtc_mp.add_peer(peer, id)
+	error = rtc_mp.add_peer(peer, id)
+	if error != Error.OK:
+		push_error("Adding peer failed %s" % error)
 	if id < rtc_mp.get_unique_id():  # So lobby creator never creates offers.
-		peer.create_offer()
+		error = peer.create_offer()
+		if error != Error.OK:
+			push_error("Creating offer failed: %s" % error)
 	return peer
 
 
@@ -83,7 +89,7 @@ func _connected(id: int, use_mesh: bool) -> void:
 	else:
 		error = rtc_mp.create_client(id)
 	if error != Error.OK:
-		printerr("Error creating peer: %s" % error)
+		push_error("Error creating peer: %s" % error)
 	get_tree().get_multiplayer().multiplayer_peer = rtc_mp
 
 
@@ -112,15 +118,21 @@ func _peer_disconnected(id: int) -> void:
 func _offer_received(id: int, offer: String) -> void:
 	print("Got offer: %d" % id)
 	if rtc_mp.has_peer(id):
-		rtc_mp.get_peer(id).connection.set_remote_description("offer", offer)
+		var error: Error = rtc_mp.get_peer(id).connection.set_remote_description("offer", offer)
+		if error != Error.OK:
+			push_error("Unable to set remote description %s" % error)
 
 
 func _answer_received(id: int, answer: String) -> void:
 	print("Got answer: %d" % id)
 	if rtc_mp.has_peer(id):
-		rtc_mp.get_peer(id).connection.set_remote_description("answer", answer)
+		var error: Error = rtc_mp.get_peer(id).connection.set_remote_description("answer", answer)
+		if error != Error.OK:
+			push_error("Unable to set remote description: %s" % error)
 
 
 func _candidate_received(id: int, mid: String, index: int, sdp: String) -> void:
 	if rtc_mp.has_peer(id):
-		rtc_mp.get_peer(id).connection.add_ice_candidate(mid, index, sdp)
+		var error: Error = rtc_mp.get_peer(id).connection.add_ice_candidate(mid, index, sdp)
+		if error != Error.OK:
+			push_error("Unable to add ice candidate: %s" % error)

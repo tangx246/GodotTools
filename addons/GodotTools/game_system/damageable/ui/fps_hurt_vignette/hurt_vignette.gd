@@ -8,17 +8,13 @@ extends TextureRect
 var gradient_texture = texture as GradientTexture2D
 var gradient = gradient_texture.gradient as Gradient
 
-func _enter_tree() -> void:
-	await get_tree().process_frame
-	if not is_inside_tree():
-		return
-	
+func _ready() -> void:
 	if is_multiplayer_authority():
-		damageable.current_hp_changed_by_source.connect(_oh_hp_changed)
+		Signals.safe_connect(self, damageable.current_hp_changed_by_source, _on_hp_changed)
 		gradient.set_offset(0, 1)
 	
 var tween: Tween
-func _oh_hp_changed(prev_value: float, value: float, source: Node):
+func _on_hp_changed(prev_value: float, value: float, source: Node):
 	if value >= prev_value:
 		return
 		

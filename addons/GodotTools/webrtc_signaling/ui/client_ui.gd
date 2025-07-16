@@ -44,7 +44,8 @@ func _mp_server_disconnect() -> void:
 
 func _mp_peer_connected(id: int) -> void:
 	_log("[Multiplayer] Peer %d connected" % id)
-
+	if id != MultiplayerPeer.TARGET_PEER_SERVER and Multiprocess.is_multiprocess_instance_single_player():
+		_on_start_game_pressed()
 
 func _mp_peer_disconnected(id: int) -> void:
 	_log("[Multiplayer] Peer %d disconnected" % id)

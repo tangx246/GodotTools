@@ -32,10 +32,7 @@ signal recovered
 @export var drain_rate: float = 1
 
 func _enter_tree() -> void:
-	current_changed.connect(_on_current_changed)
-	
-func _exit_tree() -> void:
-	current_changed.disconnect(_on_current_changed)
+	Signals.safe_connect(self, current_changed, _on_current_changed)
 
 func _on_current_changed(prev: float, current: float) -> void:
 	if current <= 0 and prev > 0:

@@ -44,6 +44,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="ClientUI" parent="VBoxContainer/Clients" instance=ExtResource("2_i1cbs")]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="Server" type="Node" parent="."]

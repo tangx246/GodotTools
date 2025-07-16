@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=3 uid="uid://bfckiuisw4h5a"]
+
+[ext_resource type="Script" uid="uid://b4oxe2tsxewmo" path="res://addons/GodotTools/ui/options_menu/logs/logs.gd" id="1_lprw2"]
+
+[node name="Logs" type="VBoxContainer"]
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_lprw2")
+
+[node name="TextEdit" type="TextEdit" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+editable = false
+
+[node name="Button" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Copy to Clipboard"

@@ -30,17 +30,12 @@ signal hp_changed()
 signal current_hp_reduced()
 
 func _enter_tree() -> void:
-	current_hp_changed.connect(_on_current_hp_changed)
-	current_hp_changed.connect(_death_check)
-	max_hp_changed.connect(_on_max_hp_changed)
+	Signals.safe_connect(self, current_hp_changed, _on_current_hp_changed)
+	Signals.safe_connect(self, current_hp_changed, _death_check)
+	Signals.safe_connect(self, max_hp_changed, _on_max_hp_changed)
 	
 	current_hp = current_hp
 	max_hp = max_hp
-
-func _exit_tree() -> void:
-	current_hp_changed.disconnect(_on_current_hp_changed)
-	current_hp_changed.disconnect(_death_check)
-	max_hp_changed.disconnect(_on_max_hp_changed)
 
 func _on_current_hp_changed(prev: float, current: float) -> void:
 	hp_changed.emit()

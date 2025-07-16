@@ -6,17 +6,8 @@ extends Node
 @export var fall_damage_curve: Curve
 @onready var damageable: Damageable = root.find_children("", "Damageable")[0]
 
-func _enter_tree() -> void:
-	await get_tree().process_frame
-	if not is_inside_tree():
-		return
-	
-	if not root.hit_floor.is_connected(_on_fell):
-		root.hit_floor.connect(_on_fell)
-	
-func _exit_tree() -> void:
-	if root.hit_floor.is_connected(_on_fell):
-		root.hit_floor.disconnect(_on_fell)
+func _ready() -> void:
+	Signals.safe_connect(self, root.hit_floor, _on_fell)
 
 func _on_fell(fall_speed: float, fall_height: float):
 	if fall_speed > 0:

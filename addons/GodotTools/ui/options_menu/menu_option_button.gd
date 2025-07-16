@@ -40,6 +40,9 @@ func _enter_tree() -> void:
 	item_selected.connect(_on_item_selected)
 	
 	var current_setting: int = _get_current_setting()
+	if not options.has(current_setting):
+		push_warning("Options %s does not contain %s" % [JSON.stringify(options), current_setting])
+		return
 	select(options[current_setting].index)
 
 	var saved: int = PlayerPrefs.get_value(_get_key(), -1)
