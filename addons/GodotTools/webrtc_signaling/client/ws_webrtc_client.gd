@@ -32,7 +32,9 @@ func connect_to_url(url: String) -> void:
 	close()
 	code = 1000
 	reason = "Unknown"
-	ws.connect_to_url(url)
+	var err: Error = ws.connect_to_url(url)
+	if err != Error.OK:
+		push_error("Unable to connect to %s. Code: %s" % [url, err])
 
 func close() -> void:
 	ws.close()

@@ -134,7 +134,9 @@ func listen(port: int) -> void:
 	stop()
 	rand.seed = int(Time.get_unix_time_from_system())
 	print("Signaling server listening on %s" % port)
-	tcp_server.listen(port)
+	var err: Error = tcp_server.listen(port)
+	if err != Error.OK:
+		push_error("Listen to server failed with error code: %s" % err)
 
 
 func stop() -> void:

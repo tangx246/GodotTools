@@ -1,18 +1,16 @@
-extends LineEdit
+extends PlayerPrefsLineEdit
 
 const KEY: String = "max_fps"
+const DEFAULT_VAL: int = 360
 
-func _enter_tree() -> void:
-	text_submitted.connect(_on_text_changed, CONNECT_DEFERRED)
-	var saved: int = PlayerPrefs.get_value(KEY, 360)
-	text = str(saved)
-
-func _exit_tree() -> void:
-	if text_submitted.is_connected(_on_text_changed):
-		text_submitted.disconnect(_on_text_changed)
-
-func _on_text_changed(_new_text: String):
+func _apply(text: String) -> Variant:
 	var text_int: int = int(text)
 	print("Setting max FPS to %s" % text_int)
 	Engine.max_fps = text_int
-	PlayerPrefs.set_value(KEY, text_int)
+	return text_int
+
+func _get_key() -> StringName:
+	return KEY
+
+func _get_default_value() -> Variant:
+	return DEFAULT_VAL

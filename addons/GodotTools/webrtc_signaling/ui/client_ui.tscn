@@ -60,7 +60,7 @@ text = "Signaling Server URL:"
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-text = "ws://localhost:9080"
+text = "ws://localhost:25843"
 
 [node name="Mesh" type="CheckBox" parent="VBoxContainer/TabContainer/Host Join UI/Connect"]
 unique_name_in_owner = true
@@ -88,12 +88,6 @@ text = "Start Single Player Game"
 layout_mode = 2
 size_flags_horizontal = 3
 alignment = 2
-
-[node name="MultiprocessCheckbox" type="CheckBox" parent="VBoxContainer/TabContainer/Host Join UI/HBoxContainer2/HBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-button_pressed = true
-text = "Multiprocess"
 
 [node name="Options" type="Button" parent="VBoxContainer/TabContainer/Host Join UI/HBoxContainer2/HBoxContainer"]
 unique_name_in_owner = true

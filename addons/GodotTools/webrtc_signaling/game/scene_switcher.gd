@@ -10,6 +10,7 @@ var ready_peers: int
 
 var load_screen: LoadScreen
 var instantiated: Node
+var currently_switching: bool = false
 
 func _enter_tree() -> void:
 	Signals.safe_connect(self, multiplayer.server_disconnected, _clear_loading_screen)
@@ -46,6 +47,12 @@ func _switch_scenes_server(new_scene: PackedScene) -> bool:
 	return true
 
 func _switch_scenes(new_scene: PackedScene) -> void:
+	if currently_switching:
+		push_error("Currently switching scenes. Aborting")
+		return
+		
+	currently_switching = true
+	print("Switcing to scene: %s" % new_scene)
 	_clear_gameRoot()
 
 	ready_peers = 0
@@ -56,6 +63,8 @@ func _switch_scenes(new_scene: PackedScene) -> void:
 		await all_peers_ready
 	
 	get_level_spawner().spawn(new_scene.resource_path)
+	
+	currently_switching = false
 
 @rpc("any_peer", "call_local", "reliable")
 func load_complete():

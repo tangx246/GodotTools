@@ -1,0 +1,28 @@
+[gd_scene load_steps=3 format=3 uid="uid://bc67uokwgs84b"]
+
+[ext_resource type="Script" uid="uid://do1c8devc4r4y" path="res://addons/GodotTools/ui/options_menu/performance/multiprocess.gd" id="1_g1qy7"]
+[ext_resource type="Script" uid="uid://csisarcsibg0x" path="res://addons/GodotTools/ui/options_menu/performance/multiprocess_port.gd" id="2_q6oqc"]
+
+[node name="Performance" type="VBoxContainer"]
+
+[node name="Multiprocess" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Multiprocess"]
+layout_mode = 2
+text = "Multiprocess"
+
+[node name="CheckButton" type="CheckButton" parent="Multiprocess"]
+layout_mode = 2
+script = ExtResource("1_g1qy7")
+
+[node name="Multiprocess Port" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Multiprocess Port"]
+layout_mode = 2
+text = "Multiprocess Port"
+
+[node name="LineEdit" type="LineEdit" parent="Multiprocess Port"]
+layout_mode = 2
+script = ExtResource("2_q6oqc")

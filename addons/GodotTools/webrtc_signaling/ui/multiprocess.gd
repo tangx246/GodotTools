@@ -32,11 +32,9 @@ static func is_rpc_safe(root: Node) -> bool:
 func _init() -> void:
 	add_to_group(GROUP)
 
-func _enter_tree() -> void:
+func _ready() -> void:
 	if is_multiprocess_instance():
-		await get_tree().process_frame
-		if not is_inside_tree():
-			return
+		await get_tree().process_frame # Allow for clientui to initialize
 		var single_player: bool = is_multiprocess_instance_single_player()
 		print("Multiprocess Server started. Autohosting. Singleplayer: %s" % single_player)
 		clientui._on_start_pressed(single_player)
@@ -47,11 +45,23 @@ func _enter_tree() -> void:
 		timer.timeout.connect(func(): print("FPS: %s" % Performance.get_monitor(Performance.Monitor.TIME_FPS)))
 		add_child(timer)
 		
-		multiplayer.peer_connected.connect(_on_peer_connected, CONNECT_ONE_SHOT)
+		var timeout_timer: Timer = Timer.new()
+		var timeout_time: float = 30
+		timeout_timer.wait_time = timeout_time
+		timeout_timer.autostart = true
+		add_child(timeout_timer)
+		timeout_timer.timeout.connect(func():
+			push_error("No clients joined in %s seconds. Quitting" % timeout_time)
+			get_tree().quit()
+		)
+
+		multiplayer.peer_connected.connect(_on_peer_connected.bind(timeout_timer), CONNECT_ONE_SHOT)
 		multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 
-func _on_peer_connected(id: int):
+func _on_peer_connected(id: int, timeout: Timer):
+	print("First peer connected. Making host: %s" % id)
 	first_peer_id = id
+	timeout.queue_free()
 
 func _on_peer_disconnected(id: int):
 	if multiplayer.get_peers().size() <= 0 or id == first_peer_id:

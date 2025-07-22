@@ -27,12 +27,6 @@ layout_mode = 2
 layout_mode = 2
 text = "Signaling server:"
 
-[node name="Port" type="SpinBox" parent="VBoxContainer/Signaling"]
-layout_mode = 2
-min_value = 1025.0
-max_value = 65535.0
-value = 9080.0
-
 [node name="ListenButton" type="Button" parent="VBoxContainer/Signaling"]
 layout_mode = 2
 toggle_mode = true

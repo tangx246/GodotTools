@@ -1,0 +1,33 @@
+[gd_scene load_steps=5 format=3 uid="uid://dgkmlvbt2r5dl"]
+
+[ext_resource type="Script" uid="uid://diw5wfcv2s16l" path="res://addons/GodotTools/ui/player_ready/player_ready.gd" id="1_3v37i"]
+[ext_resource type="Texture2D" uid="uid://bfryd8pwj65xv" path="res://addons/GodotTools/ui/player_ready/green_circle.png" id="2_wau2j"]
+[ext_resource type="Texture2D" uid="uid://n3et7e1un0wx" path="res://addons/GodotTools/ui/player_ready/red_circle.png" id="3_tst6n"]
+[ext_resource type="PackedScene" uid="uid://bgapv68lx05a2" path="res://addons/GodotTools/ui/player_ready/player_ready_item.tscn" id="4_fs6nn"]
+
+[node name="PlayerReady" type="PanelContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_3v37i")
+ready_icon = ExtResource("2_wau2j")
+not_ready_icon = ExtResource("3_tst6n")
+player_ready_item = ExtResource("4_fs6nn")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 2
+
+[node name="List" type="VBoxContainer" parent="ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="PlayerReadyItem" parent="ScrollContainer/List" instance=ExtResource("4_fs6nn")]
+layout_mode = 2
+
+[node name="PlayerReadyItem2" parent="ScrollContainer/List" instance=ExtResource("4_fs6nn")]
+layout_mode = 2
+
+[node name="PlayerReadyItem3" parent="ScrollContainer/List" instance=ExtResource("4_fs6nn")]
+layout_mode = 2

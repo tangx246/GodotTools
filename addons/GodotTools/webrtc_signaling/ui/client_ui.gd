@@ -5,7 +5,6 @@ extends Control
 @onready var room: LineEdit = %RoomSecret
 @onready var mesh: CheckBox = %Mesh
 @onready var multiprocess: Multiprocess = %Multiprocess
-@onready var multiprocess_checkbox: CheckBox = %MultiprocessCheckbox
 @onready var multiplayerUi: Control = %VBoxContainer
 @onready var multiplayerUiRoot: Control = $"%VBoxContainer/.."
 @onready var main: Node = $"%VBoxContainer/../.."
@@ -82,7 +81,7 @@ func _on_seal_pressed() -> void:
 	client.seal_lobby()
 
 func _on_start_pressed(single_player: bool = false) -> void:
-	if not multiprocess.is_multiprocess_instance() and multiprocess_checkbox.button_pressed:
+	if not multiprocess.is_multiprocess_instance() and MultiprocessEnabledOption.get_value():
 		_log("Starting multiplayer multiprocess instance")
 		multiprocess.start_headless_process(false)
 	else:
@@ -96,7 +95,8 @@ func _on_start_pressed(single_player: bool = false) -> void:
 func _get_url(single_player: bool) -> String:
 	var url: String
 	if single_player:
-		url = "ws://127.0.0.1:9080"
+		url = "ws://127.0.0.1:%s" % MultiprocessPortOption.get_value()
+		print("Connecting to single player URL: %s" % url)
 	else:
 		url = host.text
 	return url
@@ -133,7 +133,7 @@ func _on_stop_pressed() -> void:
 func _on_start_game_pressed():
 	if multiprocess.is_multiprocess_instance_running():
 		_on_start_game_pressed_rpc.rpc_id(MultiplayerPeer.TARGET_PEER_SERVER)
-	elif not multiprocess.is_multiprocess_instance() and multiprocess_checkbox.button_pressed:
+	elif not multiprocess.is_multiprocess_instance() and MultiprocessEnabledOption.get_value():
 		_log("Starting single player multiprocess instance")
 		multiprocess.start_headless_process(true)
 	elif MultiplayerSceneSwitcher.switch_scenes(self, main.gameScene):

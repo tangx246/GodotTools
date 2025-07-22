@@ -74,7 +74,9 @@ func _offer_created(type: String, data: String, id: int) -> void:
 	if not rtc_mp.has_peer(id):
 		return
 	print("created", type)
-	rtc_mp.get_peer(id).connection.set_local_description(type, data)
+	var err: Error = rtc_mp.get_peer(id).connection.set_local_description(type, data)
+	if err != Error.OK:
+		push_error("Error creating local description. Code: %s. %s, %s" % [err, type, data])
 	if type == "offer": send_offer(id, data)
 	else: send_answer(id, data)
 
@@ -120,7 +122,7 @@ func _offer_received(id: int, offer: String) -> void:
 	if rtc_mp.has_peer(id):
 		var error: Error = rtc_mp.get_peer(id).connection.set_remote_description("offer", offer)
 		if error != Error.OK:
-			push_error("Unable to set remote description %s" % error)
+			push_error("Unable to set remote description %s, %s" % [error, offer])
 
 
 func _answer_received(id: int, answer: String) -> void:
@@ -128,11 +130,11 @@ func _answer_received(id: int, answer: String) -> void:
 	if rtc_mp.has_peer(id):
 		var error: Error = rtc_mp.get_peer(id).connection.set_remote_description("answer", answer)
 		if error != Error.OK:
-			push_error("Unable to set remote description: %s" % error)
+			push_error("Unable to set remote description: %s, %s" % [error, answer])
 
 
 func _candidate_received(id: int, mid: String, index: int, sdp: String) -> void:
 	if rtc_mp.has_peer(id):
 		var error: Error = rtc_mp.get_peer(id).connection.add_ice_candidate(mid, index, sdp)
 		if error != Error.OK:
-			push_error("Unable to add ice candidate: %s" % error)
+			push_error("Unable to add ice candidate: %s, %s, %s" % [error, index, sdp])

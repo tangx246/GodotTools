@@ -19,6 +19,6 @@ func _ready() -> void:
 
 func _on_listen_toggled(button_pressed: bool) -> void:
 	if button_pressed:
-		$Server.listen(int($VBoxContainer/Signaling/Port.value))
+		$Server.listen(MultiprocessPortOption.get_value())
 	else:
 		$Server.stop()

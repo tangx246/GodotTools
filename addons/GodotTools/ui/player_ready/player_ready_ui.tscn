@@ -1,0 +1,30 @@
+[gd_scene load_steps=4 format=3 uid="uid://cn4khe473o3m0"]
+
+[ext_resource type="PackedScene" uid="uid://dgkmlvbt2r5dl" path="res://addons/GodotTools/ui/player_ready/player_ready.tscn" id="1_xt4jd"]
+[ext_resource type="Script" uid="uid://bgxjal58paq31" path="res://addons/GodotTools/node_utility/multiplayer_synchronizer_workaround/multiplayer_synchronizer_workaround.gd" id="2_cc5mx"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_cio42"]
+properties/0/path = NodePath("PlayerReady:ready_state")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+
+[node name="PlayerReadyUI" type="VBoxContainer"]
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+text = "Players"
+
+[node name="Button" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Ready"
+
+[node name="PlayerReady" parent="." instance=ExtResource("1_xt4jd")]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MultiplayerSynchronizerWorkaround" type="MultiplayerSynchronizer" parent="."]
+unique_name_in_owner = true
+replication_config = SubResource("SceneReplicationConfig_cio42")
+script = ExtResource("2_cc5mx")
+metadata/_custom_type_script = "uid://bgxjal58paq31"

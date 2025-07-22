@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://1tk7mqago26t"]
+[gd_scene load_steps=7 format=3 uid="uid://1tk7mqago26t"]
 
 [ext_resource type="PackedScene" uid="uid://bwate1hp34pw2" path="res://addons/GodotTools/ui/options_menu/video/video.tscn" id="1_1127u"]
 [ext_resource type="PackedScene" uid="uid://cvc2elttch4nb" path="res://addons/GodotTools/ui/options_menu/keybinds/keybinds.tscn" id="1_p0bru"]
 [ext_resource type="PackedScene" uid="uid://ptb02aoy8gn1" path="res://addons/GodotTools/ui/volume_control/volume_container.tscn" id="2_lbnda"]
 [ext_resource type="PackedScene" uid="uid://0iicb5npbaox" path="res://addons/GodotTools/ui/options_menu/controls/controls.tscn" id="3_gy6vn"]
+[ext_resource type="PackedScene" uid="uid://bc67uokwgs84b" path="res://addons/GodotTools/ui/options_menu/performance/performance.tscn" id="5_68w1v"]
 [ext_resource type="PackedScene" uid="uid://bfckiuisw4h5a" path="res://addons/GodotTools/ui/options_menu/logs/logs.tscn" id="5_iv303"]
 
 [node name="OptionsMenu" type="PanelContainer"]
@@ -48,10 +49,18 @@ metadata/_tab_index = 3
 [node name="Keybinds" parent="TabContainer/Keybinds" instance=ExtResource("1_p0bru")]
 layout_mode = 2
 
-[node name="Logs" type="ScrollContainer" parent="TabContainer"]
+[node name="Performance" type="ScrollContainer" parent="TabContainer"]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 4
+
+[node name="Performance" parent="TabContainer/Performance" instance=ExtResource("5_68w1v")]
+layout_mode = 2
+
+[node name="Logs" type="ScrollContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 5
 
 [node name="Logs" parent="TabContainer/Logs" instance=ExtResource("5_iv303")]
 layout_mode = 2
