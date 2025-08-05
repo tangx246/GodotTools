@@ -1,0 +1,10 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://b82unr7uge7ls"]
+
+[ext_resource type="Shader" uid="uid://bb2up3wpp7raa" path="res://addons/GodotTools/graphics/outline/Outline.gdshader" id="1_mv623"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_mv623")
+shader_parameter/shadow_color = Color(0.333333, 0.101961, 0, 1)
+shader_parameter/shadow_thickness = 2.5
+shader_parameter/shadow_thickness_falloff = 4.0

@@ -2,7 +2,7 @@
 class_name SuccessTriggerDecorator extends Decorator
 
 ## Will continue to return SUCCESS after SUCCESS has been triggered once
-var successed: bool = false
+var succeeded: bool = false
 
 func tick(actor: Node, blackboard: Blackboard) -> int:
 	var c = get_child(0)
@@ -27,9 +27,9 @@ func tick(actor: Node, blackboard: Blackboard) -> int:
 		c.after_run(actor, blackboard)
 
 		if response == SUCCESS:
-			successed = true
+			succeeded = true
 
-		if successed:
+		if succeeded:
 			return SUCCESS
 		
 		return response

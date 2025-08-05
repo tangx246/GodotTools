@@ -12,4 +12,8 @@ static func _static_init() -> void:
 		uid_cache[buffer.get_string_from_ascii()] = id
 
 static func get_resource_uid(path: String) -> int:
-	return uid_cache[path]
+	if uid_cache.has(path):
+		return uid_cache[path]
+	else:
+		push_error("Unable to find UID for %s" % path)
+		return -1

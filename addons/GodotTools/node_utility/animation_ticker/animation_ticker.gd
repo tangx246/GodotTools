@@ -22,6 +22,9 @@ func _ready() -> void:
 	
 	if Engine.is_editor_hint():
 		Signals.safe_connect(self, get_tree().process_frame, func():
+			if process_mode == PROCESS_MODE_DISABLED:
+				return
+			
 			editor_wait_time += get_process_delta_time()
 			if editor_wait_time >= wait_time:
 				for mixer in mixers:

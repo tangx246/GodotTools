@@ -46,7 +46,7 @@ func _on_ready_changed() -> void:
 			"id": str(id),
 			"name": players[id].name
 		}), ready_icon if _is_ready(id) else not_ready_icon,
-		players[self_id].avatar)
+		players[id].avatar)
 
 	toggle_ready_button.text = "Ready" if not _is_ready(self_id) else "Unready"
 

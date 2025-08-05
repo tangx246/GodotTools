@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://dqdjvimwbo58k"]
+
+[ext_resource type="Material" uid="uid://b82unr7uge7ls" path="res://addons/GodotTools/graphics/outline/outline_shader_material.tres" id="1_hk4tq"]
+[ext_resource type="Script" uid="uid://cencpt3htbwl2" path="res://addons/GodotTools/graphics/outline/outline_shader.gd" id="1_r7syr"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_ux0lh"]
+material = ExtResource("1_hk4tq")
+flip_faces = true
+size = Vector2(2, 2)
+
+[node name="Outline_Shader" type="Node"]
+script = ExtResource("1_r7syr")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+extra_cull_margin = 16384.0
+mesh = SubResource("QuadMesh_ux0lh")
