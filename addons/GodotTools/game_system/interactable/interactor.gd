@@ -63,5 +63,5 @@ func _get_interactable(body: Node3D, error_on_no_interactable: bool) -> Interact
 				return cousins[0]
 
 	if error_on_no_interactable:
-		printerr("Unable to find interactable in %s" % body)
+		push_error("Unable to find interactable in %s" % body)
 	return null

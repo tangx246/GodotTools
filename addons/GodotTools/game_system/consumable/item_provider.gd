@@ -3,8 +3,10 @@ extends Node
 
 var item_count : int = 0:
 	set(value):
+		var prev_value = item_count
 		item_count = value
-		item_count_changed.emit(value)
+		if prev_value != value:
+			item_count_changed.emit(value)
 signal item_count_changed(new_count: int)
 
 func has_item() -> bool:

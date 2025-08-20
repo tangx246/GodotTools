@@ -23,9 +23,9 @@ func _ready() -> void:
 
 var last_refreshed: int = -1
 func _on_child_order_changed() -> void:
-	await get_tree().process_frame
 	if not is_inside_tree():
 		await tree_entered
+	await get_tree().process_frame
 	
 	var current_tick: int = Engine.get_process_frames()
 	if current_tick == last_refreshed:

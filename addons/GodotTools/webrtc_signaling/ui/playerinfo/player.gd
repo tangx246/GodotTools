@@ -14,9 +14,19 @@ signal updated
 func fetch_avatar() -> void:
 	var steam = SteamInit.get_steam()
 	if steam and steam_id != "":
-		if not steam.avatar_loaded.is_connected(_on_loaded_avatar):
-			steam.avatar_loaded.connect(_on_loaded_avatar)
-		steam.getPlayerAvatar(steam.AVATAR_SMALL, int(steam_id))
+		var _on_persona_state_change = func(user_id: int, _flags: int) -> void:
+			if user_id != int(steam_id):
+				return
+
+			if not steam.avatar_loaded.is_connected(_on_loaded_avatar):
+				steam.avatar_loaded.connect(_on_loaded_avatar)
+			steam.getPlayerAvatar(steam.AVATAR_SMALL, int(steam_id))
+
+		if not steam.requestUserInformation(int(steam_id), false):
+			_on_persona_state_change.call(int(steam_id), 0)
+		else:
+			if not steam.persona_state_change.is_connected(_on_persona_state_change):
+				steam.persona_state_change.connect(_on_persona_state_change)
 
 func _on_loaded_avatar(user_id: int, avatar_size: int, avatar_buffer: PackedByteArray) -> void:
 	if user_id != int(steam_id):

@@ -13,9 +13,9 @@ extends Node
 		return max_hp
 	set(value):
 		var prev_hp = max_hp
+		var prev_ratio = current_hp / max_hp
 		max_hp = value
-		if current_hp < max_hp:
-			current_hp = max_hp
+		current_hp = prev_ratio * max_hp
 		max_hp_changed.emit(prev_hp, value)
 
 ## An ordered list of damage modifiers to apply to all incoming damage

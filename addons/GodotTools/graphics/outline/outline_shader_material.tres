@@ -5,6 +5,6 @@
 [resource]
 render_priority = 0
 shader = ExtResource("1_mv623")
-shader_parameter/shadow_color = Color(0.333333, 0.101961, 0, 1)
+shader_parameter/shadow_color = Color(0.25, 0.11875, 0.0625, 1)
 shader_parameter/shadow_thickness = 2.5
 shader_parameter/shadow_thickness_falloff = 4.0

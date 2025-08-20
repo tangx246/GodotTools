@@ -54,6 +54,14 @@ static func _deserialize(parsed: Dictionary, obj: Object = null) -> Object:
 		var value: Variant = _parse_object(parsed[key], obj.get(key))
 		if typeof(value) in [TYPE_ARRAY, TYPE_DICTIONARY]:
 			obj.get(key).assign(value)
+		elif typeof(obj.get(key)) == TYPE_COLOR:
+			var rgba: PackedStringArray = (value as String).trim_prefix("(").trim_suffix(")").split(", ")
+			obj.set(key, Color(
+				float(rgba[0]), 
+				float(rgba[1]), 
+				float(rgba[2]), 
+				float(rgba[3]))
+			)
 		else:
 			obj.set(key, value)
 		

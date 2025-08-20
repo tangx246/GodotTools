@@ -20,6 +20,7 @@ func _init() -> void:
 func _ready() -> void:
 	Signals.safe_connect(self, multiplayer.connected_to_server, _connected_to_server)
 	Signals.safe_connect(self, multiplayer.peer_connected, _peer_connected)
+	Signals.safe_connect(self, multiplayer.peer_disconnected, _peer_disconnected)
 	Signals.safe_connect(self, client.disconnected, _disconnected)
 
 func _connected_to_server() -> void:
@@ -28,6 +29,11 @@ func _connected_to_server() -> void:
 func _peer_connected(id: int) -> void:
 	if is_multiplayer_authority():
 		_submit_player_info()
+
+func _peer_disconnected(id: int) -> void:
+	if is_multiplayer_authority():
+		players.erase(id)
+		_sync_names.rpc(JSON.stringify(players, "", false, true))
 
 func _submit_player_info() -> void:
 	_submit_name_rpc.rpc_id(MultiplayerPeer.TARGET_PEER_SERVER, get_player_name(), get_steam_id())

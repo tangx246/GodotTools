@@ -2,6 +2,7 @@ class_name LightChecker
 extends Node
 
 @export var root: Node
+@export var min_texel_scale: float = 1
 
 func _ready() -> void:	
 	var lights = root.find_children("", "Light3D", true, false)
@@ -47,3 +48,8 @@ func _ready() -> void:
 			assert(
 				geometry.gi_mode != GeometryInstance3D.GIMode.GI_MODE_STATIC, 
 				"GeometryInstance3D %s is part of a RigidBody3D and should not contribute to global illumination (i.e. Global Illumination Mode should not be static)" % geometry.get_path())
+
+	var lightmapgis = root.find_children("", "LightmapGI", true, false)
+	for lmgi: LightmapGI in lightmapgis:
+		assert(lmgi.texel_scale >= min_texel_scale,
+		"Texel Scale must equal %s" % min_texel_scale)

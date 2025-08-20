@@ -63,6 +63,9 @@ func _on_peer_connected(id: int, timeout: Timer):
 	first_peer_id = id
 	timeout.queue_free()
 
+func get_host() -> int:
+	return first_peer_id
+
 func _on_peer_disconnected(id: int):
 	if multiplayer.get_peers().size() <= 0 or id == first_peer_id:
 		print("No more peers in multiprocess instance or first peer %s left. Quitting" % id)

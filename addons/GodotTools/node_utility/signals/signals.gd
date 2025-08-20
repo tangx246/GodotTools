@@ -9,7 +9,7 @@ class SignalFuncs extends RefCounted:
 static func safe_connect(base: Node, sig: Signal, callable: Callable, flags: int = 0) -> void:
 	var connect_signal_func: Callable = func():
 		if not sig.is_connected(callable):
-			sig.connect(callable)
+			sig.connect(callable, flags)
 	if not base.tree_entered.is_connected(connect_signal_func):
 		base.tree_entered.connect(connect_signal_func)
 

@@ -1,5 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://cn4khe473o3m0"]
+[gd_scene load_steps=5 format=3 uid="uid://cn4khe473o3m0"]
 
+[ext_resource type="AudioStream" uid="uid://dndlhxlyybs4m" path="res://addons/GodotTools/ui/player_ready/PlayerPing.ogg" id="1_cio42"]
 [ext_resource type="PackedScene" uid="uid://dgkmlvbt2r5dl" path="res://addons/GodotTools/ui/player_ready/player_ready.tscn" id="1_xt4jd"]
 [ext_resource type="Script" uid="uid://bgxjal58paq31" path="res://addons/GodotTools/node_utility/multiplayer_synchronizer_workaround/multiplayer_synchronizer_workaround.gd" id="2_cc5mx"]
 
@@ -14,10 +15,19 @@ properties/0/replication_mode = 2
 layout_mode = 2
 text = "Players"
 
-[node name="Button" type="Button" parent="."]
+[node name="ToggleReadyButton" type="Button" parent="."]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Ready"
+
+[node name="PingPlayersButton" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Ping Players"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="PingPlayersButton"]
+unique_name_in_owner = true
+stream = ExtResource("1_cio42")
 
 [node name="PlayerReady" parent="." instance=ExtResource("1_xt4jd")]
 layout_mode = 2

@@ -16,8 +16,8 @@ func _ready() -> void:
 
 func _connect_signals() -> void:
 	for inventory in find_inventories():
-		Signals.safe_connect(self, inventory.contents_changed, refresh_item_count)
-		Signals.safe_connect(self, inventory.item_property_changed, refresh_item_count.unbind(2))
+		Signals.safe_connect(self, inventory.contents_changed, refresh_item_count, CONNECT_DEFERRED)
+		Signals.safe_connect(self, inventory.item_property_changed, refresh_item_count.unbind(2), CONNECT_DEFERRED)
 
 func peek_item() -> InventoryItem:
 	return _get_items().pop_front()
@@ -65,7 +65,7 @@ func refresh_item_count():
 
 func find_inventories() -> Array[Inventory]:
 	var _inventories : Array[Inventory] = []
-	if is_instance_valid(root) and not root.is_inside_tree():
+	if not is_instance_valid(root) or not root.is_inside_tree():
 		return _inventories
 	_inventories.assign(root.find_children("", "Inventory", true, false))
 	if root is Inventory:

@@ -43,15 +43,10 @@ static func get_grab_offset() -> Vector2:
 static func get_grab_offset_local_to(control: Control) -> Vector2:
 	return CtrlDragable.get_grab_offset() / control.get_global_transform().get_scale()
 
-
-func _get_drag_data(at_position: Vector2):
+var sub_preview: Control
+func _get_drag_data(_at_position: Vector2):
 	if !_enabled:
 		return null
-
-	_grabbed_dragable = self
-	_grab_offset = at_position * get_global_transform().get_scale()
-	dragable_grabbed.emit(_grabbed_dragable, _grab_offset)
-	grabbed.emit(_grab_offset)
 
 	# Set on a separate canvas for multi-window support
 	var canvas = CanvasLayer.new()
@@ -59,13 +54,20 @@ func _get_drag_data(at_position: Vector2):
 	get_tree().current_scene.add_child(canvas)
 	var preview = Control.new()
 	preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var sub_preview = create_preview()
+	sub_preview = create_preview()
 	sub_preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	preview.add_child(sub_preview)
 	set_drag_preview(preview)
 	preview.reparent(canvas)
-	sub_preview.global_position = get_tree().current_scene.get_viewport().get_mouse_position() - at_position
+	var offset: Vector2 = (sub_preview.size / 2) * get_global_transform().get_scale()
+	sub_preview.global_position = get_tree().current_scene.get_viewport().get_mouse_position() - offset
 	preview.tree_exited.connect(canvas.queue_free)
+
+	_grabbed_dragable = self
+	_grab_offset = offset
+	dragable_grabbed.emit(_grabbed_dragable, _grab_offset)
+	grabbed.emit(_grab_offset)
+
 	return self
 
 

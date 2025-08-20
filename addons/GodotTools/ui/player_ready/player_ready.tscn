@@ -22,6 +22,7 @@ layout_mode = 2
 [node name="List" type="VBoxContainer" parent="ScrollContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="PlayerReadyItem" parent="ScrollContainer/List" instance=ExtResource("4_fs6nn")]
 layout_mode = 2

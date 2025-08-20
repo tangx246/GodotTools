@@ -6,7 +6,9 @@ extends Control
 @export var player_ready_item: PackedScene
 @onready var list: Control = %List
 @onready var pinfo: PlayerInfo = get_tree().get_first_node_in_group(PlayerInfo.GROUP)
-@onready var toggle_ready_button: Button = %Button
+@onready var toggle_ready_button: Button = %ToggleReadyButton
+@onready var ping_players_button: Button = %PingPlayersButton
+@onready var asp: AudioStreamPlayer = %AudioStreamPlayer
 @onready var synchronizer: MultiplayerSynchronizer = %MultiplayerSynchronizerWorkaround
 
 # Maps player ID to ready state
@@ -22,7 +24,12 @@ func _ready() -> void:
 	if is_multiplayer_authority() or Multiprocess.get_first_instance(self).is_multiprocess_instance_running():
 		toggle_ready()
 		toggle_ready_button.visible = false
+		ping_players_button.visible = true
+	else:
+		toggle_ready_button.visible = true
+		ping_players_button.visible = false
 
+	Signals.safe_connect(self, ping_players_button.pressed, _ping_players.rpc)
 	Signals.safe_connect(self, toggle_ready_button.pressed, toggle_ready)
 	Signals.safe_connect(self, multiplayer.peer_connected, _on_ready_changed.unbind(1))
 	Signals.safe_connect(self, multiplayer.peer_disconnected, _on_ready_changed.unbind(1))
@@ -39,14 +46,16 @@ func _on_ready_changed() -> void:
 		"id": str(self_id),
 		"name": players[self_id].name
 	}), ready_icon if _is_ready(self_id) else not_ready_icon,
-	players[self_id].avatar)
+	players[self_id].avatar,
+	self_id)
 
 	for id in multiplayer.get_peers():
 		_add_item("{id}: {name}".format({
 			"id": str(id),
 			"name": players[id].name
 		}), ready_icon if _is_ready(id) else not_ready_icon,
-		players[id].avatar)
+		players[id].avatar,
+		id)
 
 	toggle_ready_button.text = "Ready" if not _is_ready(self_id) else "Unready"
 
@@ -77,7 +86,7 @@ func _clear() -> void:
 	for child in list.get_children():
 		child.queue_free()
 
-func _add_item(text: String, icon: Texture2D, player_icon: Texture2D) -> void:
+func _add_item(text: String, icon: Texture2D, player_icon: Texture2D, multiplayer_id: int) -> void:
 	var instantiated: Control = player_ready_item.instantiate()
 	
 	var ready_rect: TextureRect = instantiated.get_node(^"%Ready")
@@ -89,4 +98,28 @@ func _add_item(text: String, icon: Texture2D, player_icon: Texture2D) -> void:
 	var label: Label = instantiated.get_node(^"%Label")
 	label.text = text
 
+	var kick_button: Button = instantiated.get_node(^"%KickButton")
+	if (is_multiplayer_authority() or Multiprocess.get_first_instance(self).is_multiprocess_instance_running()) and multiplayer_id != MultiplayerPeer.TARGET_PEER_SERVER and multiplayer_id != multiplayer.get_unique_id():
+		kick_button.visible = true
+		Signals.safe_connect(self, kick_button.pressed, _on_kick_pressed.bind(multiplayer_id))
+	else:
+		kick_button.visible = false
+
 	list.add_child(instantiated)
+
+func _on_kick_pressed(id: int) -> void:
+	_kick_rpc.rpc_id(get_multiplayer_authority(), id)
+
+@rpc("any_peer", "call_local", "reliable")
+func _kick_rpc(id: int) -> void:
+	# Check permissions
+	var remote_sender_id: int = multiplayer.get_remote_sender_id()
+	if remote_sender_id != Multiprocess.get_first_instance(self).get_host() and remote_sender_id != MultiplayerPeer.TARGET_PEER_SERVER:
+		push_error("Invalid permissions to kick player by %s" % remote_sender_id)
+		return
+
+	multiplayer.multiplayer_peer.disconnect_peer(id)
+
+@rpc("any_peer", "call_local", "reliable")
+func _ping_players() -> void:
+	asp.play()

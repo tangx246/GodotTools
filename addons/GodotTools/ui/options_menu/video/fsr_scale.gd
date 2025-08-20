@@ -22,7 +22,7 @@ func _get_key() -> String:
 	return KEY
 
 func _get_current_setting() -> int:
-	return PlayerPrefs.get_value(KEY, FSR_Scale.Balanced)
+	return PlayerPrefs.get_value(KEY, FSR_Scale.Ultra)
 
 ## Maps id to option
 func _get_options() -> Dictionary[int, MenuOption]:

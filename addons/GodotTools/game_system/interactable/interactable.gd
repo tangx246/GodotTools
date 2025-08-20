@@ -4,6 +4,7 @@ extends Node3D
 @export var interact_time : float = 0
 ## If true, will only trigger the signal on authority. Otherwise, triggers everywhere
 @export var authority_only: bool = true
+@export var interact_text: String = "Interact"
 
 signal interacted(interactor: Interactor)
 signal no_param_interacted()
@@ -13,6 +14,9 @@ func _enter_tree() -> void:
 
 func interact(interactor: Interactor):
 	interact_rpc.rpc(interactor.get_path())
+
+func get_interact_text() -> String:
+	return interact_text
 
 @rpc("any_peer", "call_local", "reliable")
 func interact_rpc(interactor_path: NodePath):
