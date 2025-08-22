@@ -7,6 +7,8 @@ extends MultiplayerSpawner
 
 const group : StringName = "PlayerSpawner"
 
+var id_to_player: Dictionary[int, Node] = {}
+
 ## Emitted when the player is currently spawning, but before being added to the scene tree.
 ## Authority-related processing should happen here
 signal player_spawning(id: int, player: Node)
@@ -24,10 +26,19 @@ func _ready():
 		# Make one for the server's self
 		spawn.call_deferred(multiplayer.get_unique_id())
 
+		Signals.safe_connect(self, multiplayer.peer_disconnected, _on_peer_disconnected)
+
+func _on_peer_disconnected(id: int):
+	print("Peer %s disconnected. Cleaning up player object" % id)
+	if id_to_player.has(id):
+		id_to_player[id].queue_free()
+		id_to_player.erase(id)
+
 func _player_spawn(id: int):
 	var instantiated = playerScene.instantiate()
 	if shifter:
 		shifter.shift(instantiated)
 	instantiated.set_multiplayer_authority(id)
 	player_spawning.emit(id, instantiated)
+	id_to_player[id] = instantiated
 	return instantiated

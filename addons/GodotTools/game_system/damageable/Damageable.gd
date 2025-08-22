@@ -13,7 +13,7 @@ extends Node
 		return max_hp
 	set(value):
 		var prev_hp = max_hp
-		var prev_ratio = current_hp / max_hp
+		var prev_ratio = current_hp / max_hp if max_hp > 0 else 1
 		max_hp = value
 		current_hp = prev_ratio * max_hp
 		max_hp_changed.emit(prev_hp, value)

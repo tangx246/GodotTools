@@ -171,6 +171,8 @@ script = ExtResource("4_blxr0")
 [node name="TextEdit" type="TextEdit" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+editable = false
+context_menu_enabled = false
 
 [connection signal="pressed" from="VBoxContainer/TabContainer/Host Join UI/HBoxContainer2/Start" to="." method="_on_start_pressed"]
 [connection signal="pressed" from="VBoxContainer/TabContainer/Host Join UI/HBoxContainer2/Refresh" to="." method="_on_refresh_pressed"]

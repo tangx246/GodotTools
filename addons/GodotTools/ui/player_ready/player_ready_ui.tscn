@@ -28,6 +28,7 @@ text = "Ping Players"
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="PingPlayersButton"]
 unique_name_in_owner = true
 stream = ExtResource("1_cio42")
+volume_db = 15.0
 
 [node name="PlayerReady" parent="." instance=ExtResource("1_xt4jd")]
 layout_mode = 2
