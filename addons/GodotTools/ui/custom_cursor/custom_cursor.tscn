@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cves5x02v1fgx"]
+
+[ext_resource type="Script" uid="uid://w2y70k7h5qst" path="res://addons/GodotTools/ui/custom_cursor/custom_cursor.gd" id="1_wtnxm"]
+
+[node name="CustomCursor" type="Node"]
+script = ExtResource("1_wtnxm")
