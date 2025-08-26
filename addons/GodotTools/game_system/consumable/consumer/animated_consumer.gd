@@ -52,6 +52,9 @@ func _start_animated_consumption(consumable: AnimatedConsumable, finished: Calla
 	var sm = tree.tree_root as AnimationNodeStateMachine
 	tree.set(time_scale_path, consumable.time_scale)
 	var smp = tree.get("parameters/playback") as AnimationNodeStateMachinePlayback
+	var consume_node = sm.get_node(consume_node_name)
+	var consume_animation = consume_node.get_node("Animation")
+	consume_animation.animation = consumable.consume_animation
 	smp.travel(consume_node_name)
 	Signals.safe_connect(self, consume_finished, _call_finished, CONNECT_ONE_SHOT)
 

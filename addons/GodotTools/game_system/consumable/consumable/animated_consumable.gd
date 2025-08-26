@@ -3,3 +3,4 @@ extends Consumable
 
 @export var animated_scene: PackedScene
 @export var time_scale: float = 1
+@export var consume_animation: StringName

@@ -10,7 +10,7 @@ func _ready() -> void:
 	Signals.safe_connect(self, CtrlDragable.dragable_grabbed, _draggable_grabbed, CONNECT_DEFERRED)
 
 func _draggable_grabbed(node: CtrlDragable, _offset: Vector2) -> void:
-	if not is_instance_valid(node) or node.is_queued_for_deletion():
+	if not is_instance_valid(node) or node.is_queued_for_deletion() or not is_instance_valid(node.sub_preview) or node.sub_preview.is_queued_for_deletion():
 		return
 
 	var item: InventoryItem = node.item
