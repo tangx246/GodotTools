@@ -38,8 +38,9 @@ func _peer_disconnected(id: int) -> void:
 func _submit_player_info() -> void:
 	_submit_name_rpc.rpc_id(MultiplayerPeer.TARGET_PEER_SERVER, get_player_name(), get_steam_id())
 
-func get_player_name() -> String:
-	if is_multiplayer_authority():
+## Gets the player name. If authority_check is true, then returns "server" if we have multiplayer authority
+func get_player_name(authority_check: bool = true) -> String:
+	if authority_check and is_multiplayer_authority():
 		return "server"
 	else:
 		var steam = SteamInit.get_steam()

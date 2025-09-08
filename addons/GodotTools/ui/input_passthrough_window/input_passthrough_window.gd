@@ -5,8 +5,7 @@ var mouse_in_window: bool = false
 var children_windows: Array[Window] = []
 
 func _ready() -> void:
-	Signals.safe_connect(self, get_parent().visibility_changed, _on_parent_visibility_changed)
-	_on_parent_visibility_changed()
+	EmbeddedUI.attach(self)
 
 	Signals.safe_connect(self, mouse_entered, _on_mouse_entered)
 	Signals.safe_connect(self, mouse_exited, _on_mouse_exited)
@@ -46,6 +45,3 @@ func _is_any_children_window_focused() -> bool:
 			return true
 
 	return false
-
-func _on_parent_visibility_changed() -> void: 
-	visible = (get_parent() as Control).is_visible_in_tree()

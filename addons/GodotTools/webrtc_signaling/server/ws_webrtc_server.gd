@@ -1,3 +1,4 @@
+class_name WebsocketWebRTCSignalingServer
 extends Node
 
 enum Message {
@@ -55,6 +56,7 @@ class Peer extends RefCounted:
 class Lobby extends RefCounted:
 	var peers := {}
 	var host := -1
+	var host_name := ""
 	var sealed := false
 	var time := 0  # Value is in milliseconds.
 	var mesh := true
@@ -122,6 +124,10 @@ class Lobby extends RefCounted:
 
 		return true
 
+	func _to_string() -> String:
+		return JSON.stringify({
+			"host_name": host_name
+		})
 
 func _process(_delta: float) -> void:
 	poll()
@@ -192,12 +198,13 @@ func poll() -> void:
 		peers.erase(id)
 
 
-func _join_lobby(peer: Peer, lobby: String, mesh: bool) -> bool:
-	lobby = lobby.to_upper()
+func _join_lobby(peer: Peer, join_packet: JoinPacket, mesh: bool) -> bool:
+	var lobby = join_packet.lobby.to_upper()
 	if lobby.is_empty():
 		for _i in 5:
 			lobby += char(_alfnum[rand.randi_range(0, ALFNUM.length() - 1)])
 		lobbies[lobby] = Lobby.new(peer.id, mesh)
+		lobbies[lobby].host_name = join_packet.host_name
 	elif not lobbies.has(lobby):
 		printerr("Peer %s attempted to join lobby %s that does not exist" % [peer, lobby])
 		return false
@@ -235,7 +242,7 @@ func _parse_msg(peer: Peer) -> bool:
 			printerr("Parse failed: %s" % pkt_str)
 			return false
 
-		var joined: bool = _join_lobby(peer, msg.data, msg.id == 0)
+		var joined: bool = _join_lobby(peer, JoinPacket.deserialize(msg.data), msg.id == 0)
 		if not joined:
 			printerr("Join failed: %s" % pkt_str)
 		return joined

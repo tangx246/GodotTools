@@ -15,6 +15,10 @@ properties/0/replication_mode = 2
 layout_mode = 2
 text = "Players"
 
+[node name="PlayerReady" parent="." instance=ExtResource("1_xt4jd")]
+layout_mode = 2
+size_flags_vertical = 3
+
 [node name="ToggleReadyButton" type="Button" parent="."]
 unique_name_in_owner = true
 layout_mode = 2
@@ -29,10 +33,6 @@ text = "Ping Players"
 unique_name_in_owner = true
 stream = ExtResource("1_cio42")
 volume_db = 15.0
-
-[node name="PlayerReady" parent="." instance=ExtResource("1_xt4jd")]
-layout_mode = 2
-size_flags_vertical = 3
 
 [node name="MultiplayerSynchronizerWorkaround" type="MultiplayerSynchronizer" parent="."]
 unique_name_in_owner = true

@@ -112,8 +112,11 @@ func _parse_msg() -> bool:
 
 
 func join_lobby(lobby: String) -> Error:
-	return _send_msg(Message.JOIN, 0 if mesh else 1, lobby)
-
+	var player_name: String = get_tree().get_first_node_in_group(PlayerInfo.GROUP).get_player_name(false)
+	var packet := JoinPacket.new()
+	packet.lobby = lobby
+	packet.host_name = player_name
+	return _send_msg(Message.JOIN, 0 if mesh else 1, packet.to_string())
 
 func seal_lobby() -> Error:
 	return _send_msg(Message.SEAL, 0)

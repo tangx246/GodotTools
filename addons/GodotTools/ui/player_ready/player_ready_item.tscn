@@ -1,13 +1,16 @@
-[gd_scene load_steps=2 format=3 uid="uid://bgapv68lx05a2"]
+[gd_scene load_steps=3 format=3 uid="uid://bgapv68lx05a2"]
 
 [ext_resource type="Texture2D" uid="uid://bfryd8pwj65xv" path="res://addons/GodotTools/ui/player_ready/green_circle.png" id="1_13n5a"]
+[ext_resource type="Script" uid="uid://bgvlolw4g2eh" path="res://addons/GodotTools/ui/player_ready/player_ready_item.gd" id="1_o03us"]
 
 [node name="PlayerReadyItem" type="HBoxContainer"]
 offset_right = 96.0
 offset_bottom = 21.0
 size_flags_horizontal = 3
+script = ExtResource("1_o03us")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
+custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5

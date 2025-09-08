@@ -160,7 +160,7 @@ func _on_room_list_activated(id: int) -> void:
 	client.start(host.text, room, mesh.button_pressed)
 
 func _room_list_received(received_rooms: Dictionary) -> void:
-	_log("Room list received: %s" % (JSON.stringify(received_rooms.keys()) if received_rooms else "[]"))
+	_log("Room list received. Got %s rooms" % (received_rooms.size() if received_rooms else "0"))
 	room_list.clear()
 	
 	for room in received_rooms.keys():

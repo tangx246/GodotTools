@@ -1,7 +1,13 @@
 class_name WorldTextArea3D
 extends Area3D
 
-@export_multiline var text: String
+@export_multiline var text: String:
+	set(value):
+		var prev_text = text
+		text = value
+		if text != prev_text:
+			text_changed.emit()
+signal text_changed
 
 func _ready() -> void:
 	monitorable = false

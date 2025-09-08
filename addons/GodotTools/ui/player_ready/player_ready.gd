@@ -21,7 +21,7 @@ func _init() -> void:
 	add_to_group(GROUP)
 
 func _ready() -> void:
-	if is_multiplayer_authority() or Multiprocess.get_first_instance(self).is_multiprocess_instance_running():
+	if is_host():
 		toggle_ready()
 		toggle_ready_button.visible = false
 		ping_players_button.visible = true
@@ -38,26 +38,19 @@ func _ready() -> void:
 	Signals.safe_connect(self, pinfo.player_info_updated, _on_ready_changed)
 	_on_ready_changed()
 
+func is_host() -> bool:
+	return is_multiplayer_authority() or Multiprocess.get_first_instance(self).is_multiprocess_instance_running()
+
 func _on_ready_changed() -> void:
 	var players := pinfo.get_players()
 	_clear()
 	var self_id: int = multiplayer.get_unique_id()
-	_add_item("{id}: {name} (Me)".format({
-		"id": str(self_id),
-		"name": players[self_id].name
-	}), ready_icon if _is_ready(self_id) else not_ready_icon,
-	players[self_id].avatar,
-	self_id)
+	_add_item(self_id)
 
 	for id in multiplayer.get_peers():
-		_add_item("{id}: {name}".format({
-			"id": str(id),
-			"name": players[id].name
-		}), ready_icon if _is_ready(id) else not_ready_icon,
-		players[id].avatar,
-		id)
+		_add_item(id)
 
-	toggle_ready_button.text = "Ready" if not _is_ready(self_id) else "Unready"
+	toggle_ready_button.text = "Ready" if not is_ready(self_id) else "Unready"
 
 func toggle_ready() -> void:
 	_toggle_ready_rpc.rpc_id(get_multiplayer_authority())
@@ -65,10 +58,10 @@ func toggle_ready() -> void:
 @rpc("any_peer", "call_local", "reliable")
 func _toggle_ready_rpc() -> void:
 	var id: int = multiplayer.get_remote_sender_id()
-	ready_state[id] = not _is_ready(id)
+	ready_state[id] = not is_ready(id)
 	ready_changed.emit()
 
-func _is_ready(id: int) -> bool:
+func is_ready(id: int) -> bool:
 	if ready_state.has(id):
 		return ready_state[id]
 	return false
@@ -78,7 +71,7 @@ func all_ready() -> bool:
 	ids.append_array(multiplayer.get_peers())
 
 	for id in ids:
-		if not _is_ready(id):
+		if not is_ready(id):
 			return false
 	return true
 
@@ -86,26 +79,12 @@ func _clear() -> void:
 	for child in list.get_children():
 		child.queue_free()
 
-func _add_item(text: String, icon: Texture2D, player_icon: Texture2D, multiplayer_id: int) -> void:
-	var instantiated: Control = player_ready_item.instantiate()
-	
-	var ready_rect: TextureRect = instantiated.get_node(^"%Ready")
-	ready_rect.texture = icon
-
-	var player_icon_rect: TextureRect = instantiated.get_node(^"%PlayerIcon")
-	player_icon_rect.texture = player_icon
-	
-	var label: Label = instantiated.get_node(^"%Label")
-	label.text = text
-
-	var kick_button: Button = instantiated.get_node(^"%KickButton")
-	if (is_multiplayer_authority() or Multiprocess.get_first_instance(self).is_multiprocess_instance_running()) and multiplayer_id != MultiplayerPeer.TARGET_PEER_SERVER and multiplayer_id != multiplayer.get_unique_id():
-		kick_button.visible = true
-		Signals.safe_connect(self, kick_button.pressed, _on_kick_pressed.bind(multiplayer_id))
-	else:
-		kick_button.visible = false
-
+func _add_item(multiplayer_id: int) -> void:
+	var instantiated: PlayerReadyItem = player_ready_item.instantiate()
 	list.add_child(instantiated)
+	
+	instantiated.setup(multiplayer_id)
+	Signals.safe_connect(self, instantiated.player_kicked, _on_kick_pressed)
 
 func _on_kick_pressed(id: int) -> void:
 	_kick_rpc.rpc_id(get_multiplayer_authority(), id)

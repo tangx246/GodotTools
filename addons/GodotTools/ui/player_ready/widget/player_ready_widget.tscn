@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://bx7aemxo1vna6"]
+
+[ext_resource type="PackedScene" uid="uid://bgapv68lx05a2" path="res://addons/GodotTools/ui/player_ready/player_ready_item.tscn" id="1_m5bis"]
+[ext_resource type="Script" uid="uid://e8wrtusw7b44" path="res://addons/GodotTools/ui/player_ready/widget/player_ready_widget.gd" id="1_m8x7e"]
+
+[node name="PlayerReadyWidget" type="HBoxContainer"]
+offset_right = 111.0
+offset_bottom = 32.0
+script = ExtResource("1_m8x7e")
+
+[node name="PlayerReadyItem" parent="." instance=ExtResource("1_m5bis")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ReadyButton" type="Button" parent="PlayerReadyItem"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Ready"
