@@ -164,5 +164,9 @@ func _room_list_received(received_rooms: Dictionary) -> void:
 	room_list.clear()
 	
 	for room in received_rooms.keys():
-		var id: int = room_list.add_item(room)
+		var host_name = JSON.parse_string(received_rooms[room])["host_name"]
+		var id: int = room_list.add_item("{host_name}'s server. Code: {room_code}".format({
+			"host_name": host_name,
+			"room_code": room
+		}))
 		room_list.set_item_metadata(id, room)

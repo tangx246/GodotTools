@@ -12,12 +12,12 @@ const KEY_STACK_SIZE = "stack_size"
 
 func _ready() -> void:
 	_connect_signals()
-	refresh_item_count()
 
 func _connect_signals() -> void:
 	for inventory in find_inventories():
 		Signals.safe_connect(self, inventory.contents_changed, refresh_item_count, CONNECT_DEFERRED)
 		Signals.safe_connect(self, inventory.item_property_changed, refresh_item_count.unbind(2), CONNECT_DEFERRED)
+	refresh_item_count()
 
 func peek_item() -> InventoryItem:
 	return _get_items().pop_front()
