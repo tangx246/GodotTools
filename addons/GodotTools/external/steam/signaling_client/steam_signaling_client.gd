@@ -1,12 +1,17 @@
 class_name SteamSignalingClient
 extends SignalingClient
 
-var rtc_mp: SteamMultiplayerPeer = SteamMultiplayerPeer.new()
+#var rtc_mp: SteamMultiplayerPeer = SteamMultiplayerPeer.new()
+var rtc_mp
 var ws = self
 var current_lobby_id: int = -1
 var is_hosting: bool = false
 
 func _ready() -> void:
+	if ClassDB.can_instantiate("SteamMultiplayerPeer"):
+		rtc_mp = ClassDB.instantiate("SteamMultiplayerPeer")
+	else:
+		printerr("SteamMultiplayerPeer is not available. Steam integration will not work.")
 	Signals.safe_connect(self, Steam.lobby_created, _lobby_created)
 	Signals.safe_connect(self, Steam.lobby_joined, _lobby_joined)
 	Signals.safe_connect(self, Steam.lobby_kicked, _lobby_kicked)
