@@ -2,6 +2,8 @@ class_name GlootUnlockInteractable
 extends UnlockInteractable
 
 @export var key_id: String
+@export var protoset: ItemProtoset
+@export var override_interactable_text: String = "Unlock with {item_name}"
 
 var item_provider: GlootItemIdProvider
 
@@ -9,6 +11,13 @@ func _ready() -> void:
 	super()
 	item_provider = GlootItemIdProvider.new(null, key_id)
 	add_child(item_provider)
+
+	if not override_interactable_text.is_empty():
+		var prototype: Variant = protoset.get_prototype(key_id)
+		var item_name: String = prototype[InventoryItem.KEY_NAME]
+		interactable.interact_text = override_interactable_text.format({
+			"item_name" = item_name
+		})
 
 func _on_interacted(interactor: Node) -> void:
 	item_provider.root = (interactor as Interactor).actor
