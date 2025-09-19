@@ -1,0 +1,16 @@
+[gd_resource type="Theme" load_steps=4 format=3 uid="uid://c3ef3twl2tkfa"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l1pol"]
+bg_color = Color(0.152941, 0.152941, 0.152941, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jqa55"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jqa55"]
+
+[resource]
+ControlWindow/base_type = &"PanelContainer"
+ControlWindow/styles/panel = SubResource("StyleBoxFlat_l1pol")
+ControlWindowContent/base_type = &"PanelContainer"
+ControlWindowContent/styles/panel = SubResource("StyleBoxEmpty_jqa55")
+ControlWindowTitle/base_type = &"PanelContainer"
+ControlWindowTitle/styles/panel = SubResource("StyleBoxFlat_jqa55")

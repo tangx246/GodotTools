@@ -1,0 +1,54 @@
+[gd_scene load_steps=3 format=3 uid="uid://44jhnsnwnwfo"]
+
+[ext_resource type="Script" uid="uid://rb5y7wiegfbc" path="res://addons/GodotTools/ui/control_window/control_window.gd" id="1_w0fgk"]
+[ext_resource type="Script" uid="uid://dkel7mvx6byhb" path="res://addons/GodotTools/ui/control_window/control_window_container.gd" id="2_ga2kx"]
+
+[node name="ControlWindow" type="CanvasLayer"]
+physics_interpolation_mode = 2
+script = ExtResource("1_w0fgk")
+metadata/_custom_type_script = "uid://rb5y7wiegfbc"
+
+[node name="ControlWindowContainer" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+offset_right = 77.0
+offset_bottom = 29.0
+theme_type_variation = &"ControlWindow"
+script = ExtResource("2_ga2kx")
+
+[node name="ControlWindowVBoxContainer" type="VBoxContainer" parent="ControlWindowContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ControlWindow"
+
+[node name="TitleBackground" type="PanelContainer" parent="ControlWindowContainer/ControlWindowVBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 1
+theme_type_variation = &"ControlWindowTitle"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ControlWindowContainer/ControlWindowVBoxContainer/TitleBackground"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Title" type="Label" parent="ControlWindowContainer/ControlWindowVBoxContainer/TitleBackground/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 2
+text = "Title"
+vertical_alignment = 1
+
+[node name="CloseButton" type="Button" parent="ControlWindowContainer/ControlWindowVBoxContainer/TitleBackground/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "x"
+flat = true
+alignment = 2
+
+[node name="Content" type="PanelContainer" parent="ControlWindowContainer/ControlWindowVBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 1
+theme_type_variation = &"ControlWindowContent"
