@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://7dj8tqi63n1l" path="res://addons/GodotTools/ui/escape_menu/quit_game.gd" id="2_41r75"]
 
 [node name="EscapeMenu" type="PopupPanel"]
+oversampling_override = 1.0
 initial_position = 2
 size = Vector2i(165, 91)
 visible = true
@@ -13,10 +14,8 @@ unresizable = false
 borderless = false
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 161.0
-offset_bottom = 87.0
+offset_right = 165.0
+offset_bottom = 91.0
 
 [node name="Options" type="Button" parent="VBoxContainer"]
 layout_mode = 2
@@ -40,9 +39,7 @@ unresizable = false
 borderless = false
 
 [node name="OptionsMenu" parent="PopupPanel" instance=ExtResource("1_wlkxg")]
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 496.0
-offset_bottom = 496.0
+offset_right = 500.0
+offset_bottom = 500.0
 
 [connection signal="pressed" from="VBoxContainer/Options" to="PopupPanel" method="popup"]

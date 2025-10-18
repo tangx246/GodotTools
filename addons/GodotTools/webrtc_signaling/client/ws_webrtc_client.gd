@@ -18,8 +18,6 @@ enum Message {
 @export var mesh := true  # Will use the lobby host as relay otherwise.
 
 var ws := WebSocketPeer.new()
-var code := 1000
-var reason := "Unknown"
 var old_state := WebSocketPeer.STATE_CLOSED
 
 signal peer_connected(id: int)
@@ -119,6 +117,9 @@ func join_lobby(lobby: String) -> Error:
 	return _send_msg(Message.JOIN, 0 if mesh else 1, packet.to_string())
 
 func seal_lobby() -> Error:
+	if ws.get_ready_state() != WebSocketPeer.STATE_OPEN:
+		return Error.ERR_CONNECTION_ERROR
+	
 	return _send_msg(Message.SEAL, 0)
 
 func refresh_room_list() -> Error:

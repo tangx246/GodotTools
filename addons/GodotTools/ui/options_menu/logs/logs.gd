@@ -23,7 +23,8 @@ func _refresh() -> void:
 	for file_name: String in file_names:
 		var file_path: String = "%s/%s" % [LOG_PATH, file_name]
 		var file: FileAccess = FileAccess.open(file_path, FileAccess.READ)
-		var text: String = ">>>>>%s\n%s" % [file_name, file.get_as_text()]
+		var last_modified: String = Time.get_datetime_string_from_unix_time(FileAccess.get_modified_time(file_path), true)
+		var text: String = ">>>>>%s - Last modified %s\n%s" % [file_name, last_modified, file.get_as_text()]
 		texts.append(text)	
 
 	text_edit.text = "\n".join(texts)

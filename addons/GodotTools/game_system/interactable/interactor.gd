@@ -50,7 +50,7 @@ func _physics_process(_delta: float) -> void:
 	else:
 		interactable = null
 
-func _get_interactable(body: Node3D, error_on_no_interactable: bool) -> Interactable:
+func _get_interactable(body: Node, error_on_no_interactable: bool) -> Interactable:
 	if body is Interactable:
 		return body
 	else:

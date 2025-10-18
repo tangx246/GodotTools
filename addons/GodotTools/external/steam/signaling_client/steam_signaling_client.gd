@@ -13,7 +13,7 @@ func _ready() -> void:
 	else:
 		printerr("SteamMultiplayerPeer is not available. Steam integration will not work.")
 	Signals.safe_connect(self, Steam.lobby_created, _lobby_created)
-	Signals.safe_connect(self, Steam.lobby_joined, _lobby_joined)
+	Signals.safe_connect(self, Steam.lobby_joined, _steam_lobby_joined)
 	Signals.safe_connect(self, Steam.lobby_kicked, _lobby_kicked)
 	Signals.safe_connect(self, Steam.lobby_match_list, _on_lobby_list_received)
 
@@ -38,7 +38,7 @@ func _lobby_created(result: int, lobby_id: int) -> void:
 		
 	is_hosting = true
 
-func _lobby_joined(lobby_id: int, permissions: int, locked: bool, response: int) -> void:
+func _steam_lobby_joined(lobby_id: int, permissions: int, locked: bool, response: int) -> void:
 	current_lobby_id = lobby_id
 	var error: Error
 	if is_hosting:
@@ -69,7 +69,10 @@ func refresh_room_list() -> Error:
 func _on_lobby_list_received(lobbies: Array) -> void:
 	var lobby_list: Dictionary = {}
 	for lobby in lobbies:
-		lobby_list[str(lobby)] = true
+		lobby_list[str(lobby)] = JSON.stringify({
+			"host_name": "",
+			"room_code": ""
+		})
 	room_list_received.emit(lobby_list)
 
 func stop() -> void:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://caymbqompufss"]
+[gd_scene load_steps=16 format=3 uid="uid://caymbqompufss"]
 
 [ext_resource type="Script" uid="uid://vnxiuxrgo2ea" path="res://addons/GodotTools/game_system/damageable/Damageable.gd" id="1_f1f5u"]
 [ext_resource type="Script" uid="uid://bqth8w8x7lhd0" path="res://addons/GodotTools/node_utility/follow_target/follow_target.gd" id="2_ajkxx"]
@@ -18,18 +18,6 @@ height = 0.7
 [sub_resource type="SphereShape3D" id="SphereShape3D_3i6i0"]
 radius = 0.12
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fpyl6"]
-radius = 0.05
-height = 0.35
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8ua6m"]
-radius = 0.1
-height = 0.4
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_85f1y"]
-radius = 0.1
-height = 0.7
-
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_5rsl7"]
 properties/0/path = NodePath(".:current_hp")
 properties/0/spawn = true
@@ -40,13 +28,10 @@ properties/1/replication_mode = 2
 
 [sub_resource type="Resource" id="Resource_5yaro"]
 script = ExtResource("6_pio6e")
-collision_index = 0
-modifier = 0.0
 
 [sub_resource type="Resource" id="Resource_u764a"]
 script = ExtResource("6_pio6e")
 collision_index = 1
-modifier = 0.0
 
 [node name="Damageable" type="AnimatableBody3D" node_paths=PackedStringArray("damage_modifiers")]
 disable_mode = 2
@@ -70,62 +55,6 @@ transform = Transform3D(-0.999326, -0.0351677, 0.0105125, -0.0366091, 0.934229, 
 shape = SubResource("SphereShape3D_3i6i0")
 script = ExtResource("2_ajkxx")
 localOffset = Vector3(0, 0.1, 0)
-
-[node name="LeftUpperArmCollisionShape3D" type="CollisionShape3D" parent="."]
-process_mode = 1
-transform = Transform3D(-0.539809, 0.101033, -0.835702, 0.834141, -0.0693009, -0.547179, -0.113198, -0.992467, -0.0468667, -0.156747, 1.2062, -0.198401)
-shape = SubResource("CapsuleShape3D_fpyl6")
-script = ExtResource("2_ajkxx")
-localOffset = Vector3(0, 0.1, 0)
-
-[node name="LeftLowerArmCollisionShape3D" type="CollisionShape3D" parent="."]
-process_mode = 1
-transform = Transform3D(-0.35231, 0.668819, -0.654645, 0.933117, 0.197284, -0.300619, -0.0719088, -0.716771, -0.693591, -0.0760872, 1.21647, -0.405424)
-shape = SubResource("CapsuleShape3D_fpyl6")
-script = ExtResource("2_ajkxx")
-localOffset = Vector3(0, 0.1, 0)
-
-[node name="RightUpperArmCollisionShape3D" type="CollisionShape3D" parent="."]
-process_mode = 1
-transform = Transform3D(-0.43321, -0.204572, 0.87777, -0.756287, -0.447251, -0.477489, 0.490264, -0.870699, 0.0390387, 0.153014, 1.15185, -0.187546)
-shape = SubResource("CapsuleShape3D_fpyl6")
-script = ExtResource("2_ajkxx")
-localOffset = Vector3(0, 0.1, 0)
-
-[node name="RightLowerArmCollisionShape3D" type="CollisionShape3D" parent="."]
-process_mode = 1
-transform = Transform3D(-0.350653, -0.200365, 0.91482, -0.681352, 0.724754, -0.102427, -0.642497, -0.659231, -0.390656, 0.105079, 1.16334, -0.372209)
-shape = SubResource("CapsuleShape3D_fpyl6")
-script = ExtResource("2_ajkxx")
-localOffset = Vector3(0, 0.1, 0)
-
-[node name="LeftUpperLegCollisionShape3D" type="CollisionShape3D" parent="."]
-process_mode = 1
-transform = Transform3D(-0.98497, 0.0729147, 0.156579, -0.160926, -0.716688, -0.678573, 0.0627405, -0.693572, 0.71765, -0.0624652, 0.559771, -0.129779)
-shape = SubResource("CapsuleShape3D_8ua6m")
-script = ExtResource("2_ajkxx")
-localOffset = Vector3(0, 0.2, 0)
-
-[node name="LeftLowerLegCollisionShape3D" type="CollisionShape3D" parent="."]
-process_mode = 1
-transform = Transform3D(-0.579691, 0.0961705, -0.809142, -0.47529, -0.846491, 0.239901, -0.66186, 0.523645, 0.536412, -0.0305161, 0.265494, -0.145996)
-shape = SubResource("CapsuleShape3D_85f1y")
-script = ExtResource("2_ajkxx")
-localOffset = Vector3(0, 0.2, 0)
-
-[node name="RightUpperLegCollisionShape3D" type="CollisionShape3D" parent="."]
-process_mode = 1
-transform = Transform3D(-0.995155, 0.0562377, 0.080643, -0.0841326, -0.911522, -0.402554, 0.0508692, -0.407388, 0.911837, 0.089949, 0.52696, -0.072508)
-shape = SubResource("CapsuleShape3D_8ua6m")
-script = ExtResource("2_ajkxx")
-localOffset = Vector3(0, 0.2, 0)
-
-[node name="RightLowerLegCollisionShape3D" type="CollisionShape3D" parent="."]
-process_mode = 1
-transform = Transform3D(-0.999298, -0.0240251, -0.0287407, -0.021963, -0.245763, 0.969081, -0.0303457, 0.969032, 0.245063, 0.0949509, 0.318853, 0.0502567)
-shape = SubResource("CapsuleShape3D_85f1y")
-script = ExtResource("2_ajkxx")
-localOffset = Vector3(0, 0.2, 0)
 
 [node name="DamageableAuthoritySetter" type="Node" parent="." node_paths=PackedStringArray("root")]
 script = ExtResource("3_iktyc")

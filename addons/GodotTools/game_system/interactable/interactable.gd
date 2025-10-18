@@ -1,5 +1,5 @@
 class_name Interactable
-extends Node3D
+extends Node
 
 @export var interact_time : float = 0
 ## If true, will only trigger the signal on authority. Otherwise, triggers everywhere

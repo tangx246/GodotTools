@@ -9,9 +9,9 @@ extends Node3D
 
 func _ready() -> void:
 	for child: Node in find_children("", "Node", true, false):
-		Signals.safe_connect(self, child.child_order_changed, set_renderers)
+		Signals.safe_connect(self, child.child_order_changed, set_renderers, CONNECT_DEFERRED)
 
-	set_renderers()
+	set_renderers.call_deferred()
 
 func set_renderers():
 	var renderers = find_children("", "VisualInstance3D", true, false)
@@ -29,7 +29,6 @@ func replace_materials(mesh: MeshInstance3D) -> void:
 		var material: Material = mesh.get_active_material(i)
 		if material is ShaderMaterial:
 			material.set_shader_parameter("viewmodel_fov", fov)
-			continue
 		elif material is BaseMaterial3D:
 			var new_material: ShaderMaterial = shader_material.duplicate(true)
 			new_material.set_shader_parameter("viewmodel_fov", fov)
@@ -62,6 +61,6 @@ func replace_materials(mesh: MeshInstance3D) -> void:
 			new_material.set_shader_parameter("texture_roughness", material.roughness_texture)
 			new_material.set_shader_parameter("texture_normal", material.normal_texture)
 			new_material.set_shader_parameter("texture_rim", material.rim_texture)
-			mesh.set_surface_override_material(i, new_material)
+			mesh.set_surface_override_material.call_deferred(i, new_material)
 		else:
 			printerr("Unable to handle material %s" % material)

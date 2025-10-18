@@ -23,11 +23,23 @@ layout_mode = 2
 [node name="KeybindItem" parent="BindList" instance=ExtResource("2_mkr0t")]
 layout_mode = 2
 
+[node name="Label" parent="BindList/KeybindItem/PopupPanel" index="1"]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 205.0
+offset_bottom = 100.0
+
 [node name="KeybindItem2" parent="BindList" instance=ExtResource("2_mkr0t")]
 layout_mode = 2
 
 [node name="Label" parent="BindList/KeybindItem2" index="0"]
 text = "Aim"
+
+[node name="Label" parent="BindList/KeybindItem2/PopupPanel" index="1"]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 205.0
+offset_bottom = 100.0
 
 [editable path="BindList/KeybindItem"]
 [editable path="BindList/KeybindItem2"]

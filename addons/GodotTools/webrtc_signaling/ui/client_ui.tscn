@@ -66,7 +66,6 @@ text = "ws://localhost:25843"
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-button_pressed = true
 text = "Mesh"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/TabContainer/Host Join UI"]

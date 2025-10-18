@@ -3,6 +3,8 @@ extends OptionButton
 
 signal setting_changed
 
+@export var show_warning_on_no_option: bool = true
+
 func _get_key() -> String:
 	assert(false, "Unimplemented")
 	return ""
@@ -41,7 +43,8 @@ func _enter_tree() -> void:
 	
 	var current_setting: int = _get_current_setting()
 	if not options.has(current_setting):
-		push_warning("Options %s does not contain %s" % [JSON.stringify(options), current_setting])
+		if show_warning_on_no_option:
+			push_warning("Options %s does not contain %s. %s" % [JSON.stringify(options), current_setting, get_path()])
 		return
 	select(options[current_setting].index)
 

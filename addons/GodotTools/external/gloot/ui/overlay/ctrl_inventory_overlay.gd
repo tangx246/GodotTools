@@ -13,8 +13,7 @@ signal refresh
 
 func _ready() -> void:
 	await get_tree().process_frame
-	if not is_inside_tree():
-		await tree_entered
+	await TreeSync.wait_for_inside_tree(self)
 
 	var ancestor: Node = get_parent()
 	while ancestor != null and not ancestor is CtrlItemSlot:

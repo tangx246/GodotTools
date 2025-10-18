@@ -6,8 +6,7 @@ extends UtilityDecorator
 var _exp: Expression
 func _ready() -> void:
 	super()
-	if not is_inside_tree():
-		return
+	await TreeSync.wait_for_inside_tree(self)
 
 	_exp = Expression.new()
 	_exp.parse(expression, ["considerations"])

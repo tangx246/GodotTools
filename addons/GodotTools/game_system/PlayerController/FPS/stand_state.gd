@@ -39,7 +39,8 @@ signal stand_state_changed(transition_time: float)
 func _set_collider():
 	var colliders: Array[CollisionShape3D] = [stand_collider, crouch_collider, prone_collider]
 	for i in range(colliders.size()):
-		colliders[i].disabled = i != stand_state
+		if colliders[i]:
+			colliders[i].disabled = i != stand_state
 
 func _ready() -> void:
 	_set_collider()

@@ -1,3 +1,4 @@
+## Not actually just a light checker. Checks for various errors and performance gotchas in the scene
 class_name LightChecker
 extends Node
 
@@ -40,7 +41,7 @@ func _ready() -> void:
 			directional_lights += 1
 			
 	print("%s static lights, %s dynamic lights, %s directional lights" % [static_lights, dynamic_lights, directional_lights])
-	
+
 	var rigidbodies = root.find_children("", "RigidBody3D", true, false)
 	for rigidbody: RigidBody3D in rigidbodies:
 		var geometries = rigidbody.find_children("", "GeometryInstance3D", true, false)
@@ -53,3 +54,11 @@ func _ready() -> void:
 	for lmgi: LightmapGI in lightmapgis:
 		assert(lmgi.texel_scale >= min_texel_scale,
 		"Texel Scale must equal %s" % min_texel_scale)
+
+	# Not a reliable way of detecting Jolt scaling error
+	# var physicsbodies = root.find_children("", "PhysicsBody3D", true, false)
+	# for body: PhysicsBody3D in physicsbodies:
+	# 	var scale: Vector3 = body.global_basis.get_scale()
+	# 	if not (is_equal_approx(scale.x, scale.y) and is_equal_approx(scale.y, scale.z)):
+	# 		body.process_mode = Node.PROCESS_MODE_DISABLED
+	# 		printerr("PhysicsBody %s with scale %s should have uniform scale" % [body.get_path(), scale])

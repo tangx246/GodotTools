@@ -31,6 +31,7 @@ popup/item_1/id = 1
 popup/item_2/text = "Fullscreen"
 popup/item_2/id = 2
 script = ExtResource("1_1jr12")
+show_warning_on_no_option = false
 
 [node name="UI Scale" type="HBoxContainer" parent="."]
 layout_mode = 2

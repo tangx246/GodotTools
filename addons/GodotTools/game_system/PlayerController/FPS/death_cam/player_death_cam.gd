@@ -16,7 +16,7 @@ func _ready() -> void:
 	cam.make_current()
 	current_distance = spring_arm.spring_length
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	
+
 func _exit_tree() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	
@@ -36,6 +36,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		pitch.rotate_x(-event.relative.y * .002 * PlayerPrefs.get_value(MouseLookSensitivity.MOUSE_LOOK_KEY, 1.0))
 		pitch.rotation.x = clampf(pitch.rotation.x, -PI/4, PI/4)
 
+func _get_current_player() -> Node3D:
+	return players[current_player_idx] if current_player_idx < players.size() else null
+
 var tween: Tween
 func _zoom(amount: float) -> void:
 	if tween:
@@ -46,9 +49,14 @@ func _zoom(amount: float) -> void:
 	tween.tween_property(spring_arm, "spring_length", current_distance, .2)
 
 func _process(_delta: float) -> void:
-	var current_player: Node3D = players[current_player_idx] if current_player_idx < players.size() else null
+	var current_player: Node3D = _get_current_player()
 	if not current_player:
 		return
 
 	global_position = current_player.global_position
-	cam.look_at(position + cam_offset)
+
+	var pos_offset: Vector3 = position + cam_offset
+	if not cam.position.is_equal_approx(pos_offset) and\
+		# not colinear
+		not cam.position.cross(pos_offset).is_zero_approx():
+		cam.look_at(pos_offset)

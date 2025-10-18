@@ -7,7 +7,8 @@ extends Node
 	set(value):
 		var prev_hp = current_hp
 		current_hp = clampf(value, 0, max_hp)
-		current_hp_changed.emit(prev_hp, value)
+		if current_hp != prev_hp:
+			current_hp_changed.emit(prev_hp, value)
 @export var max_hp: float:
 	get:
 		return max_hp
@@ -16,7 +17,8 @@ extends Node
 		var prev_ratio = current_hp / max_hp if max_hp > 0 else 1
 		max_hp = value
 		current_hp = prev_ratio * max_hp
-		max_hp_changed.emit(prev_hp, value)
+		if max_hp != prev_hp:
+			max_hp_changed.emit(prev_hp, value)
 
 ## An ordered list of damage modifiers to apply to all incoming damage
 @export var damage_modifiers: Array[DamageModifier]

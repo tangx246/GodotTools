@@ -56,11 +56,17 @@ func _switch_scenes(new_scene: PackedScene) -> void:
 	_clear_gameRoot()
 
 	ready_peers = 0
-	get_tree().create_timer(10).timeout.connect(all_peers_ready.emit, CONNECT_ONE_SHOT)
+	var await_peers: Callable = func():
+		push_warning("Awaiting for peers timed out")
+		all_peers_ready.emit()
+	var timer: SceneTreeTimer = get_tree().create_timer(60)
+	timer.timeout.connect(await_peers, CONNECT_ONE_SHOT)
 	start_scene_switch.rpc(new_scene.resource_path)
 	
 	if ready_peers < multiplayer.get_peers().size() + 1:
 		await all_peers_ready
+		if timer.timeout.is_connected(await_peers):
+			timer.timeout.disconnect(await_peers)
 	
 	get_level_spawner().spawn(new_scene.resource_path)
 	

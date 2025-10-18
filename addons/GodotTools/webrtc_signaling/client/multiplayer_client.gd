@@ -5,6 +5,9 @@ var rtc_mp := WebRTCMultiplayerPeer.new()
 var sealed := false
 
 func _init() -> void:
+	var buffer_size: int = 65535 * 64
+	rtc_mp.encode_buffer_max_size = buffer_size
+	
 	connected.connect(_connected)
 	disconnected.connect(_disconnected)
 
@@ -17,6 +20,10 @@ func _init() -> void:
 	peer_connected.connect(_peer_connected)
 	peer_disconnected.connect(_peer_disconnected)
 
+func _process(delta: float) -> void:
+	super(delta)
+
+	rtc_mp.poll()
 
 func start(url: String, _lobby: String = "", _mesh: bool = true, _autojoin: bool = true) -> void:
 	stop()
@@ -46,10 +53,7 @@ func _create_peer(id: int) -> WebRTCPeerConnection:
 	var error: Error = peer.initialize({
 		"iceServers": [ { "urls": [
 			"stun:stun.l.google.com:19302",
-			"stun:stun1.l.google.com:19302",
-			"stun:stun2.l.google.com:19302",
-			"stun:stun3.l.google.com:19302",
-			"stun:stun4.l.google.com:19302",
+			"stun:stun.nextcloud.com:3478",
 		] } ]
 	})
 	if error != Error.OK:
@@ -104,6 +108,7 @@ func _lobby_sealed() -> void:
 
 
 func _disconnected() -> void:
+	code = rtc_mp.get_packet_error()
 	print("Disconnected: %d: %s" % [code, reason])
 	stop() # Unexpected disconnect
 

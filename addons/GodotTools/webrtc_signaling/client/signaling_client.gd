@@ -1,6 +1,9 @@
 class_name SignalingClient
 extends Node
 
+var code := 1000
+var reason := "Unknown"
+
 signal connected(id: int, use_mesh: bool)
 signal disconnected()
 signal room_list_received(room_list: Dictionary)

@@ -8,6 +8,7 @@ const port: int = 25743
 
 func _init() -> void:
 	var buffer_size: int = 65535 * 64
+	rtc_mp.encode_buffer_max_size = buffer_size
 	rtc_mp.inbound_buffer_size = buffer_size
 	rtc_mp.outbound_buffer_size = buffer_size
 	rtc_mp.max_queued_packets = buffer_size
@@ -24,6 +25,10 @@ func _init() -> void:
 	peer_connected.connect(_peer_connected)
 	peer_disconnected.connect(_peer_disconnected)
 
+func _process(delta: float) -> void:
+	super(delta)
+
+	rtc_mp.poll()
 
 func start(url: String, _lobby: String = "", _mesh: bool = true, _autojoin: bool = true) -> void:
 	stop()

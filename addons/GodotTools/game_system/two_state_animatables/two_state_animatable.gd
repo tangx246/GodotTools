@@ -5,7 +5,14 @@ var animation : AnimationPlayer
 @export var open_animation : StringName
 @export var close_animation : StringName
 @export var open_on_ready : bool = false
-@export var locked: bool = false
+@export var locked: bool = false:
+	set(value):
+		var prev: bool = locked
+		locked = value
+		if prev != locked:
+			locked_changed.emit()
+
+signal locked_changed
 
 var _is_open: bool = false
 

@@ -30,10 +30,8 @@ always_on_top = true
 mouse_passthrough = true
 
 [node name="Label" type="Label" parent="PopupPanel"]
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 201.0
-offset_bottom = 96.0
+offset_right = 205.0
+offset_bottom = 100.0
 mouse_filter = 1
 text = "Press a button to bind"
 horizontal_alignment = 1

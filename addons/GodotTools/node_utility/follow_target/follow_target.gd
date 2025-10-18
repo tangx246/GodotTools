@@ -38,7 +38,7 @@ func _ready() -> void:
 
 var short_distance: bool = true
 func _physics_process(_delta: float) -> void:
-	if not camera:
+	if not camera or not camera.current:
 		camera = get_viewport().get_camera_3d()
 		
 		if not camera:

@@ -37,6 +37,7 @@ func _exit_tree():
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 func _unhandled_input(event: InputEvent) -> void:
+	await PhysicsSync.wait_for_physics_frame()
 	if is_on_floor():
 		if event.is_action_pressed("Jump") and stand_state_controller.stand_state == StandState.STAND_STATE.STAND:
 			jump_velocity_to_add = sqrt(2*jump_height*(get_gravity().length()))

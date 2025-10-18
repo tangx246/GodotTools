@@ -11,8 +11,10 @@ unique_name_in_owner = true
 [node name="SpringArm3D" type="SpringArm3D" parent="Pitch"]
 unique_name_in_owner = true
 spring_length = 2.0
-margin = 0.1
+margin = 0.2
 
-[node name="Camera3D" type="Camera3D" parent="Pitch/SpringArm3D"]
+[node name="DirectCameraBugWorkaround" type="Node3D" parent="Pitch/SpringArm3D"]
+
+[node name="Camera3D" type="Camera3D" parent="Pitch/SpringArm3D/DirectCameraBugWorkaround"]
 unique_name_in_owner = true
 cull_mask = 1048551
