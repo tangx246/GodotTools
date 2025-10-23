@@ -1,0 +1,21 @@
+"AppBuild"
+{
+	"AppID" "" // your AppID
+	"Desc" "This is a simple build script" // internal description for this build
+
+	"ContentRoot" "windows" // root content folder, relative to location of this file
+	"BuildOutput" "steambuildoutput" // build output folder for build logs and build cache files
+
+	"Depots"
+	{
+		"" // your DepotID
+		{
+			"FileMapping"
+			{
+				"LocalPath" "*" // all files from contentroot folder
+				"DepotPath" "." // mapped into the root of the depot
+				"recursive" "1" // include all subfolders
+			}
+		}
+	}
+}
