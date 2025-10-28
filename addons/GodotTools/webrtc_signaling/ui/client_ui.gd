@@ -1,5 +1,8 @@
 extends Control
 
+@export var game_loading_text: String = "Loading..."
+var original_start_text: String
+
 @onready var client: SignalingClient = %Client
 @onready var host: LineEdit = %Host
 @onready var room: LineEdit = %RoomSecret
@@ -9,6 +12,7 @@ extends Control
 @onready var multiplayerUiRoot: Control = $"%VBoxContainer/.."
 @onready var main: Node = $"%VBoxContainer/../.."
 @onready var room_list: ItemList = %RoomList
+@onready var start_button: Button = %Start
 
 func _ready() -> void:
 	_connect_signals(client)
@@ -26,6 +30,18 @@ func _ready() -> void:
 	#get_tree().get_multiplayer().peer_disconnected.connect(_mp_peer_disconnected)
 
 	room_list.item_activated.connect(_on_room_list_activated)
+
+	original_start_text = start_button.text
+	Signals.safe_connect(self, multiplayer.connected_to_server, func():
+		_set_original_start_button_text()
+	)
+	Signals.safe_connect(self, Multiprocess.get_first_instance(self).server_creating, func():
+		start_button.text = game_loading_text
+	)
+
+func _set_original_start_button_text() -> void:
+	start_button.text = original_start_text
+
 
 func _connect_signals(client: SignalingClient):
 	client.lobby_joined.connect(_lobby_joined)
@@ -58,6 +74,7 @@ func _connected(id: int, use_mesh: bool) -> void:
 func _disconnected() -> void:
 	_log("[Signaling] Server disconnected: %d - %s" % [client.code, client.reason])
 	multiplayerUiRoot.visible = true
+	_set_original_start_button_text()
 
 func _lobby_joined(lobby: String) -> void:
 	_log("[Signaling] Joined lobby %s" % lobby)
@@ -82,8 +99,9 @@ func _on_seal_pressed() -> void:
 
 func _on_start_pressed(single_player: bool = false) -> void:
 	if not multiprocess.is_multiprocess_instance() and MultiprocessEnabledOption.get_value():
-		_log("Starting multiplayer multiprocess instance")
-		multiprocess.start_headless_process(false)
+		if not multiprocess.is_multiprocess_instance_running():
+			_log("Starting multiplayer multiprocess instance")
+			multiprocess.start_headless_process(false)
 	else:
 		var client_to_use: SignalingClient
 		if single_player:
@@ -129,6 +147,7 @@ func _on_stop_pressed() -> void:
 	if multiprocess.is_multiprocess_instance_running():
 		multiprocess.kill_headless_process()
 	client.stop()
+	client.disconnected.emit()
 
 func _on_start_game_pressed():
 	if multiprocess.is_multiprocess_instance_running():

@@ -1,0 +1,33 @@
+[gd_scene load_steps=3 format=3 uid="uid://dn6c1wfittak8"]
+
+[ext_resource type="Script" uid="uid://d0essbpvegvjq" path="res://addons/GodotTools/game_system/PlayerController/FPS/minimap/minimap_ui.gd" id="1_1m0kw"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g2hd5"]
+bg_color = Color(1, 0.7019608, 0.4, 1)
+border_color = Color(1, 0.7019608, 0.4, 1)
+corner_radius_bottom_left = 1
+corner_detail = 1
+
+[node name="Minimap" type="TextureRect"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -151.0
+offset_top = 1.0
+offset_right = -1.0
+offset_bottom = 151.0
+grow_horizontal = 0
+script = ExtResource("1_1m0kw")
+
+[node name="Panel" type="Panel" parent="."]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -151.0
+offset_top = -1.0
+offset_right = 1.0
+offset_bottom = 151.0
+grow_horizontal = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_g2hd5")

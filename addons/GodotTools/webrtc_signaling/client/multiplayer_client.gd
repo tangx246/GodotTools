@@ -108,8 +108,9 @@ func _lobby_sealed() -> void:
 
 
 func _disconnected() -> void:
-	code = rtc_mp.get_packet_error()
 	print("Disconnected: %d: %s" % [code, reason])
+	print_stack()
+	
 	stop() # Unexpected disconnect
 
 
@@ -139,6 +140,7 @@ func _answer_received(id: int, answer: String) -> void:
 
 
 func _candidate_received(id: int, mid: String, index: int, sdp: String) -> void:
+	print("Candidate received: %s" % id)
 	if rtc_mp.has_peer(id):
 		var error: Error = rtc_mp.get_peer(id).connection.add_ice_candidate(mid, index, sdp)
 		if error != Error.OK:

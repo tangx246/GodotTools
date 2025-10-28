@@ -34,6 +34,8 @@ func add_fps_controller_input_map():
 		"input/Lean Left": [KEY_Q],
 		"input/Lean Right": [KEY_E],
 		"input/Sprint": [KEY_SHIFT],
+		"input/Zoom In Minimap": [KEY_KP_ADD],
+		"input/Zoom Out Minimap": [KEY_KP_SUBTRACT]
 	}
 	
 	for input in input_to_events:

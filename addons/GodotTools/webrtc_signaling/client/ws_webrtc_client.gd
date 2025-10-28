@@ -56,7 +56,12 @@ func _process(_delta: float) -> void:
 	if state != old_state and state == WebSocketPeer.STATE_CLOSED:
 		code = ws.get_close_code()
 		reason = ws.get_close_reason()
-		disconnected.emit()
+
+		# If the underlying WebSocket signaling server has disconnected (e.g. due to lobby sealing), but we are still connected, stay in game
+		var conn_status = get_tree().get_multiplayer().multiplayer_peer.get_connection_status()
+		print("Current rtc_mp connection status: %s" % conn_status)
+		if conn_status != MultiplayerPeer.CONNECTION_CONNECTED:
+			disconnected.emit()
 	old_state = state
 
 
@@ -126,6 +131,7 @@ func refresh_room_list() -> Error:
 	return _send_msg(Message.REFRESH_ROOM_LIST, 0)
 
 func send_candidate(id: int, mid: String, index: int, sdp: String) -> Error:
+	print("Sending new candidate: %s" % id)
 	return _send_msg(Message.CANDIDATE, id, "\n%s\n%d\n%s" % [mid, index, sdp])
 
 

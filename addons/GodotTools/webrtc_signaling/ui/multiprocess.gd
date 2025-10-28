@@ -29,6 +29,9 @@ static func get_first_instance(root: Node) -> Multiprocess:
 static func is_rpc_safe(root: Node) -> bool:
 	return get_first_instance(root).is_multiprocess_instance()
 
+signal server_creating
+signal server_created
+
 func _init() -> void:
 	add_to_group(GROUP)
 
@@ -108,6 +111,8 @@ var stdio_observer: Thread
 var stderr_observer: Thread
 func start_headless_process(single_player: bool):
 	kill_headless_process()
+
+	server_creating.emit()
 	
 	var params: Array[String] = ["--headless", AUTOHOST_PARAM]
 	if single_player:
@@ -124,3 +129,5 @@ func _on_server_created(lobby: String):
 	
 	var single_player: bool = is_local_instance_single_player(self)
 	clientui._on_join_pressed(single_player)
+	
+	server_created.emit()

@@ -53,10 +53,9 @@ func _process(_delta: float) -> void:
 	if not current_player:
 		return
 
-	global_position = current_player.global_position
+	global_position = current_player.global_position + cam_offset
 
-	var pos_offset: Vector3 = position + cam_offset
-	if not cam.position.is_equal_approx(pos_offset) and\
+	if not cam.position.is_equal_approx(position) and\
 		# not colinear
-		not cam.position.cross(pos_offset).is_zero_approx():
-		cam.look_at(pos_offset)
+		not cam.position.cross(position).is_zero_approx():
+		cam.look_at(position)

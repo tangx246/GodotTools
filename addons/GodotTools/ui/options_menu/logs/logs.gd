@@ -5,6 +5,8 @@ extends VBoxContainer
 
 const LOG_PATH: String = "user://logs"
 
+var text: String
+
 func _ready() -> void:
 	Signals.safe_connect(self, visibility_changed, _refresh)
 	Signals.safe_connect(self, button.pressed, _on_copy)
@@ -27,7 +29,11 @@ func _refresh() -> void:
 		var text: String = ">>>>>%s - Last modified %s\n%s" % [file_name, last_modified, file.get_as_text()]
 		texts.append(text)	
 
-	text_edit.text = "\n".join(texts)
+	text = "\n".join(texts)
+	if text.length() > 10000:
+		text_edit.text = "Cannot display. Max log length exceeded. Use Copy to Clipboard for the full logs"
+	else:
+		text_edit.text = text
 
 func _on_copy() -> void:
-	DisplayServer.clipboard_set(text_edit.text)
+	DisplayServer.clipboard_set(text)

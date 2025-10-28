@@ -27,12 +27,12 @@ func unapply(root: Node) -> void:
 	
 func get_text() -> String:
 	if speed_factor > 1:
-		return "Increases movement speed by {speed_factor}%".format({
-			"speed_factor": (speed_factor - 1) * 100
+		return "Movement Speed +{speed_factor}%".format({
+			"speed_factor": "%.0f" % ((speed_factor - 1) * 100)
 		})
 	else:
-		return "Decreases movement speed by {speed_factor}%".format({
-			"speed_factor": (1 - speed_factor) * 100
+		return "Movement Speed -{speed_factor}%".format({
+			"speed_factor": "%.0f" % ((1 - speed_factor) * 100)
 		})
 
 func get_effect_type() -> EffectType:

@@ -23,9 +23,9 @@ func unapply(root: Node) -> void:
 	
 func get_text() -> String:
 	if amount > 0:
-		return "Increase max HP by {amount}".format({"amount": "%d" % amount})
+		return "HP +{amount}".format({"amount": "%d" % amount})
 	else:
-		return "Decrease max HP by {amount}".format({"amount": "%d" % -amount})
+		return "HP -{amount}".format({"amount": "%d" % -amount})
 
 func get_effect_type() -> EffectType:
 	if amount > 0:

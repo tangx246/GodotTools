@@ -3,21 +3,23 @@ extends Node
 const MULTIPROCESS_APP_ID_PATH: String = "res://dedicated_server_steamappid.txt"
 const APP_ID_PATH: String = "res://steam_appid.txt"
 const DEMO_APP_ID_PATH: String = "res://demo_steamappid.txt"
+var _Steam = Engine.get_singleton("Steam")
 
 func _ready() -> void:
 	var steam_app_id: int = _get_steam_app_id()
 
-	var Steam = Engine.get_singleton("Steam")
-	if Steam:
-		Steam.steamInitEx.call_deferred(steam_app_id, true)
+	if _Steam:
+		var resp = _Steam.steamInitEx(steam_app_id, true)
+		if resp['status'] > _Steam.STEAM_API_INIT_RESULT_OK:
+			print("Unable to initialize Steam: %s" % JSON.stringify(resp))
+			_Steam = null
 
 func get_steam() -> Object:
-	if not Engine.has_singleton("Steam"):
+	if not _Steam:
 		return null
 	
-	var Steam = Engine.get_singleton("Steam")
-	if Steam and Steam.loggedOn():
-		return Steam
+	if _Steam and _Steam.loggedOn():
+		return _Steam
 	
 	return null
 

@@ -19,5 +19,5 @@ func has_path_to(navAgent: NavigationAgent3D, startPos: Vector3, targetPos: Vect
 	queryParams.target_position = targetPos
 	NavigationServer3D.query_path(queryParams, queryResult)
 	
-	var pathFoundDistanceToTarget = queryResult.path[-1].distance_to(targetPos)
+	var pathFoundDistanceToTarget: float = INF if queryResult.path.size() == 0 else queryResult.path[-1].distance_to(targetPos)
 	return pathFoundDistanceToTarget < navAgent.target_desired_distance

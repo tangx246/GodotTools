@@ -30,8 +30,8 @@ func _ready() -> void:
 	assert(process_mode == PROCESS_MODE_PAUSABLE, "Process mode for AnimationTicker must be Pausable")
 
 	visibility_notifier = VisibleOnScreenNotifier3D.new()
-	Signals.safe_connect(self, visibility_notifier.screen_entered, func(): _distance_update)
-	Signals.safe_connect(self, visibility_notifier.screen_exited, func(): _distance_update)
+	Signals.safe_connect(self, visibility_notifier.screen_entered, func(): _distance_update())
+	Signals.safe_connect(self, visibility_notifier.screen_exited, func(): _distance_update())
 	root.add_child.call_deferred(visibility_notifier)
 
 	mixers = []
@@ -71,6 +71,7 @@ func _refresh_skeletons() -> void:
 		skeleton.modifier_callback_mode_process = Skeleton3D.MODIFIER_CALLBACK_MODE_PROCESS_MANUAL
 
 func _process(delta: float) -> void:
+	assert(is_stopped(), "Timer should be stopped when ticking in _process")
 	_on_tick(delta)
 
 func _on_tick(delta: float):
