@@ -88,9 +88,9 @@ func _clear_impl(return_item: bool) -> bool:
 	if get_item() == null:
 		return false
 		
-	if return_item && _return_item_to_source_inventory():
-		return true
-		
+	if return_item:
+		return _return_item_to_source_inventory()
+	
 	remove_child(get_item())
 	return true
 
