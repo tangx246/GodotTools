@@ -14,20 +14,24 @@ var first_peer_id: int = -1
 static func is_multiprocess_instance() -> bool:
 	return AUTOHOST_PARAM in OS.get_cmdline_args()
 	
-func is_multiprocess_instance_running() -> bool:
-	return not output.is_empty()
+static func is_multiprocess_instance_running() -> bool:
+	var instance: Multiprocess = get_first_instance()
+	if not instance:
+		return false
+	
+	return not instance.output.is_empty()
 
-static func is_local_instance_single_player(root: Node) -> bool:
-	return get_first_instance(root).local_instance_single_player
+static func is_local_instance_single_player() -> bool:
+	return get_first_instance().local_instance_single_player
 
 static func is_multiprocess_instance_single_player() -> bool:
 	return SINGLEPLAYER_PARAM in OS.get_cmdline_args()
 
-static func get_first_instance(root: Node) -> Multiprocess:
-	return root.get_tree().get_first_node_in_group(GROUP)
+static func get_first_instance() -> Multiprocess:
+	return Engine.get_main_loop().get_first_node_in_group(GROUP)
 
-static func is_rpc_safe(root: Node) -> bool:
-	return get_first_instance(root).is_multiprocess_instance()
+static func is_rpc_safe() -> bool:
+	return get_first_instance().is_multiprocess_instance()
 
 signal server_creating
 signal server_created
@@ -127,7 +131,7 @@ func start_headless_process(single_player: bool):
 func _on_server_created(lobby: String):
 	clientui.room.text = lobby
 	
-	var single_player: bool = is_local_instance_single_player(self)
+	var single_player: bool = is_local_instance_single_player()
 	clientui._on_join_pressed(single_player)
 	
 	server_created.emit()

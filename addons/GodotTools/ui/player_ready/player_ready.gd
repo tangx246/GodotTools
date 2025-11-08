@@ -39,7 +39,7 @@ func _ready() -> void:
 	_on_ready_changed()
 
 func is_host() -> bool:
-	return is_multiplayer_authority() or Multiprocess.get_first_instance(self).is_multiprocess_instance_running()
+	return is_multiplayer_authority() or Multiprocess.is_multiprocess_instance_running()
 
 func _on_ready_changed() -> void:
 	var players := pinfo.get_players()
@@ -93,7 +93,7 @@ func _on_kick_pressed(id: int) -> void:
 func _kick_rpc(id: int) -> void:
 	# Check permissions
 	var remote_sender_id: int = multiplayer.get_remote_sender_id()
-	if remote_sender_id != Multiprocess.get_first_instance(self).get_host() and remote_sender_id != MultiplayerPeer.TARGET_PEER_SERVER:
+	if remote_sender_id != Multiprocess.get_first_instance().get_host() and remote_sender_id != MultiplayerPeer.TARGET_PEER_SERVER:
 		push_error("Invalid permissions to kick player by %s" % remote_sender_id)
 		return
 

@@ -17,16 +17,21 @@ func consume(consumer_root: Node, item_provider: ItemProvider) -> void:
 	else:
 		consumer = consumers[0]
 	
-	item_provider.use_item(1)
+	if consumer.item_consumed_immediately:
+		item_provider.use_item(1)
+
 	consumer.start_consumption(
 		self,
 		# We have to use a lambda to keep this consumable around
 		func():
-			_consume.bind(consumer_root).call())
+			_consume.bind(consumer_root, consumer, item_provider).call())
 	
-func _consume(consumer_root: Node):
+func _consume(consumer_root: Node, consumer: Consumer, item_provider: ItemProvider):
 	for effect in effects:
 		effect.apply(consumer_root)
+
+	if not consumer.item_consumed_immediately:
+		item_provider.use_item(1)
 
 func get_text() -> String:
 	var effect_texts: Array[String] = []

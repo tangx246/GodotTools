@@ -2,7 +2,7 @@ class_name BeehaveDebuggerMessages
 
 
 static func can_send_message() -> bool:
-	return not Engine.is_editor_hint() and OS.has_feature("editor")
+	return not Engine.is_editor_hint() and OS.has_feature("editor") and not Multiprocess.is_multiprocess_instance()
 
 
 static func register_tree(beehave_tree: Dictionary) -> void:

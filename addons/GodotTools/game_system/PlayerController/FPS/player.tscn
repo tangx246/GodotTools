@@ -96,6 +96,7 @@ script = ExtResource("6_dyw3o")
 noise = SubResource("FastNoiseLite_lmai6")
 
 [node name="Camera3D" type="Camera3D" parent="StandState/Recoil/Lean/ScreenShake"]
+physics_interpolation_mode = 2
 
 [node name="WeaponSway" type="Node3D" parent="StandState/Recoil/Lean/ScreenShake/Camera3D" node_paths=PackedStringArray("root")]
 script = ExtResource("8_r2t8n")

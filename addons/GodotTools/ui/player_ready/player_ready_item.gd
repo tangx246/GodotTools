@@ -37,7 +37,7 @@ func _refresh() -> void:
 	ready_rect.texture = player_ready.ready_icon if player_ready.is_ready(multiplayer_id) else player_ready.not_ready_icon
 	player_icon_rect.texture = players[multiplayer_id].avatar
 
-	if (is_multiplayer_authority() or Multiprocess.get_first_instance(self).is_multiprocess_instance_running()) and multiplayer_id != MultiplayerPeer.TARGET_PEER_SERVER and multiplayer_id != multiplayer.get_unique_id():
+	if (is_multiplayer_authority() or Multiprocess.is_multiprocess_instance_running()) and multiplayer_id != MultiplayerPeer.TARGET_PEER_SERVER and multiplayer_id != multiplayer.get_unique_id():
 		kick_button.visible = true
 		Signals.safe_connect(self, kick_button.pressed, player_kicked.emit.bind(multiplayer_id))
 	else:

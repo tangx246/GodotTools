@@ -1,7 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://bef418tvtf7h6"]
+[gd_scene load_steps=4 format=3 uid="uid://bef418tvtf7h6"]
 
 [ext_resource type="PackedScene" uid="uid://c6e4cxvjdxhdo" path="res://addons/gloot/editor/inventory_editor/inventory_editor.tscn" id="1"]
 [ext_resource type="Script" uid="uid://cutwgaskj6v2t" path="res://addons/gloot/editor/inventory_editor/inventory_inspector.gd" id="2"]
+
+[sub_resource type="DPITexture" id="DPITexture_aesoo"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><path fill=\"#e0e0e0\" d=\"m1 1v5l1.793-1.793 2.5 2.5 1.4141-1.4141-2.5-2.5 1.793-1.793h-5zm9 0 1.793 1.793-2.5 2.5 1.4141 1.4141 2.5-2.5 1.793 1.793v-5h-5zm-4.707 8.293-2.5 2.5-1.793-1.793v5h5l-1.793-1.793 2.5-2.5-1.4141-1.4141zm5.4141 0-1.4141 1.4141 2.5 2.5-1.793 1.793h5v-5l-1.793 1.793-2.5-2.5z\"/></svg>
+"
+color_map = {
+Color(1, 0.37254903, 0.37254903, 1): Color(1, 0.47, 0.42, 1),
+Color(0.37254903, 1, 0.5921569, 1): Color(0.45, 0.95, 0.5, 1),
+Color(1, 0.8666667, 0.39607844, 1): Color(1, 0.87, 0.4, 1)
+}
 
 [node name="InventoryInspector" type="Control"]
 custom_minimum_size = Vector2(0, 200)
@@ -29,6 +38,7 @@ size_flags_vertical = 3
 
 [node name="BtnExpand" type="Button" parent="HBoxContainer"]
 layout_mode = 2
+icon = SubResource("DPITexture_aesoo")
 
 [node name="Window" type="Window" parent="."]
 title = "Edit Inventory"

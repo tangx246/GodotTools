@@ -50,7 +50,7 @@ func _zoom(amount: float) -> void:
 
 func _process(_delta: float) -> void:
 	var current_player: Node3D = _get_current_player()
-	if not current_player:
+	if not current_player or not current_player.is_inside_tree():
 		return
 
 	global_position = current_player.global_position + cam_offset

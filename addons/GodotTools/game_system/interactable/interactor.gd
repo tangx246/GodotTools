@@ -9,12 +9,20 @@ var interactable : Interactable = null:
 	set(value):
 		interactable = value
 		interactable_changed.emit(value)
-var interacting : bool = false
 var interact_progress : float = 0:
 	set(value):
 		interact_progress = value
 		interact_progress_changed.emit(value)
 
+@export_group("Synchronizable properties")
+@export var interacting : bool = false:
+	set(value):
+		var previous = interacting
+		interacting = value
+		if previous != interacting:
+			interacting_changed.emit()
+
+signal interacting_changed
 signal interactable_changed(interactable: Interactable)
 signal interact_progress_changed(progress: float)
 

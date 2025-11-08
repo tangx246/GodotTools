@@ -27,6 +27,12 @@ func _enter_tree() -> void:
 		for child in children:
 			child.reparent(content)
 
+func _get_configuration_warnings() -> PackedStringArray:
+	var warnings = []
+	if not content:
+		warnings.push_back("ControlWindow has no Content node. Make sure to use the provided PackedScene")
+	return warnings
+
 func _ready() -> void:
 	EmbeddedUI.attach(self, false)
 	ControlWindowManager.register(self)

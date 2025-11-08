@@ -2,15 +2,16 @@ class_name Toast
 extends Control
 
 @export var fade_time: float = 1.0
-## How long to stay visible for
+## How long to stay visible for. If value is negative, stays visible forever
 @export var visible_for: float = 3.0
 ## If this node is not a node that can have its text set, aim for this instead
 @export var toast_text: NodePath
 
 var timer: Timer
 func _ready() -> void:
-	await get_tree().create_timer(visible_for).timeout
-	_fade_out()
+	if visible_for > 0:
+		await get_tree().create_timer(visible_for).timeout
+		_fade_out()
 
 func _fade_out() -> void:
 	var tween: Tween = create_tween()

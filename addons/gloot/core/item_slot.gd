@@ -27,7 +27,7 @@ const KEY_ITEM: String = "item"
 ## return the item to its original inventory.
 @export var remember_source_inventory: bool = true
 
-var _wr_source_inventory: WeakRef = weakref(null)
+var wr_source_inventory_or_slot: WeakRef = weakref(null)
 var _item: InventoryItem
 
 
@@ -51,7 +51,14 @@ func equip(item: InventoryItem) -> bool:
 	if get_item() != null && !clear():
 		return false
 
-	_wr_source_inventory = weakref(item.get_inventory())
+	var source_inventory = item.get_inventory()
+	var source_slot = item.get_item_slot()
+	if source_inventory:
+		wr_source_inventory_or_slot = weakref(source_inventory)
+	elif source_slot:
+		wr_source_inventory_or_slot = weakref(source_slot)
+	else:
+		wr_source_inventory_or_slot = weakref(null)
 
 	if item.get_parent():
 		item.get_parent().remove_child(item)
@@ -89,16 +96,17 @@ func _clear_impl(return_item: bool) -> bool:
 
 
 func _return_item_to_source_inventory() -> bool:
-	var inventory: Inventory = (_wr_source_inventory.get_ref() as Inventory)
-	if inventory != null:
-		if inventory.add_item(get_item()):
-			return true
-	return false
-
+	var inventory_or_slot = wr_source_inventory_or_slot.get_ref()
+	if inventory_or_slot is Inventory:
+		return inventory_or_slot.add_item(get_item())
+	elif inventory_or_slot is ItemSlot:
+		return inventory_or_slot.equip(get_item())
+	else:
+		return false
 
 func _on_item_removed() -> void:
 	_item = null
-	_wr_source_inventory = weakref(null)
+	wr_source_inventory_or_slot = weakref(null)
 	cleared.emit()
 
 ## Returns the equipped item.

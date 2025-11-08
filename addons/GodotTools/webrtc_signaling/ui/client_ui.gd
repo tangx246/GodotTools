@@ -13,6 +13,8 @@ var original_start_text: String
 @onready var main: Node = $"%VBoxContainer/../.."
 @onready var room_list: ItemList = %RoomList
 @onready var start_button: Button = %Start
+@onready var start_game_singleplayer: Button = %StartGameSinglePlayer
+@onready var start_game_multiplayer: Button = %StartGameMultiplayer
 
 func _ready() -> void:
 	_connect_signals(client)
@@ -35,9 +37,11 @@ func _ready() -> void:
 	Signals.safe_connect(self, multiplayer.connected_to_server, func():
 		_set_original_start_button_text()
 	)
-	Signals.safe_connect(self, Multiprocess.get_first_instance(self).server_creating, func():
+	Signals.safe_connect(self, multiprocess.server_creating, func():
 		start_button.text = game_loading_text
 	)
+	Signals.safe_connect(self, start_game_singleplayer.pressed, on_start_game_pressed)
+	Signals.safe_connect(self, start_game_multiplayer.pressed, on_start_game_pressed)
 
 func _set_original_start_button_text() -> void:
 	start_button.text = original_start_text
@@ -60,7 +64,7 @@ func _mp_server_disconnect() -> void:
 func _mp_peer_connected(id: int) -> void:
 	_log("[Multiplayer] Peer %d connected" % id)
 	if id != MultiplayerPeer.TARGET_PEER_SERVER and Multiprocess.is_multiprocess_instance_single_player():
-		_on_start_game_pressed()
+		on_start_game_pressed()
 
 func _mp_peer_disconnected(id: int) -> void:
 	_log("[Multiplayer] Peer %d disconnected" % id)
@@ -149,7 +153,7 @@ func _on_stop_pressed() -> void:
 	client.stop()
 	client.disconnected.emit()
 
-func _on_start_game_pressed():
+func on_start_game_pressed():
 	if multiprocess.is_multiprocess_instance_running():
 		_on_start_game_pressed_rpc.rpc_id(MultiplayerPeer.TARGET_PEER_SERVER)
 	elif not multiprocess.is_multiprocess_instance() and MultiprocessEnabledOption.get_value():
@@ -163,11 +167,11 @@ func _on_start_game_pressed():
 
 @rpc("any_peer", "call_remote", "reliable")
 func _on_start_game_pressed_rpc():
-	if not multiprocess.is_rpc_safe(self):
+	if not multiprocess.is_rpc_safe():
 		printerr("Invalid state")
 		return
 	
-	_on_start_game_pressed()
+	on_start_game_pressed()
 
 func _on_room_list_activated(id: int) -> void:
 	var current_state: WebSocketPeer.State = client.ws.get_ready_state()

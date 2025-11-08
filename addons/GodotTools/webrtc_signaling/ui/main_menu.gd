@@ -19,9 +19,9 @@ func _ready() -> void:
 	_on_visibility_changed()
 
 	Signals.safe_connect(self, multiplayer_back.pressed, show)
-	Signals.safe_connect(self, start_new_game.pressed, clientui._on_start_game_pressed)
+	Signals.safe_connect(self, start_new_game.pressed, clientui.on_start_game_pressed)
 	original_start_text = start_new_game.text
-	Signals.safe_connect(self, Multiprocess.get_first_instance(self).server_creating, func():
+	Signals.safe_connect(self, Multiprocess.get_first_instance().server_creating, func():
 		start_new_game.text = game_loading_text
 	)
 	Signals.safe_connect(self, multiplayer.connected_to_server, func(): 

@@ -80,7 +80,8 @@ text = "Host Room"
 layout_mode = 2
 text = "Refresh Room List"
 
-[node name="Start Game" type="Button" parent="VBoxContainer/TabContainer/Host Join UI/HBoxContainer2"]
+[node name="StartGameSinglePlayer" type="Button" parent="VBoxContainer/TabContainer/Host Join UI/HBoxContainer2"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Start Single Player Game"
 
@@ -160,7 +161,8 @@ text = "Print peers"
 layout_mode = 2
 script = ExtResource("4_dx57n")
 
-[node name="Start Game" type="Button" parent="VBoxContainer/TabContainer/In Room UI/HBoxContainer/AuthorityActions"]
+[node name="StartGameMultiplayer" type="Button" parent="VBoxContainer/TabContainer/In Room UI/HBoxContainer/AuthorityActions"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Start Game"
 
@@ -181,9 +183,7 @@ context_menu_enabled = false
 
 [connection signal="pressed" from="VBoxContainer/TabContainer/Host Join UI/HBoxContainer2/Start" to="." method="_on_start_pressed"]
 [connection signal="pressed" from="VBoxContainer/TabContainer/Host Join UI/HBoxContainer2/Refresh" to="." method="_on_refresh_pressed"]
-[connection signal="pressed" from="VBoxContainer/TabContainer/Host Join UI/HBoxContainer2/Start Game" to="." method="_on_start_game_pressed"]
 [connection signal="pressed" from="VBoxContainer/TabContainer/Host Join UI/HBoxContainer2/HBoxContainer/Options" to="VBoxContainer/TabContainer/Host Join UI/HBoxContainer2/HBoxContainer/Options/PopupPanel" method="popup"]
 [connection signal="pressed" from="VBoxContainer/TabContainer/Host Join UI/HBoxContainer/Join Room" to="." method="_on_join_pressed"]
 [connection signal="pressed" from="VBoxContainer/TabContainer/In Room UI/HBoxContainer/Stop" to="." method="_on_stop_pressed"]
 [connection signal="pressed" from="VBoxContainer/TabContainer/In Room UI/HBoxContainer/Peers" to="." method="_on_peers_pressed"]
-[connection signal="pressed" from="VBoxContainer/TabContainer/In Room UI/HBoxContainer/AuthorityActions/Start Game" to="." method="_on_start_game_pressed"]
