@@ -66,6 +66,13 @@ const Utils = preload("res://addons/gloot/core/utils.gd")
 		properties_changed.emit()
 		update_configuration_warnings()
 
+# UUID is not @exported so that Node.duplicate() doesn't replicate it
+var uuid: String:
+	set(new_uuid):
+		if new_uuid == uuid:
+			return
+		uuid = new_uuid
+
 var _inventory: Inventory:
 	set(new_inventory):
 		if new_inventory == _inventory:
@@ -77,6 +84,7 @@ var _item_slot: ItemSlot
 
 const KEY_PROTOSET: String = "protoset"
 const KEY_PROTOTYE_ID: String = "prototype_id"
+const KEY_UUID: String = "uuid"
 const KEY_PROPERTIES: String = "properties"
 const KEY_NODE_NAME: String = "node_name"
 const KEY_TYPE: String = "type"
@@ -86,6 +94,9 @@ const KEY_IMAGE: String = "image"
 const KEY_NAME: String = "name"
 
 const Verify = preload("res://addons/gloot/core/verify.gd")
+
+func _init() -> void:
+	uuid = Uuid.v4()
 
 func _connect_protoset_signals() -> void:
 	if protoset == null:
@@ -296,6 +307,7 @@ func reset() -> void:
 	protoset = null
 	prototype_id = ""
 	properties = {}
+	uuid = Uuid.v4()
 
 ## Serializes the item into a dictionary.
 func serialize() -> Dictionary:
@@ -304,6 +316,7 @@ func serialize() -> Dictionary:
 	result[KEY_NODE_NAME] = name as String
 	result[KEY_PROTOSET] = Inventory._serialize_item_protoset(protoset)
 	result[KEY_PROTOTYE_ID] = prototype_id
+	result[KEY_UUID] = uuid
 	if !properties.is_empty():
 		result[KEY_PROPERTIES] = {}
 		for property_name in properties.keys():
@@ -328,6 +341,7 @@ func deserialize(source: Dictionary) -> bool:
 	if !Verify.dict(source, true, KEY_NODE_NAME, TYPE_STRING) || \
 		!Verify.dict(source, true, KEY_PROTOSET, TYPE_STRING) || \
 		!Verify.dict(source, true, KEY_PROTOTYE_ID, TYPE_STRING) || \
+		!Verify.dict(source, true, KEY_UUID, TYPE_STRING) || \
 		!Verify.dict(source, false, KEY_PROPERTIES, TYPE_DICTIONARY):
 		return false
 
@@ -337,6 +351,7 @@ func deserialize(source: Dictionary) -> bool:
 		name = source[KEY_NODE_NAME]
 	protoset = Inventory._deserialize_item_protoset(source[KEY_PROTOSET])
 	prototype_id = source[KEY_PROTOTYE_ID]
+	uuid = source[KEY_UUID]
 	if source.has(KEY_PROPERTIES):
 		for key in source[KEY_PROPERTIES].keys():
 			properties[key] = _deserialize_property(source[KEY_PROPERTIES][key])

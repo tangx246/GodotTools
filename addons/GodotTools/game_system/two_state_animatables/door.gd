@@ -21,7 +21,7 @@ func _on_locked_changed():
 	nav_obstacle.affect_navigation_mesh = locked
 	nav_obstacle.carve_navigation_mesh = locked
 	nav_obstacle.avoidance_enabled = locked
-	nav_obstacle.rebake_navmesh.call_deferred()
+	nav_obstacle.rebake_navmesh()
 
 func is_open() -> bool:
 	return doorway_collision_shape.disabled

@@ -39,5 +39,5 @@ func _ready() -> void:
 
 func _on_body_exited(body: Node) -> void:
 	if is_instance_valid(body) and not body.is_queued_for_deletion() and body.is_inside_tree():
-		print("Body exited bounds: %s" % body.get_path())
+		#print("Body exited bounds: %s" % body.get_path())
 		exited_bounds.emit(body)

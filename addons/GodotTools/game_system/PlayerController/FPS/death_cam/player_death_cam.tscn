@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://m3ag3mqi601r" path="res://addons/GodotTools/game_system/PlayerController/FPS/death_cam/player_death_cam.gd" id="1_dqw0y"]
 
 [node name="PlayerDeathCam" type="Node3D"]
+physics_interpolation_mode = 2
 script = ExtResource("1_dqw0y")
 
 [node name="Pitch" type="Node3D" parent="."]

@@ -16,18 +16,18 @@ func _ready() -> void:
 		duplicates.append(duplicated)
 
 	if affect_navigation_mesh or carve_navigation_mesh:
-		rebake_navmesh.call_deferred()
+		rebake_navmesh()
 
-var last_called: int = -1
+var rebake_queued: bool = false
 func rebake_navmesh() -> void:
+	if rebake_queued:
+		return
+	rebake_queued = true
 	_rebake_navmesh.call_deferred()
 
 func _rebake_navmesh() -> void:
 	await get_tree().physics_frame
-	var current_frame: int = Engine.get_physics_frames()
-	if current_frame == last_called:
-		return
-	last_called = current_frame
+	rebake_queued = false
 
 	for duplicate in duplicates:
 		duplicate.avoidance_enabled = avoidance_enabled

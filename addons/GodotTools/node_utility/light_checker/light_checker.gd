@@ -4,6 +4,8 @@ extends Node
 
 @export var root: Node
 @export var min_texel_scale: float = 1
+@export var disable_negative_scale_check: bool = false
+@export var print_lights_count: bool = false
 
 func _ready() -> void:
 	var lights = root.find_children("", "Light3D", true, false)
@@ -17,7 +19,8 @@ func _ready() -> void:
 	_rigidbody_check()
 	_lightmap_check()
 	#_check_jolt_scaling() # Not a reliable way of detecting Jolt scaling error
-	_check_negative_scales()
+	if not disable_negative_scale_check:
+		_check_negative_scales()
 
 ## Set sane performance parameters for lights
 func _light_settings(lights: Array) -> void:
@@ -50,8 +53,9 @@ func _light_count(lights: Array) -> void:
 				dynamic_lights += 1
 		else:
 			directional_lights += 1
-			
-	print("%s static lights, %s dynamic lights, %s directional lights" % [static_lights, dynamic_lights, directional_lights])
+	
+	if print_lights_count:
+		print("%s static lights, %s dynamic lights, %s directional lights" % [static_lights, dynamic_lights, directional_lights])
 
 func _rigidbody_check() -> void:
 	var rigidbodies = root.find_children("", "RigidBody3D", true, false)
