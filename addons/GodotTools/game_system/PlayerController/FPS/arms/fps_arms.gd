@@ -4,13 +4,15 @@ extends Node3D
 @export var fov: float = 75:
 	set(value):
 		fov = value
-		set_renderers.call_deferred()
+		fov_changed.emit()
+signal fov_changed
 @export var shader_material: ShaderMaterial
 
 func _ready() -> void:
 	for child: Node in find_children("", "Node", true, false):
 		Signals.safe_connect(self, child.child_order_changed, set_renderers, CONNECT_DEFERRED)
 
+	Signals.safe_connect(self, fov_changed, set_renderers, CONNECT_DEFERRED)
 	set_renderers.call_deferred()
 
 func set_renderers():

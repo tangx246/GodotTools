@@ -5,12 +5,13 @@ extends ItemProvider
 @export var root: Node:
 	set(value):
 		root = value
-		if is_inside_tree():
-			_connect_signals()
+		root_changed.emit()
+signal root_changed
 
 const KEY_STACK_SIZE = "stack_size"
 
 func _ready() -> void:
+	Signals.safe_connect(self, root_changed, _connect_signals)
 	_connect_signals()
 
 func _connect_signals() -> void:
