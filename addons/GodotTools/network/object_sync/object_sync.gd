@@ -10,7 +10,16 @@ func attach(object_changed_signal: Signal, emit_recursive: bool = false) -> void
 	assert(object is Node, "Object must be a node")
 	Signals.safe_connect(object, object_changed_signal, _sync.bind(object_changed_signal, emit_recursive))
 
+var in_progress: bool = false
 func _sync(object_changed_signal: Signal, emit_recursive: bool) -> void:
+	if in_progress:
+		return
+
+	in_progress = true
+	_sync_debounced.call_deferred(object_changed_signal, emit_recursive)
+
+func _sync_debounced(object_changed_signal: Signal, emit_recursive: bool) -> void:
+	in_progress = false
 	var object: Object = object_changed_signal.get_object()
 	if not object.is_multiplayer_authority():
 		return

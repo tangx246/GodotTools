@@ -129,8 +129,8 @@ func await_resource_load(resource_path: String) -> bool:
 
 	return true
 
-static func back_to_main(node: Node) -> void:
-	node.get_tree().reload_current_scene()
+static func back_to_main() -> void:
+	Engine.get_main_loop().reload_current_scene()
 	
 func _clear_gameRoot() -> void:
 	clear_children(get_gameroot())
