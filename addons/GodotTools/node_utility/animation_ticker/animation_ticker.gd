@@ -35,19 +35,7 @@ func _ready() -> void:
 	root.add_child.call_deferred(visibility_notifier)
 
 	mixers = []
-	mixers.assign(root.find_children("", "AnimationMixer"))
-	var anim_players_to_remove: Array[AnimationPlayer] = []
-	for mixer: AnimationMixer in mixers:
-		mixer.callback_mode_process = AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_MANUAL
-		
-		if mixer is AnimationTree:
-			var anim_player = mixer.get_node(mixer.anim_player)
-			if mixers.has(anim_player):
-				anim_players_to_remove.append(anim_player)
-
-	for anim_player: AnimationPlayer in anim_players_to_remove:
-		mixers.erase(anim_player)
-
+	_refresh_mixers()
 	skeletons = []
 	_refresh_skeletons()
 
@@ -63,7 +51,21 @@ func _ready() -> void:
 	timer.start()
 
 	Signals.safe_connect(self, timeout, func():
-		_on_tick(wait_time))
+		_on_tick(wait_time), CONNECT_DEFERRED)
+
+func _refresh_mixers() -> void:
+	mixers.assign(root.find_children("", "AnimationMixer"))
+	var anim_players_to_remove: Array[AnimationPlayer] = []
+	for mixer: AnimationMixer in mixers:
+		mixer.callback_mode_process = AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_MANUAL
+		
+		if mixer is AnimationTree:
+			var anim_player = mixer.get_node(mixer.anim_player)
+			if mixers.has(anim_player):
+				anim_players_to_remove.append(anim_player)
+
+	for anim_player: AnimationPlayer in anim_players_to_remove:
+		mixers.erase(anim_player)
 
 func _refresh_skeletons() -> void:
 	skeletons.assign(root.find_children("", "Skeleton3D"))
@@ -72,13 +74,20 @@ func _refresh_skeletons() -> void:
 
 func _process(delta: float) -> void:
 	assert(is_stopped(), "Timer should be stopped when ticking in _process")
-	_on_tick(delta)
+	_on_tick.call_deferred(delta)
 
 func _on_tick(delta: float):
-	for mixer in mixers:
-		mixer.advance.call_deferred(delta)
-
 	var needs_refresh: bool = false
+	for mixer in mixers:
+		if mixer:
+			mixer.advance.call_deferred(delta)
+		else:
+			needs_refresh = true
+
+	if needs_refresh:
+		_refresh_mixers()
+
+	needs_refresh = false
 	for skeleton: Skeleton3D in skeletons:
 		if skeleton:
 			skeleton.advance.call_deferred(delta)

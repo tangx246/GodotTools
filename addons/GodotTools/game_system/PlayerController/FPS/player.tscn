@@ -67,6 +67,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
 shape = SubResource("CapsuleShape3D_fvl13")
 
 [node name="ControllerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+process_mode = 1
 replication_config = SubResource("SceneReplicationConfig_8wb3o")
 script = ExtResource("2_iyc1q")
 
@@ -109,6 +110,7 @@ script = ExtResource("7_sf4bq")
 shader_material = ExtResource("9_cntxa")
 
 [node name="CameraSynchronizer" type="MultiplayerSynchronizer" parent="StandState/Recoil/Lean/ScreenShake"]
+process_mode = 1
 root_path = NodePath("../Camera3D")
 replication_config = SubResource("SceneReplicationConfig_e45ti")
 script = ExtResource("2_iyc1q")

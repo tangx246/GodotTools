@@ -5,7 +5,7 @@ const CtrlInventoryItemRect = preload("res://addons/gloot/ui/ctrl_inventory_item
 
 ## Fixes a bug where CtrlDragable is left in an unusable state when scene switches occur
 func _ready() -> void:
-	await get_tree().process_frame
+	await Engine.get_main_loop().process_frame
 	
 	if not _override():
 		Signals.safe_connect(self, get_tree().tree_changed, _override)

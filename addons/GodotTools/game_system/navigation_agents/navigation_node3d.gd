@@ -3,6 +3,9 @@ extends Node3D
 
 @export var speed: float = 4
 @export var tick_rate: int = 1
+@export var long_distance_debounce_rate: int = 100
+@export var long_distance: float = 30
+@export var player_group: StringName = "player"
 @export_flags_3d_physics var floor_mask: int = 1 << 0
 var navigation_agent: NavigationAgent3D
 var velocity: Vector3
@@ -18,15 +21,16 @@ func _exit_tree() -> void:
 	nodes -= 1
 
 var raycast: RayCast3D
+var tick_variance: int
 func _ready() -> void:
 	navigation_agent = get_node("NavigationAgent3D")
 	
-	ticks = randi() % tick_rate
+	tick_variance = randi() % 10000
 	
 	raycast = RayCast3D.new()
 	raycast.collision_mask = floor_mask
 	raycast.position = raycast.position + Vector3(0, 1, 0)
-	raycast.target_position = Vector3(0, -3, 0)
+	raycast.target_position = Vector3(0, -100, 0)
 	raycast.enabled = false
 	add_child(raycast)
 
@@ -35,13 +39,10 @@ func _ready() -> void:
 func set_movement_target(movement_target: Vector3):
 	navigation_agent.set_target_position(movement_target)
 
-var ticks: int = 0
 func _physics_process(_delta: float) -> void:
-	ticks = (ticks + 1) % tick_rate
-	
-	if ticks != 0:
+	if (Engine.get_physics_frames() + tick_variance) % tick_rate != 0:
 		return
-	
+		
 	# Do not query when the map has never synchronized and is empty.
 	if NavigationServer3D.map_get_iteration_id(navigation_agent.get_navigation_map()) == 0:
 		return
@@ -63,9 +64,27 @@ func _stick_to_floor() -> void:
 	if raycast.is_colliding():
 		navigation_agent.path_height_offset = clampf(navigation_agent.path_height_offset + global_position.y - raycast.get_collision_point().y, 0, 0.5)
 
-func _on_velocity_computed(safe_velocity: Vector3):	
+var queued: bool = false
+func _on_velocity_computed(safe_velocity: Vector3):
 	velocity = safe_velocity
-	_calculate_new_pos_and_look(global_position, safe_velocity, speed * get_physics_process_delta_time())
+
+	if queued:
+		return
+
+	queued = true
+
+	var debounce_rate: int = long_distance_debounce_rate
+	for player: Node3D in get_tree().get_nodes_in_group(player_group):
+		if player.global_position.distance_to(global_position) < long_distance:
+			debounce_rate = 0
+			break
+
+	var loops: int = randi_range(0, debounce_rate)
+	for i in range(loops):
+		await Engine.get_main_loop().physics_frame
+
+	_calculate_new_pos_and_look(global_position, safe_velocity, speed * get_physics_process_delta_time() * (loops + 1))
+	queued = false
 
 func _calculate_new_pos_and_look(pos: Vector3, safe_velocity: Vector3, delta: float) -> void:
 	var horizontal: Vector3 = Plane.PLANE_XZ.project(safe_velocity)

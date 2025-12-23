@@ -41,7 +41,7 @@ func _init() -> void:
 
 func _ready() -> void:
 	if is_multiprocess_instance():
-		await get_tree().process_frame # Allow for clientui to initialize
+		await Engine.get_main_loop().process_frame # Allow for clientui to initialize
 		var single_player: bool = is_multiprocess_instance_single_player()
 		print("Multiprocess Server started. Autohosting. Singleplayer: %s" % single_player)
 		clientui._on_start_pressed(single_player)

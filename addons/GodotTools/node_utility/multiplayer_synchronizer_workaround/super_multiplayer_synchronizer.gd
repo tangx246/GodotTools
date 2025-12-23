@@ -7,7 +7,10 @@ var packets: Array[PackedByteArray] = []
 func push_sync(msw: MultiplayerSynchronizerWorkaround, dirty_properties: Dictionary[NodePath, Variant]) -> void:
 	packets.append(Packet.new(msw.get_path(), dirty_properties).serialize())
 
-func _process(_delta: float) -> void:
+func _physics_process(_delta: float) -> void:
+	tick.call_deferred()
+
+func tick() -> void:
 	if not packets.is_empty():
 		var serialized: PackedByteArray = var_to_bytes(packets)
 		var compressed: PackedByteArray = serialized.compress(COMPRESSION_METHOD)
@@ -40,8 +43,8 @@ func _sync_property(msw: MultiplayerSynchronizerWorkaround, path: NodePath, sync
 		print("Node not found %s" % path)
 		return
 	
-	node.set.call_deferred(path.get_subname(0), value)
-	msw.delta_synchronized.emit.call_deferred()
+	node.set(path.get_subname(0), value)
+	msw.delta_synchronized.emit()
 
 class Packet extends RefCounted:
 	var msw_path: NodePath

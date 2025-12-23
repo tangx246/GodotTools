@@ -34,6 +34,9 @@ func _get_configuration_warnings() -> PackedStringArray:
 	return warnings
 
 func _ready() -> void:
+	if Engine.is_editor_hint():
+		return
+	
 	EmbeddedUI.attach(self, false)
 	ControlWindowManager.register(self)
 
@@ -47,6 +50,9 @@ func _ready() -> void:
 	Signals.safe_connect(self, control_window_container.focused, _on_container_focused)
 
 func _notification(what: int) -> void:
+	if Engine.is_editor_hint():
+		return
+	
 	if what == NOTIFICATION_PREDELETE:
 		ControlWindowManager.unregister(self)
 

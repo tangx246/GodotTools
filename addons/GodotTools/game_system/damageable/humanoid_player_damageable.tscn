@@ -63,6 +63,7 @@ authority_layer = 4
 no_authority_layer = 8
 
 [node name="DamageableSynchronizer" type="MultiplayerSynchronizer" parent="."]
+process_mode = 1
 replication_config = SubResource("SceneReplicationConfig_5rsl7")
 script = ExtResource("4_mkjdy")
 

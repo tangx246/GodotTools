@@ -8,18 +8,19 @@ const COMPRESSION: FileAccess.CompressionMode = FileAccess.COMPRESSION_ZSTD
 func attach(object_changed_signal: Signal, emit_recursive: bool = false) -> void:
 	var object: Object = object_changed_signal.get_object()
 	assert(object is Node, "Object must be a node")
+	
 	Signals.safe_connect(object, object_changed_signal, _sync.bind(object_changed_signal, emit_recursive))
 
-var in_progress: bool = false
+var in_progress: Dictionary[Signal, bool] = {}
 func _sync(object_changed_signal: Signal, emit_recursive: bool) -> void:
-	if in_progress:
+	if in_progress.has(object_changed_signal):
 		return
 
-	in_progress = true
+	in_progress[object_changed_signal] = true
 	_sync_debounced.call_deferred(object_changed_signal, emit_recursive)
 
 func _sync_debounced(object_changed_signal: Signal, emit_recursive: bool) -> void:
-	in_progress = false
+	in_progress.erase(object_changed_signal)
 	var object: Object = object_changed_signal.get_object()
 	if not object.is_multiplayer_authority():
 		return

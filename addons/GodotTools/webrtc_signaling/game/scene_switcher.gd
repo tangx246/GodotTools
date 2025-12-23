@@ -84,7 +84,7 @@ func load_complete():
 func start_scene_switch(resource_path: String) -> void:
 	load_screen = loading_screen.instantiate()
 	add_child(load_screen)
-	await get_tree().process_frame
+	await Engine.get_main_loop().process_frame
 	
 	var started := Time.get_ticks_usec()
 
@@ -125,7 +125,7 @@ func await_resource_load(resource_path: String) -> bool:
 		elif load_status == ResourceLoader.ThreadLoadStatus.THREAD_LOAD_FAILED or load_status == ResourceLoader.ThreadLoadStatus.THREAD_LOAD_INVALID_RESOURCE:
 			printerr("Failed to load resource %s: %s" % [resource_path, load_status])
 			return false
-		await get_tree().process_frame
+		await Engine.get_main_loop().process_frame
 
 	return true
 

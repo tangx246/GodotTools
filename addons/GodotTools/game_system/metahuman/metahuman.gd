@@ -33,8 +33,9 @@ func _set_skeletons():
 	var skeleton_path := skeleton.get_path()
 	for mesh : MeshInstance3D in meshes:
 		var current_skeleton: Skeleton3D = mesh.get_node(mesh.skeleton)
-		current_skeleton.modifier_callback_mode_process = Skeleton3D.MODIFIER_CALLBACK_MODE_PROCESS_MANUAL
-		current_skeleton.process_mode = Node.PROCESS_MODE_DISABLED
+		if not Engine.is_editor_hint():
+			current_skeleton.modifier_callback_mode_process = Skeleton3D.MODIFIER_CALLBACK_MODE_PROCESS_MANUAL
+			current_skeleton.process_mode = Node.PROCESS_MODE_DISABLED
 
 		mesh.skeleton = skeleton_path
 		

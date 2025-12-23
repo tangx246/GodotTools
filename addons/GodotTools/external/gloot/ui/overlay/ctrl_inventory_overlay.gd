@@ -12,7 +12,7 @@ var item: InventoryItem:
 signal refresh
 
 func _ready() -> void:
-	await get_tree().process_frame
+	await Engine.get_main_loop().process_frame
 	await TreeSync.wait_for_inside_tree(self)
 
 	var ancestor: Node = get_parent()

@@ -76,7 +76,9 @@ func _positionrotation_to_transform(node_paths: Array[NodePath]):
 			var transform_nodepath: NodePath = NodePath("%s:transform" % key)
 			node_paths.append(transform_nodepath)
 
-func _ready() -> void:	
+func _ready() -> void:
+	if process_mode == PROCESS_MODE_INHERIT:
+		process_mode = Node.PROCESS_MODE_PAUSABLE
 	root = get_node(root_path)
 	
 	for path: NodePath in properties:
@@ -91,7 +93,7 @@ func _ready() -> void:
 
 	if is_multiplayer_authority():
 		if properties.size() > 0:
-			Signals.safe_connect(self, get_tree().physics_frame, tick)
+			Signals.safe_connect(self, Engine.get_main_loop().physics_frame, tick, CONNECT_DEFERRED)
 
 # NodePath to Variant
 var dirty_properties: Dictionary[NodePath, Variant] = {}
@@ -99,6 +101,9 @@ var ticks_since_change: int
 var tick_shift: int
 func tick() -> void:
 	if ((Engine.get_physics_frames() + tick_shift) % tick_rate) != 0:
+		return
+
+	if not can_process():
 		return
 	
 	_do_compare()

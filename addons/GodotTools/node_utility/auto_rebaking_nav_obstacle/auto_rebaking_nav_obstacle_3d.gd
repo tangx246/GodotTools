@@ -26,7 +26,7 @@ func rebake_navmesh() -> void:
 	_rebake_navmesh.call_deferred()
 
 func _rebake_navmesh() -> void:
-	await get_tree().physics_frame
+	await Engine.get_main_loop().physics_frame
 	rebake_queued = false
 
 	for duplicate in duplicates:

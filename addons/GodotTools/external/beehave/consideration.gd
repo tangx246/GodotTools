@@ -21,6 +21,7 @@ func _ready() -> void:
 	var timer = Timer.new()
 	timer.autostart = true
 	timer.wait_time = tick_rate
+	await get_tree().create_timer(randf_range(0, tick_rate)).timeout
 	Signals.safe_connect(self, timer.timeout, func(): tick(timer.wait_time))
 	add_child(timer)
 
