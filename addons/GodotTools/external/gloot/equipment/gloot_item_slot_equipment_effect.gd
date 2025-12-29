@@ -2,7 +2,13 @@ class_name GlootItemSlotEquipmentEffect
 extends Node
 
 @export var root: Node
-@onready var item_slots: Array[ItemSlot] = [] 
+@export_group("Weapon System")
+@export var weapon_system_class: StringName = "WeaponSystem"
+@export var weapon_changed_signal: StringName = "gun_changed"
+@export var weapon_slot_list: StringName = "weapon_slots"
+@export var current_weapon_slot_method: StringName = "get_current_weaponslot"
+@onready var item_slots: Array[ItemSlot] = []
+@onready var weapon_system: Node = root.get_parent().find_children("", weapon_system_class).pop_front()
 
 var effect_stack: Array[EquipmentEffect] = []
 
@@ -14,6 +20,11 @@ func _ready() -> void:
 	for item_slot in item_slots:
 		Signals.safe_connect(self, item_slot.item_equipped, _on_item_equipped)
 		Signals.safe_connect(self, item_slot.cleared, _on_item_unequipped)
+	if weapon_system:
+		assert(weapon_system.has_signal(weapon_changed_signal), "WeaponSystem must have %s signal" % weapon_changed_signal)
+		assert(weapon_system.has_method(current_weapon_slot_method), "WeaponSystem must have %s method" % current_weapon_slot_method)
+		assert(weapon_slot_list in weapon_system, "WeaponSystem must have %s property" % weapon_slot_list)
+		Signals.safe_connect(self, weapon_system.get(weapon_changed_signal), _refresh.unbind(1), CONNECT_DEFERRED)
 	_refresh.call_deferred()
 
 func _on_item_equipped() -> void:
@@ -31,7 +42,16 @@ func _refresh() -> void:
 		var effect: EquipmentEffect = effect_stack.pop_back()
 		effect.unapply(_get_root())
 
+	# Coax the type of the weapon slot list
+	var weapon_slots: Array = []
+	if weapon_system:
+		weapon_slots.assign(weapon_system.get(weapon_slot_list))
+
 	for item_slot: ItemSlot in item_slots:
+		# Non-equipped weapons should be ignored
+		if weapon_system and item_slot in weapon_slots and item_slot != weapon_system.get(current_weapon_slot_method).call():
+			continue
+
 		var item: InventoryItem = item_slot.get_item()
 		if item:
 			var effects: Array[String] = []
