@@ -33,8 +33,14 @@ extends TweenObjectTo
 			_set_collider()
 			_transition_stand_state(prev_value, value)
 enum STAND_STATE {STAND, CROUCH, PRONE}
-
 signal stand_state_changed(transition_time: float)
+
+var sprinting: bool = false:
+	set(value):
+		if sprinting != value:
+			sprinting = value
+			sprinting_changed.emit(sprinting)
+signal sprinting_changed(sprinting: bool)
 
 func _set_collider():
 	var colliders: Array[CollisionShape3D] = [stand_collider, crouch_collider, prone_collider]
@@ -93,17 +99,18 @@ func walk(walking: bool):
 		else:
 			body.set(speed_var, stand_speed)
 
-func sprint(sprinting: bool):
-	if sprinting and stand_state == STAND_STATE.STAND:
+func sprint(_sprinting: bool):
+	if _sprinting and stand_state == STAND_STATE.STAND:
 		await _wait_cameraRoot_tweens()
 		body.set(speed_var, sprint_speed)
-	if sprinting and stand_state != STAND_STATE.STAND:
+	if _sprinting and stand_state != STAND_STATE.STAND:
 		stand_state = STAND_STATE.STAND
 		await _wait_cameraRoot_tweens()
 		body.set(speed_var, sprint_speed)
-	if not sprinting and stand_state == STAND_STATE.STAND:
+	if not _sprinting and stand_state == STAND_STATE.STAND:
 		await _wait_cameraRoot_tweens()
 		body.set(speed_var, stand_speed)
+	sprinting = _sprinting
 
 func _tween_camera_root_to(position: Vector3, time: float) -> Signal:
 	return tween_object_to(self, position, Vector3.ZERO, time)
