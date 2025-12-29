@@ -5,8 +5,9 @@ extends Node
 @export_group("Weapon System")
 @export var weapon_system_class: StringName = "WeaponSystem"
 @export var weapon_changed_signal: StringName = "gun_changed"
-@export var weapon_slot_list: StringName = "weapon_slots"
-@export var current_weapon_slot_method: StringName = "get_current_weaponslot"
+## Given an ItemSlot, is this both a WeaponSlot and is currently wielded
+@export var is_wielded_weapon_slot: StringName = "is_weapon_slot_currently_wielded"
+@export var is_weapon_slot: StringName = "is_weapon_slot"
 @onready var item_slots: Array[ItemSlot] = []
 @onready var weapon_system: Node = root.get_parent().find_children("", weapon_system_class).pop_front()
 
@@ -22,8 +23,8 @@ func _ready() -> void:
 		Signals.safe_connect(self, item_slot.cleared, _on_item_unequipped)
 	if weapon_system:
 		assert(weapon_system.has_signal(weapon_changed_signal), "WeaponSystem must have %s signal" % weapon_changed_signal)
-		assert(weapon_system.has_method(current_weapon_slot_method), "WeaponSystem must have %s method" % current_weapon_slot_method)
-		assert(weapon_slot_list in weapon_system, "WeaponSystem must have %s property" % weapon_slot_list)
+		assert(weapon_system.has_method(is_wielded_weapon_slot), "WeaponSystem must have %s method" % is_wielded_weapon_slot)
+		assert(weapon_system.has_method(is_weapon_slot), "WeaponSystem must have %s method" % is_weapon_slot)
 		Signals.safe_connect(self, weapon_system.get(weapon_changed_signal), _refresh.unbind(1), CONNECT_DEFERRED)
 	_refresh.call_deferred()
 
@@ -42,14 +43,9 @@ func _refresh() -> void:
 		var effect: EquipmentEffect = effect_stack.pop_back()
 		effect.unapply(_get_root())
 
-	# Coax the type of the weapon slot list
-	var weapon_slots: Array = []
-	if weapon_system:
-		weapon_slots.assign(weapon_system.get(weapon_slot_list))
-
 	for item_slot: ItemSlot in item_slots:
 		# Non-equipped weapons should be ignored
-		if weapon_system and item_slot in weapon_slots and item_slot != weapon_system.get(current_weapon_slot_method).call():
+		if weapon_system and weapon_system.get(is_weapon_slot).call(item_slot) and not weapon_system.get(is_wielded_weapon_slot).call(item_slot):
 			continue
 
 		var item: InventoryItem = item_slot.get_item()
