@@ -27,7 +27,7 @@ func _init() -> void:
 
 var editor_wait_time: float = 0
 func _ready() -> void:
-	assert(process_mode == PROCESS_MODE_PAUSABLE, "Process mode for AnimationTicker must be Pausable")
+	assert(process_mode != PROCESS_MODE_INHERIT, "Process mode for AnimationTicker must not be Inherit")
 
 	visibility_notifier = VisibleOnScreenNotifier3D.new()
 	Signals.safe_connect(self, visibility_notifier.screen_entered, func(): _distance_update())

@@ -1,3 +1,4 @@
+## Deprecated. Should use OnDemandPathSpawner instead
 class_name OnDemandPackedSceneSpawner
 extends Node3D
 

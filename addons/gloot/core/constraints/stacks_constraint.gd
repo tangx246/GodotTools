@@ -176,8 +176,9 @@ static func split_stack(item: InventoryItem, new_stack_size: int) -> InventoryIt
 
     var new_item_success = set_item_stack_size(new_item, new_stack_size)
     assert(new_item_success)
-    var split_out_item_success = set_item_stack_size(item, stack_size - new_stack_size)
-    assert(split_out_item_success)
+    # Directly set the original item's stack size to allow splitting over-max stacks
+    # (e.g., when missions give cash exceeding max_stack_size)
+    item.set_property(KEY_STACK_SIZE, stack_size - new_stack_size)
     return new_item
 
 

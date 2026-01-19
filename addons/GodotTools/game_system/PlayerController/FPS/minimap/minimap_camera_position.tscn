@@ -1,13 +1,29 @@
-[gd_scene load_steps=3 format=3 uid="uid://lymsypqacyc1"]
+[gd_scene load_steps=6 format=3 uid="uid://lymsypqacyc1"]
 
 [ext_resource type="Script" uid="uid://bqth8w8x7lhd0" path="res://addons/GodotTools/node_utility/follow_target/follow_target.gd" id="1_d04h6"]
 
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_d04h6"]
+load_path = "res://.godot/imported/panorama_PurpleNebula_image.png-38c58784ec54f7fb6495910401042eea.bptc.ctex"
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_3kij2"]
+panorama = SubResource("CompressedTexture2D_d04h6")
+energy_multiplier = 6.0
+
+[sub_resource type="Sky" id="Sky_w8pad"]
+sky_material = SubResource("PanoramaSkyMaterial_3kij2")
+
 [sub_resource type="Environment" id="Environment_8340s"]
+background_mode = 2
+background_color = Color(0.07058824, 0, 0.14901961, 1)
+background_energy_multiplier = 0.2
+sky = SubResource("Sky_w8pad")
+sky_custom_fov = 116.0
 
 [node name="MinimapCameraPosition" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
 
 [node name="SubViewport" type="SubViewport" parent="."]
+debug_draw = 1
 size = Vector2i(150, 150)
 
 [node name="MinimapCamera" type="Camera3D" parent="SubViewport" node_paths=PackedStringArray("target")]

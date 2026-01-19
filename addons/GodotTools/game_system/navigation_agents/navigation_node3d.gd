@@ -6,7 +6,7 @@ extends Node3D
 @export var long_distance_debounce_rate: int = 100
 @export var long_distance: float = 30
 @export var player_group: StringName = "player"
-@export_flags_3d_physics var floor_mask: int = 1 << 0
+@onready var model: Node3D = %Model
 var navigation_agent: NavigationAgent3D
 var velocity: Vector3
 
@@ -20,20 +20,12 @@ func _enter_tree() -> void:
 func _exit_tree() -> void:
 	nodes -= 1
 
-var raycast: RayCast3D
 var tick_variance: int
 func _ready() -> void:
 	navigation_agent = get_node("NavigationAgent3D")
 	
 	tick_variance = randi() % 10000
 	
-	raycast = RayCast3D.new()
-	raycast.collision_mask = floor_mask
-	raycast.position = raycast.position + Vector3(0, 1, 0)
-	raycast.target_position = Vector3(0, -100, 0)
-	raycast.enabled = false
-	add_child(raycast)
-
 	Signals.safe_connect(self, navigation_agent.velocity_computed, _on_velocity_computed)
 
 func set_movement_target(movement_target: Vector3):
@@ -58,11 +50,6 @@ func _physics_process(_delta: float) -> void:
 		navigation_agent.set_velocity(new_velocity)
 	else:
 		_on_velocity_computed(new_velocity)
-
-func _stick_to_floor() -> void:
-	raycast.force_raycast_update()
-	if raycast.is_colliding():
-		navigation_agent.path_height_offset = clampf(navigation_agent.path_height_offset + global_position.y - raycast.get_collision_point().y, 0, 0.5)
 
 var queued: bool = false
 func _on_velocity_computed(safe_velocity: Vector3):
@@ -92,8 +79,6 @@ func _calculate_new_pos_and_look(pos: Vector3, safe_velocity: Vector3, delta: fl
 	if (look_position - global_position).length_squared() > 0.01:
 		look_at(look_position)
 	_move_to(pos.move_toward(pos + safe_velocity, delta))
-	
-	_stick_to_floor()
 
 func _move_to(target: Vector3):
 	global_position = target

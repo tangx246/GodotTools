@@ -27,11 +27,14 @@ func consume(consumer_root: Node, item_provider: ItemProvider) -> void:
 			_consume.bind(consumer_root, consumer, item_provider).call())
 	
 func _consume(consumer_root: Node, consumer: Consumer, item_provider: ItemProvider):
+	if not consumer.item_consumed_immediately:
+		var used: int = item_provider.use_item(1)
+
+		if used == 0:
+			return
+
 	for effect in effects:
 		effect.apply(consumer_root)
-
-	if not consumer.item_consumed_immediately:
-		item_provider.use_item(1)
 
 func get_text() -> String:
 	var effect_texts: Array[String] = []

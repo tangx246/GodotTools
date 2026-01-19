@@ -9,6 +9,10 @@ func _init(root: Node, item: InventoryItem):
 
 func use_item(count: int) -> int:
 	queue_free()
+	if not is_instance_valid(specific_item):
+		printerr("Invalid item")
+		print_stack()
+		return 0
 	return use_specific_item(specific_item, count)
 
 func use_specific_item(item: InventoryItem, count: int) -> int:
