@@ -9,7 +9,7 @@ cd "$(dirname "$0")/.."
 
 echo "=== Building ==="
 
-GODOT="${GODOT:-Godot_v4.5.1-stable_win64.exe}"
+GODOT="${GODOT:-Godot_v4.6-stable_win64.exe}"
 
 RELEASE_PRESETS=(
     "Windows Desktop"
