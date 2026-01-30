@@ -6,11 +6,13 @@ extends Node3D
 @onready var multiplayer_spawner : MultiplayerSpawner = get_tree().get_first_node_in_group("scene_spawner")
 
 ## Spawns a scene given the path. If the path is not given, uses exported scene_path
-func spawn(path: String = "", offset: Vector3 = Vector3.ZERO) -> void:
+func spawn(path: String = "", offset: Vector3 = Vector3.ZERO, rotation_override: Vector3 = Vector3.INF, position_override: Vector3 = Vector3.INF) -> void:
 	if path.is_empty():
 		path = scene_path
 
-	_spawn_entity.rpc_id(MultiplayerPeer.TARGET_PEER_SERVER, path, global_position, global_rotation, offset)
+	var rot: Vector3 = rotation_override if rotation_override != Vector3.INF else global_rotation
+	var pos: Vector3 = position_override if position_override != Vector3.INF else global_position
+	_spawn_entity.rpc_id(MultiplayerPeer.TARGET_PEER_SERVER, path, pos, rot, offset)
 
 @rpc("any_peer", "reliable", "call_local")
 func _spawn_entity(path: String, pos: Vector3, rot: Vector3, offset: Vector3) -> void:

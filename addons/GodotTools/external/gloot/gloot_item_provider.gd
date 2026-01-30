@@ -10,6 +10,8 @@ signal root_changed
 
 const KEY_STACK_SIZE = "stack_size"
 
+var _refresh_pending := false
+
 func _ready() -> void:
 	Signals.safe_connect(self, root_changed, _connect_signals)
 	_connect_signals()
@@ -55,14 +57,26 @@ func _get_items() -> Array[InventoryItem]:
 	return items
 
 func refresh_item_count():
+	if _refresh_pending:
+		return
+	_refresh_pending = true
+	_do_refresh_item_count.call_deferred()
+
+func _do_refresh_item_count():
+	_refresh_pending = false
 	var count : int = 0
-	
+
 	var items = _get_items()
-		
+
 	for item in items:
 		count = count + item.get_property(KEY_STACK_SIZE)
-			
+
 	item_count = count
+
+func has_item() -> bool:
+	if _refresh_pending:
+		_do_refresh_item_count()
+	return super()
 
 func find_inventories() -> Array[Inventory]:
 	var _inventories : Array[Inventory] = []

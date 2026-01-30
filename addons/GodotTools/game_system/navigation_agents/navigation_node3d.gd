@@ -6,7 +6,6 @@ extends Node3D
 @export var long_distance_debounce_rate: int = 100
 @export var long_distance: float = 30
 @export var player_group: StringName = "player"
-@onready var model: Node3D = %Model
 var navigation_agent: NavigationAgent3D
 var velocity: Vector3
 

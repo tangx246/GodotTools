@@ -5,6 +5,18 @@ extends MultiplayerSynchronizer
 var root: Node
 @export var tick_rate: int = 1
 
+@export_group("Interpolation")
+## If true, received values will be interpolated instead of applied directly.
+## This smooths out network jitter for physics objects like ragdolls.
+@export var interpolate: bool = false
+## Speed of interpolation. Higher = faster catch-up to target values.
+@export var interpolation_speed: float = 20.0
+
+## Stores target values for interpolation (NodePath -> Variant)
+var interpolation_targets: Dictionary[NodePath, Variant] = {}
+## Stores current interpolated values (NodePath -> Variant)
+var interpolation_currents: Dictionary[NodePath, Variant] = {}
+
 @export_group("Sleepy ticks")
 ## If true, ticks will slow down when values haven't changed for a while
 @export var sleepy_ticks: bool = true
@@ -80,7 +92,10 @@ func _ready() -> void:
 	if process_mode == PROCESS_MODE_INHERIT:
 		process_mode = Node.PROCESS_MODE_PAUSABLE
 	root = get_node(root_path)
-	
+
+	# Disable _process by default - only enable when interpolating
+	set_process(false)
+
 	for path: NodePath in properties:
 		var cached := CachedNodePath.new()
 		cached.node_path = path
@@ -103,7 +118,7 @@ func tick() -> void:
 	if ((Engine.get_physics_frames() + tick_shift) % tick_rate) != 0:
 		return
 
-	if not can_process():
+	if not is_inside_tree() or not can_process():
 		return
 	
 	_do_compare()
@@ -160,3 +175,59 @@ func _sync_property(path: NodePath, synced_properties: Dictionary):
 	
 	node.set.call_deferred(cached.path_subname, value)
 	delta_synchronized.emit.call_deferred()
+
+## Called by SuperMultiplayerSynchronizer to receive synced values.
+## If interpolation is enabled, stores target values instead of applying directly.
+func receive_sync(path: NodePath, value: Variant) -> void:
+	var node: Node = root.get_node_or_null(path)
+	if not node or not is_instance_valid(node) or not node.is_inside_tree():
+		return
+
+	var property_name: StringName = path.get_subname(0)
+
+	if interpolate:
+		interpolation_targets[path] = value
+		# Initialize current value if not present
+		if not interpolation_currents.has(path):
+			interpolation_currents[path] = value
+		# Enable _process for interpolation
+		if not is_processing():
+			set_process(true)
+	else:
+		node.set(property_name, value)
+
+	delta_synchronized.emit()
+
+func _process(delta: float) -> void:
+	for path: NodePath in interpolation_targets:
+		var node: Node = root.get_node_or_null(path)
+		if not node or not is_instance_valid(node):
+			continue
+
+		var property_name: StringName = path.get_subname(0)
+		var target: Variant = interpolation_targets[path]
+		var current: Variant = interpolation_currents.get(path, target)
+		var interpolated: Variant
+
+		var t: float = clampf(delta * interpolation_speed, 0.0, 1.0)
+
+		if target is Transform3D:
+			var current_transform: Transform3D = current as Transform3D
+			var target_transform: Transform3D = target as Transform3D
+			# Orthonormalize bases before slerp to avoid quaternion conversion errors
+			var current_basis := current_transform.basis.orthonormalized()
+			var target_basis := target_transform.basis.orthonormalized()
+			interpolated = Transform3D(
+				current_basis.slerp(target_basis, t),
+				current_transform.origin.lerp(target_transform.origin, t)
+			)
+		elif target is Vector3:
+			interpolated = (current as Vector3).lerp(target as Vector3, t)
+		elif target is Quaternion:
+			interpolated = (current as Quaternion).slerp(target as Quaternion, t)
+		else:
+			# For other types, just set directly
+			interpolated = target
+
+		interpolation_currents[path] = interpolated
+		node.set(property_name, interpolated)

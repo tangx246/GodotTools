@@ -15,6 +15,7 @@ var effect_stack: Array[EquipmentEffect] = []
 
 const KEY_EFFECTS: String = "effects"
 const KEY_MAX_POSITIVE_EFFECTS: String = "positive_effect_slots"
+const KEY_UPGRADE_SLOTS_USED: String = "upgrade_slots_used"
 
 func _ready() -> void:
 	item_slots.assign(root.find_children("", "ItemSlot"))

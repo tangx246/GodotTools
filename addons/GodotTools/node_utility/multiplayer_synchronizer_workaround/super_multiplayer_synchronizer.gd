@@ -38,13 +38,7 @@ func sync_properties(compressed: PackedByteArray, size: int) -> void:
 
 func _sync_property(msw: MultiplayerSynchronizerWorkaround, path: NodePath, synced_properties: Dictionary):
 	var value: Variant = synced_properties[path]
-	var node: Node = msw.root.get_node_or_null(path)
-	if not node or not is_instance_valid(node) or not node.is_inside_tree():
-		print("Node not found %s" % path)
-		return
-	
-	node.set(path.get_subname(0), value)
-	msw.delta_synchronized.emit()
+	msw.receive_sync(path, value)
 
 class Packet extends RefCounted:
 	var msw_path: NodePath

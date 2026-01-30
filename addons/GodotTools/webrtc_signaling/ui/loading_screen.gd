@@ -22,4 +22,6 @@ enum State {
 
 func _on_state_changed():
 	status.text = state_to_text[state]
-	progress.value = float(state) / State.size()
+	var target_value := float(state) / State.size()
+	var tween := create_tween()
+	tween.tween_property(progress, "value", target_value, 1).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)

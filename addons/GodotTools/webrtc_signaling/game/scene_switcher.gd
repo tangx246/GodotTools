@@ -50,7 +50,7 @@ func _switch_scenes(new_scene: PackedScene) -> void:
 	if currently_switching:
 		push_error("Currently switching scenes. Aborting")
 		return
-		
+
 	currently_switching = true
 	print("Switcing to scene: %s" % new_scene)
 	_clear_gameRoot()
@@ -61,15 +61,26 @@ func _switch_scenes(new_scene: PackedScene) -> void:
 		all_peers_ready.emit()
 	var timer: SceneTreeTimer = get_tree().create_timer(60)
 	timer.timeout.connect(await_peers, CONNECT_ONE_SHOT)
+
+	# Handle peer disconnections during loading - recheck if remaining peers are ready
+	var on_peer_disconnected: Callable = func(id: int):
+		print("Peer %d disconnected during scene load. Rechecking ready status." % id)
+		_check_all_peers_ready()
+	multiplayer.peer_disconnected.connect(on_peer_disconnected)
+
 	start_scene_switch.rpc(new_scene.resource_path)
-	
+
 	if ready_peers < multiplayer.get_peers().size() + 1:
 		await all_peers_ready
 		if timer.timeout.is_connected(await_peers):
 			timer.timeout.disconnect(await_peers)
-	
+
+	# Clean up disconnection handler
+	if multiplayer.peer_disconnected.is_connected(on_peer_disconnected):
+		multiplayer.peer_disconnected.disconnect(on_peer_disconnected)
+
 	get_level_spawner().spawn(new_scene.resource_path)
-	
+
 	currently_switching = false
 
 @rpc("any_peer", "call_local", "reliable")
@@ -77,12 +88,18 @@ func load_complete():
 	ready_peers += 1
 	var total_peers: int = (multiplayer.get_peers().size() + 1)
 	print("Peer %d loaded. %d peers loaded. %d total peers" % [multiplayer.get_remote_sender_id(), ready_peers, total_peers])
+	_check_all_peers_ready()
+
+func _check_all_peers_ready() -> void:
+	var total_peers: int = (multiplayer.get_peers().size() + 1)
 	if ready_peers >= total_peers:
 		all_peers_ready.emit()
 
 @rpc("authority", "call_local", "reliable")
 func start_scene_switch(resource_path: String) -> void:
 	load_screen = loading_screen.instantiate()
+	# Defer add_child so it doesn't happen during a network tick (can crash Jolt physics init)
+	await Engine.get_main_loop().process_frame
 	add_child(load_screen)
 	await Engine.get_main_loop().process_frame
 	

@@ -22,12 +22,12 @@ enum UPDATE_MODE {
 	WAIT_TIME
 }
 
-func _init() -> void:
-	original_wait_time = wait_time
 
 var editor_wait_time: float = 0
 func _ready() -> void:
 	assert(process_mode != PROCESS_MODE_INHERIT, "Process mode for AnimationTicker must not be Inherit")
+
+	original_wait_time = wait_time
 
 	visibility_notifier = VisibleOnScreenNotifier3D.new()
 	Signals.safe_connect(self, visibility_notifier.screen_entered, func(): _distance_update())

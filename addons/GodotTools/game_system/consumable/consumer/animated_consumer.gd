@@ -28,8 +28,12 @@ func _on_anim_finished(anim_name: StringName) -> void:
 		consume_finished.emit()
 
 func _on_anim_started(anim_name: StringName) -> void:
-	if anim_name == tree.tree_root.get_node(consume_node_name).get_node("Animation").animation:
+	var consume_anim = tree.tree_root.get_node(consume_node_name).get_node("Animation").animation
+	if anim_name == consume_anim:
 		consume_started.emit()
+	elif consuming:
+		# A different animation started while consuming - consumption was interrupted
+		_cancel_consumption()
 
 var current_finished: Callable
 func start_consumption(consumable: Consumable, finished: Callable) -> void:
@@ -69,7 +73,14 @@ func _set_spawn_children_visibility(show: bool):
 
 func _call_finished() -> void:
 	current_finished.call()
+	_cleanup_consumption()
+
+func _cancel_consumption() -> void:
+	if consuming:
+		consuming = false
+		_cleanup_consumption()
+
+func _cleanup_consumption() -> void:
 	current_finished = Callable()
-	
 	_clear_spawned_object()
 	_set_spawn_children_visibility(true)

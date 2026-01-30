@@ -4,6 +4,8 @@ class_name ControlWindow
 extends CanvasLayer
 
 @export var show_close_button: bool = true
+## If true, creates a fullscreen background that blocks input to elements behind this window.
+@export var exclusive: bool = false
 @export var title: String = "Title":
 	set(value):
 		var prev = value
@@ -36,7 +38,10 @@ func _get_configuration_warnings() -> PackedStringArray:
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
-	
+
+	if exclusive:
+		_create_exclusive_background()
+
 	EmbeddedUI.attach(self, false)
 	ControlWindowManager.register(self)
 
@@ -58,3 +63,14 @@ func _notification(what: int) -> void:
 
 func _on_container_focused() -> void:
 	ControlWindowManager.focused(self)
+
+func _create_exclusive_background() -> void:
+	var background = ColorRect.new()
+	background.color = Color.TRANSPARENT
+	var viewport_size = get_viewport().get_visible_rect().size
+	var buffer = viewport_size * 2
+	background.size = viewport_size + buffer
+	background.position = -buffer / 2 - offset
+	background.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(background)
+	move_child(background, 0)

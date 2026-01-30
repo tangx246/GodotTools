@@ -183,13 +183,14 @@ func add_item(item: InventoryItem) -> bool:
 	# removing it immediately, after a successful pack() call (in case the grid
 	# constraint has no space for the item). This causes some errors because
 	# Godot still tries to call the ENTER_TREE notification. To avoid that, we
-	# call transfer_automerge(), which should be able to pack the item without 
+	# call transfer_automerge(), which should be able to pack the item without
 	# adding it first.
 	var gc := _constraint_manager.get_grid_constraint()
 	var sc := _constraint_manager.get_stacks_constraint()
 	if gc != null && sc != null && !gc.has_space_for(item):
 		var transfer_success = sc.transfer_automerge(item, self)
-		assert(transfer_success)
+		if not transfer_success:
+			return false
 	else:
 		add_child(item)
 

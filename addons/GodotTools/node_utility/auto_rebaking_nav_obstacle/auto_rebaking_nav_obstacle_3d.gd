@@ -43,5 +43,8 @@ func _rebake_navmesh() -> void:
 		if not nav_region.is_baking():
 			nav_region.bake_navigation_mesh()
 
+	# We usually wait for the bake to finish here, but there is then a race condition
+	# when other bakes begin to queue up and disable the wrong things
+
 	for disabled in prev_disabled:
 		disabled.disabled = prev_disabled[disabled]

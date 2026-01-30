@@ -29,6 +29,8 @@ func replace_materials(mesh: MeshInstance3D) -> void:
 	assert(not mesh.material_override, "Mesh should not have a geometry material override")
 	for i: int in range(mesh.get_surface_override_material_count()):
 		var material: Material = mesh.get_active_material(i)
+		if material == null:
+			continue
 		if material is ShaderMaterial:
 			material.set_shader_parameter("viewmodel_fov", fov)
 		elif material is BaseMaterial3D:
@@ -65,4 +67,4 @@ func replace_materials(mesh: MeshInstance3D) -> void:
 			new_material.set_shader_parameter("texture_rim", material.rim_texture)
 			mesh.set_surface_override_material.call_deferred(i, new_material)
 		else:
-			printerr("Unable to handle material %s" % material)
+			push_warning("Unable to handle material type %s: %s" % [material.get_class(), material])

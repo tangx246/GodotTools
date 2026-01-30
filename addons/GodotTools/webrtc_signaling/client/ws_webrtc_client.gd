@@ -39,7 +39,8 @@ func close() -> void:
 
 func _room_list_callback(_ignore: Dictionary):
 	close()
-	room_list_received.disconnect(_room_list_callback)
+	if room_list_received.is_connected(_room_list_callback):
+		room_list_received.disconnect(_room_list_callback)
 
 func _process(_delta: float) -> void:
 	ws.poll()
@@ -49,7 +50,8 @@ func _process(_delta: float) -> void:
 			join_lobby(lobby)
 		else:
 			refresh_room_list()
-			room_list_received.connect(_room_list_callback)
+			if not room_list_received.is_connected(_room_list_callback):
+				room_list_received.connect(_room_list_callback)
 	while state == WebSocketPeer.STATE_OPEN and ws.get_available_packet_count():
 		if not _parse_msg():
 			print("Error parsing message from server.")

@@ -1,14 +1,40 @@
-[gd_scene load_steps=2 format=3 uid="uid://ptb02aoy8gn1"]
+[gd_scene format=3 uid="uid://ptb02aoy8gn1"]
 
 [ext_resource type="PackedScene" uid="uid://c07y6e7ecwskb" path="res://addons/GodotTools/ui/volume_control/volume.tscn" id="1_fobux"]
 
-[node name="Volume Container" type="HBoxContainer"]
-offset_right = 168.0
+[node name="Volume Container" type="VBoxContainer" unique_id=1842277771]
+offset_right = 241.0
 offset_bottom = 40.0
 
-[node name="Label" type="Label" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1855370633]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer" unique_id=683015429]
 layout_mode = 2
 text = "Master Volume"
 
-[node name="Volume" parent="." instance=ExtResource("1_fobux")]
+[node name="Volume" parent="HBoxContainer" unique_id=2134068109 instance=ExtResource("1_fobux")]
 layout_mode = 2
+bus_name = "Master"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="." unique_id=237493205]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer2" unique_id=2051633597]
+layout_mode = 2
+text = "Music Volume"
+
+[node name="Volume" parent="HBoxContainer2" unique_id=307888134 instance=ExtResource("1_fobux")]
+layout_mode = 2
+bus_name = "Music"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="." unique_id=630097722]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer3" unique_id=654279801]
+layout_mode = 2
+text = "SFX Volume"
+
+[node name="Volume" parent="HBoxContainer3" unique_id=1026331762 instance=ExtResource("1_fobux")]
+layout_mode = 2
+bus_name = "SFX"
