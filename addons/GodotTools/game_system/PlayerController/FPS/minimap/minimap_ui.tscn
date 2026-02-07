@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://dn6c1wfittak8"]
+[gd_scene format=3 uid="uid://dn6c1wfittak8"]
 
 [ext_resource type="Script" uid="uid://d0essbpvegvjq" path="res://addons/GodotTools/game_system/PlayerController/FPS/minimap/minimap_ui.gd" id="1_1m0kw"]
 
@@ -8,45 +8,48 @@ border_color = Color(1, 0.7019608, 0.4, 1)
 corner_radius_bottom_left = 1
 corner_detail = 1
 
-[node name="Minimap" type="TextureRect"]
+[node name="Minimap" type="TextureRect" unique_id=984513062]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -151.0
-offset_top = 1.0
-offset_right = -1.0
-offset_bottom = 151.0
+offset_left = -160.0
+offset_top = 10.0
+offset_right = -9.999878
+offset_bottom = 160.0
 grow_horizontal = 0
 script = ExtResource("1_1m0kw")
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="Panel" parent="." unique_id=50668293]
 show_behind_parent = true
 layout_mode = 1
-anchors_preset = 1
+anchors_preset = -1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -151.0
-offset_top = -1.0
-offset_right = 1.0
-offset_bottom = 151.0
+offset_left = -152.00012
+offset_top = -2.0
+offset_right = 1.9998779
+offset_bottom = 152.0
 grow_horizontal = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_g2hd5")
 
-[node name="ZoomIn" type="Button" parent="."]
+[node name="ZoomIn" type="Button" parent="." unique_id=1002454402]
 layout_mode = 0
-offset_left = -17.0
-offset_right = 12.0
-offset_bottom = 25.0
+offset_left = -11.0
+offset_top = -9.0
+offset_right = 23.0
+offset_bottom = 19.0
 focus_mode = 0
+theme_type_variation = &"MediumButton"
 text = "+"
 
-[node name="ZoomOut" type="Button" parent="."]
+[node name="ZoomOut" type="Button" parent="." unique_id=1338437847]
 layout_mode = 0
-offset_left = -17.0
-offset_top = 33.0
-offset_right = 13.0
-offset_bottom = 58.0
+offset_left = -24.0
+offset_top = 23.0
+offset_right = 10.0
+offset_bottom = 51.000015
 focus_mode = 0
+theme_type_variation = &"MediumButton"
 text = "-"
 
 [connection signal="pressed" from="ZoomIn" to="." method="zoom_in"]

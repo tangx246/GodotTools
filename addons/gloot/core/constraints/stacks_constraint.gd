@@ -162,6 +162,8 @@ static func _merge_stacks(item_dst: InventoryItem, item_src: InventoryItem) -> i
 static func split_stack(item: InventoryItem, new_stack_size: int) -> InventoryItem:
 	assert(item != null, "item is null!")
 	assert(new_stack_size >= 1, "New stack size must be greater or equal to 1!")
+	if new_stack_size < 1:
+		return
 
 	var stack_size = get_item_stack_size(item)
 	assert(stack_size > 1, "Size of the item stack must be greater than 1!")

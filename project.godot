@@ -8,17 +8,31 @@
 
 config_version=5
 
+[animation]
+
+compatibility/default_parent_skeleton_in_mesh_instance_3d=true
+
 [application]
 
 config/name="GodotTools"
-config/features=PackedStringArray("4.4", "GL Compatibility")
+config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
 
-WorkerThreadPoolExtended="*res://addons/GodotTools/node_utility/workerthreadpool_extended/workerthreadpool_extended.gd"
-NavigationServerQueries="*res://addons/GodotTools/pathfinding/navigation_server_queries.gd"
-PlayerPrefs="*res://addons/GodotTools/player_prefs/player_prefs.gd"
+WorkerThreadPoolExtended="*uid://dldxsrl111q4"
+NavigationServerQueries="*uid://bq65a7p0g4aln"
+PlayerPrefs="*uid://ba1xncgbrvnm0"
+UISoundHijacker="*uid://clll2a3o4386m"
+DragableWorkaround="*uid://c0cwmg6l52o5j"
+SuperMultiplayerSynchronizer="*uid://beuvquk2wa8e8"
+SaveGames="*uid://bsymgk2hf7kbh"
+ControlWindowManager="*uid://dewr1sv5lbqyl"
+CustomCursor="*uid://cves5x02v1fgx"
+NetworkSync="*uid://b70c4wtwl304y"
+ObjectSync="*uid://b4hstcvf8o0b1"
+OutlineShader="*uid://dqdjvimwbo58k"
+Notifications="*uid://e1t66s2brjxo"
 
 [dotnet]
 
@@ -26,7 +40,7 @@ project/assembly_name="GodotTools"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/GodotTools/audio/AudioStreamPlayerSpawner/plugin.cfg", "res://addons/GodotTools/audio/RandomAudioStreamPlayer/plugin.cfg", "res://addons/GodotTools/audio/ui_sound_themes/plugin.cfg", "res://addons/GodotTools/external/gloot/plugin.cfg", "res://addons/GodotTools/game_system/PlayerController/plugin.cfg", "res://addons/GodotTools/game_system/consumable/plugin.cfg", "res://addons/GodotTools/game_system/damageable/plugin.cfg", "res://addons/GodotTools/game_system/daynight/plugin.cfg", "res://addons/GodotTools/game_system/interactable/plugin.cfg", "res://addons/GodotTools/game_system/level_bounds/plugin.cfg", "res://addons/GodotTools/game_system/metahuman/plugin.cfg", "res://addons/GodotTools/game_system/navigation_agents/plugin.cfg", "res://addons/GodotTools/node_utility/animation_ticker/plugin.cfg", "res://addons/GodotTools/node_utility/follow_target/plugin.cfg", "res://addons/GodotTools/node_utility/light_checker/plugin.cfg", "res://addons/GodotTools/node_utility/multiplayer_synchronizer_workaround/plugin.cfg", "res://addons/GodotTools/node_utility/nav_agent_height_adjuster/plugin.cfg", "res://addons/GodotTools/node_utility/workerthreadpool_extended/plugin.cfg", "res://addons/GodotTools/pathfinding/plugin.cfg", "res://addons/GodotTools/player_prefs/plugin.cfg", "res://addons/GodotTools/ui/input_action_button/plugin.cfg", "res://addons/GodotTools/ui/topdown_item_placer/plugin.cfg", "res://addons/GodotTools/webrtc_signaling/plugin.cfg")
+enabled=PackedStringArray("res://addons/GodotTools/audio/AudioStreamPlayerSpawner/plugin.cfg", "res://addons/GodotTools/audio/ui_sound_themes/plugin.cfg", "res://addons/GodotTools/external/gloot/plugin.cfg", "res://addons/GodotTools/game_system/PlayerController/plugin.cfg", "res://addons/GodotTools/game_system/consumable/plugin.cfg", "res://addons/GodotTools/game_system/damageable/plugin.cfg", "res://addons/GodotTools/game_system/daynight/plugin.cfg", "res://addons/GodotTools/game_system/equipment/plugin.cfg", "res://addons/GodotTools/game_system/interactable/plugin.cfg", "res://addons/GodotTools/game_system/level_bounds/plugin.cfg", "res://addons/GodotTools/game_system/metahuman/plugin.cfg", "res://addons/GodotTools/game_system/navigation_agents/plugin.cfg", "res://addons/GodotTools/game_system/notifications/plugin.cfg", "res://addons/GodotTools/graphics/outline/plugin.cfg", "res://addons/GodotTools/network/object_sync/plugin.cfg", "res://addons/GodotTools/network/sync/plugin.cfg", "res://addons/GodotTools/node_utility/animation_ticker/plugin.cfg", "res://addons/GodotTools/node_utility/follow_target/plugin.cfg", "res://addons/GodotTools/node_utility/light_checker/plugin.cfg", "res://addons/GodotTools/node_utility/multiplayer_synchronizer_workaround/plugin.cfg", "res://addons/GodotTools/node_utility/nav_agent_height_adjuster/plugin.cfg", "res://addons/GodotTools/node_utility/workerthreadpool_extended/plugin.cfg", "res://addons/GodotTools/pathfinding/plugin.cfg", "res://addons/GodotTools/player_prefs/plugin.cfg", "res://addons/GodotTools/ui/control_window/plugin.cfg", "res://addons/GodotTools/ui/custom_cursor/plugin.cfg", "res://addons/GodotTools/ui/input_action_button/plugin.cfg", "res://addons/GodotTools/ui/topdown_item_placer/plugin.cfg", "res://addons/GodotTools/webrtc_signaling/plugin.cfg")
 
 [input]
 
@@ -83,6 +97,36 @@ Sprint={
 interact={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":70,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
+}
+"Look Up"={
+"deadzone": 0.5,
+"events": [Object(InputEventJoypadMotion,"resource_local_to_scene":false,"resource_name":"","device":0,"axis":3,"axis_value":-1.0,"script":null)
+]
+}
+"Look Down"={
+"deadzone": 0.5,
+"events": [Object(InputEventJoypadMotion,"resource_local_to_scene":false,"resource_name":"","device":0,"axis":3,"axis_value":1.0,"script":null)
+]
+}
+"Look Left"={
+"deadzone": 0.5,
+"events": [Object(InputEventJoypadMotion,"resource_local_to_scene":false,"resource_name":"","device":0,"axis":2,"axis_value":-1.0,"script":null)
+]
+}
+"Look Right"={
+"deadzone": 0.5,
+"events": [Object(InputEventJoypadMotion,"resource_local_to_scene":false,"resource_name":"","device":0,"axis":2,"axis_value":1.0,"script":null)
+]
+}
+"Zoom In Minimap"={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194437,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
+}
+"Zoom Out Minimap"={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194435,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
 ]
 }
 
