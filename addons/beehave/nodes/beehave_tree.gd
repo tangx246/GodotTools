@@ -58,7 +58,7 @@ signal tree_disabled
 		blackboard = b
 		if blackboard and _internal_blackboard:
 			remove_child(_internal_blackboard)
-			_internal_blackboard.free()
+			_internal_blackboard.queue_free()
 			_internal_blackboard = null
 		elif not blackboard and not _internal_blackboard:
 			_internal_blackboard = Blackboard.new()

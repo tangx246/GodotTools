@@ -68,6 +68,20 @@ visible = false
 layout_mode = 2
 text = "Mesh"
 
+[node name="PasswordContainer" type="HBoxContainer" parent="VBoxContainer/TabContainer/Host Join UI"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/Host Join UI/PasswordContainer"]
+layout_mode = 2
+text = "Password (optional):"
+
+[node name="Password" type="LineEdit" parent="VBoxContainer/TabContainer/Host Join UI/PasswordContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Enter password"
+secret = true
+
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/TabContainer/Host Join UI"]
 layout_mode = 2
 

@@ -69,6 +69,9 @@ func _on_velocity_computed(safe_velocity: Vector3):
 	for i in range(loops):
 		await Engine.get_main_loop().physics_frame
 
+	if not is_inside_tree():
+		return
+	
 	_calculate_new_pos_and_look(global_position, safe_velocity, speed * get_physics_process_delta_time() * (loops + 1))
 	queued = false
 

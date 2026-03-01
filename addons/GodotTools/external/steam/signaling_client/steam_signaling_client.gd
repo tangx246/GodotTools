@@ -23,7 +23,7 @@ func _exit_tree() -> void:
 	stop()
 
 ## This is the entry point to this whole class
-func start(url: String, _lobby: String = "", _mesh: bool = true, _autojoin: bool = true) -> void:
+func start(url: String, _lobby: String = "", _mesh: bool = true, _autojoin: bool = true, _password: String = "") -> void:
 	if not _autojoin:
 		refresh_room_list()
 	elif _lobby.is_empty():

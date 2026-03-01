@@ -12,12 +12,15 @@ extends CharacterBody3D
 @onready var camera : Camera3D = find_child("Camera3D")
 var jump_velocity_to_add : float = 0
 var mouse_movement : Vector2 = Vector2.ZERO
+## Normalized local-space input direction. x = strafe (neg left, pos right), y = fwd/bwd (neg forward, pos backward)
+var input_direction: Vector2 = Vector2.ZERO
 
 signal hit_floor(fall_speed: float, fall_height: float)
 signal mouse_looked(x_angle: float, y_angle: float)
 
 func get_input() -> Vector3:
 	var input_dir = Input.get_vector("Strafe Left", "Strafe Right", "Move Forward", "Move Backward")
+	input_direction = input_dir
 	var velocity2 = (input_dir * speed)
 	return Vector3(velocity2.x, velocity.y, velocity2.y)
 

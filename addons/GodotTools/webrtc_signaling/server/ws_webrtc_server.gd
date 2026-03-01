@@ -10,7 +10,8 @@ enum Message {
 	ANSWER,
 	CANDIDATE,
 	SEAL,
-	REFRESH_ROOM_LIST
+	REFRESH_ROOM_LIST,
+	JOIN_ERROR
 }
 
 ## Unresponsive clients time out after this time (in milliseconds).
@@ -57,6 +58,7 @@ class Lobby extends RefCounted:
 	var peers := {}
 	var host := -1
 	var host_name := ""
+	var password := ""
 	var sealed := false
 	var time := 0  # Value is in milliseconds.
 	var mesh := true
@@ -126,7 +128,8 @@ class Lobby extends RefCounted:
 
 	func _to_string() -> String:
 		return JSON.stringify({
-			"host_name": host_name
+			"host_name": host_name,
+			"has_password": not password.is_empty()
 		})
 
 func _process(_delta: float) -> void:
@@ -198,22 +201,27 @@ func poll() -> void:
 		peers.erase(id)
 
 
-func _join_lobby(peer: Peer, join_packet: JoinPacket, mesh: bool) -> bool:
+## Returns "" on success, or an error string on failure.
+func _join_lobby(peer: Peer, join_packet: JoinPacket, mesh: bool) -> String:
 	var lobby = join_packet.lobby.to_upper()
 	if lobby.is_empty():
 		for _i in 5:
 			lobby += char(_alfnum[rand.randi_range(0, ALFNUM.length() - 1)])
 		lobbies[lobby] = Lobby.new(peer.id, mesh)
 		lobbies[lobby].host_name = join_packet.host_name
+		lobbies[lobby].password = join_packet.password
 	elif not lobbies.has(lobby):
 		printerr("Peer %s attempted to join lobby %s that does not exist" % [peer, lobby])
-		return false
+		return "lobby_not_found"
+	elif not lobbies[lobby].password.is_empty() and lobbies[lobby].password != join_packet.password:
+		printerr("Peer %s provided wrong password for lobby %s" % [peer, lobby])
+		return "wrong_password"
 	lobbies[lobby].join(peer)
 	peer.lobby = lobby
 	# Notify peer of its lobby
 	peer.send(Message.JOIN, 0, lobby)
 	print("Peer %d joined lobby: '%s'" % [peer.id, lobby])
-	return true
+	return ""
 
 
 func _parse_msg(peer: Peer) -> bool:
@@ -242,10 +250,14 @@ func _parse_msg(peer: Peer) -> bool:
 			printerr("Parse failed: %s" % pkt_str)
 			return false
 
-		var joined: bool = _join_lobby(peer, JoinPacket.deserialize(msg.data), msg.id == 0)
-		if not joined:
-			printerr("Join failed: %s" % pkt_str)
-		return joined
+		var join_error: String = _join_lobby(peer, JoinPacket.deserialize(msg.data), msg.id == 0)
+		if join_error == "wrong_password":
+			peer.send(Message.JOIN_ERROR, 0, join_error)
+			return true  # Keep connection alive so client can retry
+		elif not join_error.is_empty():
+			printerr("Join failed: %s, %s" % [join_error, pkt_str])
+			return false
+		return true
 
 	if not lobbies.has(peer.lobby):  # Lobby not found?
 		printerr("Parse failed: %s" % pkt_str)

@@ -25,12 +25,13 @@ func _process(delta: float) -> void:
 
 	rtc_mp.poll()
 
-func start(url: String, _lobby: String = "", _mesh: bool = true, _autojoin: bool = true) -> void:
+func start(url: String, _lobby: String = "", _mesh: bool = true, _autojoin: bool = true, _password: String = "") -> void:
 	stop()
 	sealed = false
 	mesh = _mesh
 	lobby = _lobby
 	autojoin = _autojoin
+	password = _password
 	connect_to_url(url)
 
 func _exit_tree() -> void:
@@ -96,6 +97,7 @@ func _connected(id: int, use_mesh: bool) -> void:
 		error = rtc_mp.create_client(id)
 	if error != Error.OK:
 		push_error("Error creating peer: %s" % error)
+
 	get_tree().get_multiplayer().multiplayer_peer = rtc_mp
 
 

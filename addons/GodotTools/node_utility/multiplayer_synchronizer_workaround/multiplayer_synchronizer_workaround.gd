@@ -223,6 +223,8 @@ func _process(delta: float) -> void:
 			)
 		elif target is Vector3:
 			interpolated = (current as Vector3).lerp(target as Vector3, t)
+		elif target is Vector2:
+			interpolated = (current as Vector2).lerp(target as Vector2, t)
 		elif target is Quaternion:
 			interpolated = (current as Quaternion).slerp(target as Quaternion, t)
 		else:

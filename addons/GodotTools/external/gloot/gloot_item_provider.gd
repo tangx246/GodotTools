@@ -39,6 +39,7 @@ func use_item(count_requested: int) -> int:
 		item.set_property(KEY_STACK_SIZE, maxi(stack_size - item_needed, 0))
 		if item.get_property(KEY_STACK_SIZE) == 0:
 			item.get_inventory().remove_item(item)
+			item.queue_free()
 		
 		item_count_used = mini(item_count_used + stack_size, count_requested)
 	

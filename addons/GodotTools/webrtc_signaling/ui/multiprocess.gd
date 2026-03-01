@@ -7,6 +7,7 @@ const GROUP: StringName = "Multiprocess"
 const PATTERN: String = "[Signaling] Joined lobby "
 const AUTOHOST_PARAM: String = "--autohost"
 const SINGLEPLAYER_PARAM: String = "--singleplayer"
+const PASSWORD_PARAM: String = "--password"
 
 var local_instance_single_player: bool = false
 var first_peer_id: int = -1
@@ -42,6 +43,10 @@ func _init() -> void:
 func _ready() -> void:
 	if is_multiprocess_instance():
 		await Engine.get_main_loop().process_frame # Allow for clientui to initialize
+		var args: PackedStringArray = OS.get_cmdline_args()
+		var pw_idx: int = args.find(PASSWORD_PARAM)
+		if pw_idx != -1 and pw_idx + 1 < args.size():
+			clientui.password.text = args[pw_idx + 1]
 		var single_player: bool = is_multiprocess_instance_single_player()
 		print("Multiprocess Server started. Autohosting. Singleplayer: %s" % single_player)
 		clientui._on_start_pressed(single_player)
@@ -121,6 +126,10 @@ func start_headless_process(single_player: bool):
 	var params: Array[String] = ["--headless", AUTOHOST_PARAM]
 	if single_player:
 		params.append(SINGLEPLAYER_PARAM)
+	var password_text: String = clientui.password.text
+	if not password_text.is_empty():
+		params.append(PASSWORD_PARAM)
+		params.append(password_text)
 	output = OS.execute_with_pipe(OS.get_executable_path(), params)
 	local_instance_single_player = single_player
 	stdio_observer = Thread.new()

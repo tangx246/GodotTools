@@ -10,12 +10,14 @@ enum Message {
 	ANSWER,
 	CANDIDATE,
 	SEAL,
-	REFRESH_ROOM_LIST
+	REFRESH_ROOM_LIST,
+	JOIN_ERROR
 }
 
 @export var autojoin := true
 @export var lobby := ""  # Will create a new lobby if empty.
 @export var mesh := true  # Will use the lobby host as relay otherwise.
+var password := ""
 
 var ws := WebSocketPeer.new()
 var old_state := WebSocketPeer.STATE_CLOSED
@@ -110,6 +112,8 @@ func _parse_msg() -> bool:
 		candidate_received.emit(src_id, candidate[0], candidate[1].to_int(), candidate[2])
 	elif type == Message.REFRESH_ROOM_LIST:
 		room_list_received.emit(JSON.parse_string(msg.data))
+	elif type == Message.JOIN_ERROR:
+		join_error.emit(msg.data)
 	else:
 		return false
 
@@ -121,6 +125,7 @@ func join_lobby(lobby: String) -> Error:
 	var packet := JoinPacket.new()
 	packet.lobby = lobby
 	packet.host_name = player_name
+	packet.password = password
 	return _send_msg(Message.JOIN, 0 if mesh else 1, packet.to_string())
 
 func seal_lobby() -> Error:

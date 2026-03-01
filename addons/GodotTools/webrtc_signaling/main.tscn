@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dr242bojmpc28"]
+[gd_scene format=3 uid="uid://dr242bojmpc28"]
 
 [ext_resource type="Script" uid="uid://b6vjf0k66niqq" path="res://addons/GodotTools/webrtc_signaling/main.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://5p1bp2kcs0py" path="res://addons/GodotTools/webrtc_signaling/ui/main_ui.tscn" id="1_rhk73"]
@@ -17,18 +17,18 @@ properties/0/path = NodePath(".:visible")
 properties/0/spawn = true
 properties/0/replication_mode = 2
 
-[node name="Main" type="Node"]
+[node name="Main" type="Node" unique_id=1474025352]
 script = ExtResource("1")
 
-[node name="MultiplayerSceneSwitcher" type="Node" parent="."]
+[node name="MultiplayerSceneSwitcher" type="Node" parent="." unique_id=122346008]
 script = ExtResource("5_j5sg8")
 loading_screen = ExtResource("3_84oe2")
 metadata/_custom_type_script = "uid://i68o564070pq"
 
-[node name="Control" parent="." instance=ExtResource("1_rhk73")]
+[node name="Control" parent="." unique_id=381783738 instance=ExtResource("1_rhk73")]
 unique_name_in_owner = true
 
-[node name="MainMenu" type="Control" parent="Control"]
+[node name="MainMenu" type="Control" parent="Control" unique_id=655294720]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -37,7 +37,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("5_egv6r")
 
-[node name="Label" type="Label" parent="Control/MainMenu"]
+[node name="Label" type="Label" parent="Control/MainMenu" unique_id=243456686]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -55,7 +55,7 @@ label_settings = SubResource("LabelSettings_ghh5o")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control/MainMenu"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/MainMenu" unique_id=1871023383]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -70,41 +70,41 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
-[node name="NewSinglePlayerGame" type="Button" parent="Control/MainMenu/VBoxContainer"]
+[node name="NewSinglePlayerGame" type="Button" parent="Control/MainMenu/VBoxContainer" unique_id=676313132]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Start Single Player Game"
 
-[node name="Multiplayer" type="Button" parent="Control/MainMenu/VBoxContainer"]
+[node name="Multiplayer" type="Button" parent="Control/MainMenu/VBoxContainer" unique_id=246067904]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Multiplayer"
 
-[node name="OptionsButton" type="Button" parent="Control/MainMenu/VBoxContainer"]
+[node name="OptionsButton" type="Button" parent="Control/MainMenu/VBoxContainer" unique_id=401112499]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Options"
 
-[node name="Exit" type="Button" parent="Control/MainMenu/VBoxContainer"]
+[node name="Exit" type="Button" parent="Control/MainMenu/VBoxContainer" unique_id=1327306591]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Exit to Desktop"
 
-[node name="MultiplayerUiSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="MultiplayerUiSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1267843333]
 root_path = NodePath("../Control")
 replication_config = SubResource("SceneReplicationConfig_ax6q8")
 script = ExtResource("3_ck0me")
 tick_rate = 10
 sleepy_ticks = false
 
-[node name="LevelSpawner" type="MultiplayerSpawner" parent="." groups=["LevelSpawner"]]
+[node name="LevelSpawner" type="MultiplayerSpawner" parent="." unique_id=809156497 groups=["LevelSpawner"]]
 spawn_path = NodePath("../GameRoot")
 
-[node name="GameRoot" type="Node" parent="." groups=["GameRoot"]]
+[node name="GameRoot" type="Node" parent="." unique_id=676314762 groups=["GameRoot"]]
 unique_name_in_owner = true
 
-[node name="DecorativeScenes" type="Node" parent="." node_paths=PackedStringArray("root")]
+[node name="DecorativeScenes" type="Node" parent="." unique_id=1296535397 node_paths=PackedStringArray("root")]
 script = ExtResource("4_vnl57")
 root = NodePath("..")
 
-[node name="FpsCounter" parent="." instance=ExtResource("7_nbkvf")]
+[node name="FpsCounter" parent="." unique_id=1339430245 instance=ExtResource("7_nbkvf")]

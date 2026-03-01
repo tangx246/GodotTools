@@ -19,11 +19,13 @@ signal value_changed(value: float)
 
 func _ready() -> void:
 	var timer = Timer.new()
-	timer.autostart = true
+	timer.autostart = false
 	timer.wait_time = tick_rate
+	add_child(timer)
 	await get_tree().create_timer(randf_range(0, tick_rate)).timeout
 	Signals.safe_connect(self, timer.timeout, func(): tick(timer.wait_time))
-	add_child(timer)
+	await TreeSync.wait_for_inside_tree(self)
+	timer.start()
 
 	set_process(debug)
 

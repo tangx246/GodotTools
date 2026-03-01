@@ -235,7 +235,7 @@ func create_and_add_item(prototype_id: String) -> InventoryItem:
 	if add_item(item):
 		return item
 	else:
-		item.free()
+		item.queue_free()
 		return null
 
 ## Removes the given item from the inventory.

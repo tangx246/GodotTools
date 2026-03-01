@@ -24,7 +24,10 @@ func consume(consumer_root: Node, item_provider: ItemProvider) -> void:
 		self,
 		# We have to use a lambda to keep this consumable around
 		func():
-			_consume.bind(consumer_root, consumer, item_provider).call())
+			_consume.bind(consumer_root, consumer, item_provider).call()
+			if consumer is ImmediateConsumer:
+				consumer.queue_free()
+	)
 	
 func _consume(consumer_root: Node, consumer: Consumer, item_provider: ItemProvider):
 	if not consumer.item_consumed_immediately:

@@ -6,6 +6,7 @@ var original_start_text: String
 @onready var client: SignalingClient = %Client
 @onready var host: LineEdit = %Host
 @onready var room: LineEdit = %RoomSecret
+@onready var password: LineEdit = %Password
 @onready var mesh: CheckBox = %Mesh
 @onready var multiprocess: Multiprocess = %Multiprocess
 @onready var multiplayerUi: Control = %VBoxContainer
@@ -53,6 +54,7 @@ func _connect_signals(client: SignalingClient):
 	client.connected.connect(_connected)
 	client.disconnected.connect(_disconnected)
 	client.room_list_received.connect(_room_list_received)
+	client.join_error.connect(_join_error)
 
 func _mp_server_connected() -> void:
 	_log("[Multiplayer] Server connected (I am %d)" % multiplayer.get_unique_id())
@@ -87,6 +89,11 @@ func _lobby_joined(lobby: String) -> void:
 func _lobby_sealed() -> void:
 	_log("[Signaling] Lobby has been sealed")
 
+func _join_error(reason: String) -> void:
+	_log("[Signaling] Failed to join: %s" % reason)
+	client.stop()
+	client.disconnected.emit()
+
 
 func _log(msg: String) -> void:
 	print(msg)
@@ -112,7 +119,7 @@ func _on_start_pressed(single_player: bool = false) -> void:
 			client_to_use = _create_singleplayer_client()
 		else:
 			client_to_use = client
-		client_to_use.start(_get_url(single_player), "", mesh.button_pressed)
+		client_to_use.start(_get_url(single_player), "", mesh.button_pressed, true, password.text)
 
 func _get_url(single_player: bool) -> String:
 	var url: String
@@ -134,7 +141,7 @@ func _on_join_pressed(single_player: bool = false) -> void:
 	else:
 		client_to_use = client
 
-	client_to_use.start(_get_url(single_player), room.text, mesh.button_pressed)
+	client_to_use.start(_get_url(single_player), room.text, mesh.button_pressed, true, password.text)
 
 func _create_singleplayer_client() -> LocalhostSignalingClientWS:
 	_log("Creating single player client")
@@ -180,16 +187,20 @@ func _on_room_list_activated(id: int) -> void:
 		return
 
 	var room: String = room_list.get_item_metadata(id)
-	client.start(host.text, room, mesh.button_pressed)
+	client.start(host.text, room, mesh.button_pressed, true, password.text)
 
 func _room_list_received(received_rooms: Dictionary) -> void:
 	_log("Room list received. Got %s rooms" % (received_rooms.size() if received_rooms else "0"))
 	room_list.clear()
 	
 	for room in received_rooms.keys():
-		var host_name = JSON.parse_string(received_rooms[room])["host_name"]
-		var id: int = room_list.add_item("{host_name}'s server. Code: {room_code}".format({
+		var room_data: Dictionary = JSON.parse_string(received_rooms[room])
+		var host_name: String = room_data["host_name"]
+		var has_password: bool = room_data.get("has_password", false)
+		var label: String = "{locked}{host_name}'s server. Code: {room_code}".format({
+			"locked": "[Locked] " if has_password else "",
 			"host_name": host_name,
 			"room_code": room
-		}))
+		})
+		var id: int = room_list.add_item(label)
 		room_list.set_item_metadata(id, room)

@@ -13,6 +13,9 @@ signal consume_finished
 signal consume_started
 var consuming: bool = false
 
+func _exit_tree() -> void:
+	non_animated_consumer.queue_free()
+
 func _ready() -> void:
 	var sm = tree.tree_root.duplicate(true) as AnimationNodeStateMachine
 	tree.tree_root = sm

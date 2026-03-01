@@ -148,8 +148,14 @@ static func _merge_stacks(item_dst: InventoryItem, item_src: InventoryItem) -> i
 	if free_dst_stack_space <= 0:
 		return MergeResult.FAIL
 
-	var decrease_src_item_success = set_item_stack_size(item_src, max(src_size - free_dst_stack_space, 0))
-	assert(decrease_src_item_success)
+	var new_src_size: int = max(src_size - free_dst_stack_space, 0)
+	if new_src_size == 0:
+		var inventory: Inventory = item_src.get_inventory()
+		if inventory != null:
+			inventory.remove_item(item_src)
+		item_src.queue_free()
+	else:
+		item_src.set_property(KEY_STACK_SIZE, new_src_size)
 	var increase_dst_item_success = set_item_stack_size(item_dst, min(dst_size + src_size, dst_max_size))
 	assert(increase_dst_item_success)
 
@@ -202,7 +208,7 @@ func split_stack_safe(item: InventoryItem, new_stack_size: int) -> InventoryItem
 			# Restore the original item's stack size and clean up
 			var original_stack = get_item_stack_size(item)
 			item.set_property(KEY_STACK_SIZE, original_stack + new_stack_size)
-			new_item.free()
+			new_item.queue_free()
 			return null
 	return new_item
 
@@ -327,7 +333,7 @@ static func _get_space_for_single_item(inventory: Inventory, item: InventoryItem
 	var set_item_stack_size_success = set_item_stack_size(single_item, 1)
 	assert(set_item_stack_size_success)
 	var count := inventory._constraint_manager.get_space_for(single_item)
-	single_item.free()
+	single_item.queue_free()
 	return count
 
 

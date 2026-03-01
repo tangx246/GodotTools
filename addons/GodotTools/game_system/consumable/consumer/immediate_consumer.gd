@@ -1,3 +1,4 @@
+## Consumes things immediately. WARNING: Since ImmediateConsumer is a Node, it must be freed when done
 class_name ImmediateConsumer
 extends Consumer
 
