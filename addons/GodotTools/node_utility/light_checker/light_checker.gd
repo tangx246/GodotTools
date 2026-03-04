@@ -17,7 +17,7 @@ func _ready() -> void:
 	
 	_light_count(lights)
 	_rigidbody_check()
-	_lightmap_check()
+	#_lightmap_check() # Varying texel scales actually make a lot of sense
 	#_check_jolt_scaling() # Not a reliable way of detecting Jolt scaling error
 	if not disable_negative_scale_check:
 		_check_negative_scales()

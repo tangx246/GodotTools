@@ -1,0 +1,109 @@
+[gd_scene format=3 uid="uid://4hpxi75df77e"]
+
+[ext_resource type="Script" uid="uid://ocohw1oecf3x" path="res://addons/GodotTools/game_system/PlayerController/TPS/Player.gd" id="1_tps"]
+[ext_resource type="Script" uid="uid://bgxjal58paq31" path="res://addons/GodotTools/node_utility/multiplayer_synchronizer_workaround/multiplayer_synchronizer_workaround.gd" id="2_sync"]
+[ext_resource type="Script" uid="uid://ci4suapv345nm" path="res://addons/GodotTools/game_system/PlayerController/FPS/stand_state.gd" id="3_stand"]
+[ext_resource type="Script" uid="uid://dwhrkrfmgnock" path="res://addons/GodotTools/game_system/PlayerController/FPS/lean.gd" id="4_lean"]
+[ext_resource type="Script" uid="uid://ww7s23i6ue1j" path="res://addons/GodotTools/game_system/PlayerController/FPS/screen_shake.gd" id="5_shake"]
+[ext_resource type="Script" uid="uid://crapg83iuvxpn" path="res://addons/GodotTools/game_system/PlayerController/TPS/tps_camera.gd" id="6_tpscam"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_stand"]
+radius = 0.25
+height = 1.7
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_crouch"]
+radius = 0.3
+height = 1.3
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_prone"]
+radius = 0.3
+height = 0.6
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ctrl"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath("StandState:stand_state")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath("StandState/CameraPivot/Lean:lean_state")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_shake"]
+metadata/_preview_in_3d_space_ = true
+
+[node name="Player" type="CharacterBody3D" unique_id=1111376726 node_paths=PackedStringArray("stand_state_controller", "lean_controller", "camera_pivot")]
+platform_on_leave = 2
+script = ExtResource("1_tps")
+stand_state_controller = NodePath("StandState")
+lean_controller = NodePath("StandState/CameraPivot/Lean")
+camera_pivot = NodePath("StandState/CameraPivot")
+
+[node name="StandCollider" type="CollisionShape3D" parent="." unique_id=1545680900]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+shape = SubResource("CapsuleShape3D_stand")
+
+[node name="CrouchCollider" type="CollisionShape3D" parent="." unique_id=1184794891]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
+shape = SubResource("CapsuleShape3D_crouch")
+
+[node name="ProneCollider" type="CollisionShape3D" parent="." unique_id=642813690]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+shape = SubResource("CapsuleShape3D_prone")
+
+[node name="ControllerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1844708629]
+process_mode = 1
+replication_config = SubResource("SceneReplicationConfig_ctrl")
+script = ExtResource("2_sync")
+
+[node name="StandState" type="Node3D" parent="." unique_id=1583163207 node_paths=PackedStringArray("body", "stand_collider", "crouch_collider", "prone_collider", "stand_position", "crouch_position", "prone_position")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.59211, 0)
+script = ExtResource("3_stand")
+body = NodePath("..")
+stand_collider = NodePath("../StandCollider")
+crouch_collider = NodePath("../CrouchCollider")
+prone_collider = NodePath("../ProneCollider")
+stand_position = NodePath("../StandCameraPosition")
+crouch_position = NodePath("../CrouchCameraPosition")
+prone_position = NodePath("../ProneCameraPosition")
+
+[node name="CameraPivot" type="Node3D" parent="StandState" unique_id=1008339325]
+
+[node name="Lean" type="Node3D" parent="StandState/CameraPivot" unique_id=313165960 node_paths=PackedStringArray("stand_position", "standing_lean_left_position", "standing_lean_right_position")]
+script = ExtResource("4_lean")
+stand_position = NodePath("../../../StandCameraPosition")
+standing_lean_left_position = NodePath("../../../StandLeanLeftCameraPosition")
+standing_lean_right_position = NodePath("../../../StandLeanRightCameraPosition")
+
+[node name="ScreenShake" type="Node3D" parent="StandState/CameraPivot/Lean" unique_id=1190780920]
+script = ExtResource("5_shake")
+noise = SubResource("FastNoiseLite_shake")
+
+[node name="SpringArm3D" type="SpringArm3D" parent="StandState/CameraPivot/Lean/ScreenShake" unique_id=231580925 node_paths=PackedStringArray("player_body")]
+spring_length = 2.5
+margin = 0.1
+script = ExtResource("6_tpscam")
+player_body = NodePath("../../../../..")
+
+[node name="Camera3D" type="Camera3D" parent="StandState/CameraPivot/Lean/ScreenShake/SpringArm3D" unique_id=1002440494]
+physics_interpolation_mode = 2
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 0)
+
+[node name="StandCameraPosition" type="Marker3D" parent="." unique_id=1202928780]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.59211, 0)
+
+[node name="StandLeanLeftCameraPosition" type="Marker3D" parent="." unique_id=224969042]
+transform = Transform3D(0.996195, -0.0871558, 0, 0.0871558, 0.996195, 0, 0, 0, 1, -0.35, 1.5, 0)
+
+[node name="StandLeanRightCameraPosition" type="Marker3D" parent="." unique_id=817602891]
+transform = Transform3D(0.996195, 0.0871558, 0, -0.0871558, 0.996195, 0, 0, 0, 1, 0.35, 1.5, 0)
+
+[node name="CrouchCameraPosition" type="Marker3D" parent="." unique_id=1430377741]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9897, 0)
+
+[node name="ProneCameraPosition" type="Marker3D" parent="." unique_id=275373882]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.287124, 0)

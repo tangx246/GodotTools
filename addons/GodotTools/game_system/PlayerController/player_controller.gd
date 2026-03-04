@@ -4,11 +4,13 @@ extends EditorPlugin
 
 func _enter_tree():
 	add_custom_type("FPSController", "CharacterBody3D", preload("FPS/Player.gd"), preload("icon.svg"))
+	add_custom_type("TPSController", "CharacterBody3D", preload("TPS/Player.gd"), preload("icon.svg"))
 	add_fps_controller_input_map()
 
 
 func _exit_tree():
 	remove_custom_type("FPSController")
+	remove_custom_type("TPSController")
 
 class JoyEvent extends RefCounted:
 	var axis: JoyAxis

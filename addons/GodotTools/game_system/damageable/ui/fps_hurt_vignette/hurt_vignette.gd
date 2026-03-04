@@ -24,6 +24,8 @@ func _on_hp_changed(prev_value: float, value: float, source: Node):
 		var x: float = lerpf(1, 0, (basis_hurt_direction.x + 1) / 2)
 		var y: float = lerpf(0, 0.5, (basis_hurt_direction.z + 1) / 2)
 		gradient_texture.fill_from = Vector2(x, y)
+	else:
+		gradient_texture.fill_from = Vector2(0.5, 0.5)
 
 	if tween:
 		tween.kill()
