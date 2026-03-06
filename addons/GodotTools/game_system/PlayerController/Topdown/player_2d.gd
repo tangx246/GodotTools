@@ -10,7 +10,7 @@ func _ready() -> void:
 	else:
 		process_mode = Node.PROCESS_MODE_DISABLED
 		
-	if Multiprocess.get_first_instance(self).is_multiprocess_instance() and get_multiplayer_authority() == MultiplayerPeer.TARGET_PEER_SERVER:
+	if Multiprocess.is_multiprocess_instance() and get_multiplayer_authority() == MultiplayerPeer.TARGET_PEER_SERVER:
 		queue_free()
 
 func get_input():
