@@ -23,8 +23,9 @@ func _ready():
 		for id: int in multiplayer.get_peers():
 			spawn.call_deferred(id)
 
-		# Make one for the server's self
-		spawn.call_deferred(multiplayer.get_unique_id())
+		# Only spawn a player for the server itself if it's not a headless multiprocess instance
+		if not Multiprocess.is_multiprocess_instance():
+			spawn.call_deferred(multiplayer.get_unique_id())
 
 		Signals.safe_connect(self, multiplayer.peer_disconnected, _on_peer_disconnected)
 
