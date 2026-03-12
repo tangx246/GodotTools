@@ -135,6 +135,11 @@ func start_headless_process(single_player: bool):
 	if not password_text.is_empty():
 		params.append(PASSWORD_PARAM)
 		params.append(password_text)
+	# Connect headless server to editor debugger so it appears as another
+	# debug session (enables godot-mcp debugging of the server instance)
+	if EngineDebugger.is_active():
+		params.append("--remote-debug")
+		params.append("tcp://127.0.0.1:6007")
 	output = OS.execute_with_pipe(OS.get_executable_path(), params)
 	local_instance_single_player = single_player
 	stdio_observer = Thread.new()
