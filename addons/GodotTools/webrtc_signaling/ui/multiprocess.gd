@@ -122,7 +122,7 @@ func start_headless_process(single_player: bool):
 	var main_scene: String = ResourceUID.ensure_path(ProjectSettings.get_setting("application/run/main_scene", ""))
 	var current_scene: String = get_tree().current_scene.scene_file_path
 	if main_scene != current_scene:
-		clientui._log("Cannot start multiprocess: project main scene is '%s' but running '%s'. Change Project > Project Settings > Application > Run > Main Scene." % [main_scene, current_scene])
+		clientui._log("Cannot start multiprocess: project main scene is '%s' but running '%s'. Set the main scene to '%s' via Project > Project Settings > Application > Run > Main Scene, or programmatically: ProjectSettings.set_setting(\"application/run/main_scene\", \"<path_to_scene>\") then ProjectSettings.save()" % [main_scene, current_scene, current_scene])
 		return
 	kill_headless_process()
 
