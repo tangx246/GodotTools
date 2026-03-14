@@ -3,6 +3,12 @@ extends Control
 @export var game_loading_text: String = "Loading..."
 var original_start_text: String
 
+const QUICK_START_PARAM := "--quickplay"
+const QUICK_START_LOCK_PATH := "user://quickplay.lock"
+const QUICK_START_MAX_RETRIES := 10
+var _quick_start_active: bool = false
+var _quick_start_retry_count: int = 0
+
 @onready var client: SignalingClient = %Client
 @onready var host: LineEdit = %Host
 @onready var room: LineEdit = %RoomSecret
@@ -44,6 +50,9 @@ func _ready() -> void:
 	Signals.safe_connect(self, start_game_singleplayer.pressed, on_start_game_pressed)
 	Signals.safe_connect(self, start_game_multiplayer.pressed, on_start_game_pressed)
 
+	if QUICK_START_PARAM in OS.get_cmdline_args():
+		_quick_start_play.call_deferred()
+
 func _set_original_start_button_text() -> void:
 	start_button.text = original_start_text
 
@@ -66,6 +75,8 @@ func _mp_server_disconnect() -> void:
 func _mp_peer_connected(id: int) -> void:
 	_log("[Multiplayer] Peer %d connected" % id)
 	if id != MultiplayerPeer.TARGET_PEER_SERVER and Multiprocess.is_multiprocess_instance_single_player():
+		on_start_game_pressed()
+	elif id != MultiplayerPeer.TARGET_PEER_SERVER and _quick_start_active and multiprocess.is_multiprocess_instance_running():
 		on_start_game_pressed()
 
 func _mp_peer_disconnected(id: int) -> void:
@@ -155,6 +166,9 @@ func _on_refresh_pressed() -> void:
 
 func _on_stop_pressed() -> void:
 	print("Stop pressed")
+	_quick_start_active = false
+	_quick_start_retry_count = 0
+	_release_host_lock()
 	if multiprocess.is_multiprocess_instance_running():
 		multiprocess.kill_headless_process()
 	client.stop()
@@ -192,7 +206,7 @@ func _on_room_list_activated(id: int) -> void:
 func _room_list_received(received_rooms: Dictionary) -> void:
 	_log("Room list received. Got %s rooms" % (received_rooms.size() if received_rooms else "0"))
 	room_list.clear()
-	
+
 	for room in received_rooms.keys():
 		var room_data: Dictionary = JSON.parse_string(received_rooms[room])
 		var host_name: String = room_data["host_name"]
@@ -204,3 +218,81 @@ func _room_list_received(received_rooms: Dictionary) -> void:
 		})
 		var id: int = room_list.add_item(label)
 		room_list.set_item_metadata(id, room)
+
+
+# region Quick Start
+
+func _get_localhost_url() -> String:
+	return "ws://127.0.0.1:%s" % MultiprocessPortOption.get_value()
+
+
+func _quick_start_play() -> void:
+	_quick_start_active = true
+	host.text = _get_localhost_url()
+	if _try_acquire_host_lock():
+		_log("[Quick Start] Hosting on %s" % host.text)
+		multiprocess.start_headless_process(false)
+	else:
+		_log("[Quick Start] Another instance is hosting, joining...")
+		_quick_start_retry_count = 0
+		_try_quick_join()
+
+
+func _try_acquire_host_lock() -> bool:
+	if FileAccess.file_exists(QUICK_START_LOCK_PATH):
+		var lock_age := Time.get_unix_time_from_system() - FileAccess.get_modified_time(QUICK_START_LOCK_PATH)
+		if lock_age > 5.0:
+			_release_host_lock()
+		else:
+			return false
+	var f := FileAccess.open(QUICK_START_LOCK_PATH, FileAccess.WRITE)
+	if f == null:
+		return false
+	f.close()
+	return true
+
+
+func _release_host_lock() -> void:
+	if FileAccess.file_exists(QUICK_START_LOCK_PATH):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(QUICK_START_LOCK_PATH))
+
+
+func _try_quick_join() -> void:
+	host.text = _get_localhost_url()
+	_log("[Quick Start] Discovering rooms on %s (attempt %d/%d)" % [host.text, _quick_start_retry_count + 1, QUICK_START_MAX_RETRIES])
+	client.room_list_received.connect(_quick_join_from_list, CONNECT_ONE_SHOT)
+	client.start(host.text, "", mesh.button_pressed, false)
+
+
+func _quick_join_from_list(received_rooms: Dictionary) -> void:
+	if not _quick_start_active:
+		return
+
+	var room_code: String = ""
+	if received_rooms:
+		for code: String in received_rooms.keys():
+			var room_data: Dictionary = JSON.parse_string(received_rooms[code])
+			if not room_data.get("has_password", false):
+				room_code = code
+				break
+
+	if room_code.is_empty():
+		_quick_start_retry_count += 1
+		if _quick_start_retry_count < QUICK_START_MAX_RETRIES:
+			_log("[Quick Start] No rooms found, retrying in 1s...")
+			get_tree().create_timer(1.0).timeout.connect(_try_quick_join, CONNECT_ONE_SHOT)
+		else:
+			_log("[Quick Start] Max retries reached, giving up")
+			_quick_start_active = false
+		return
+
+	_log("[Quick Start] Joining room %s" % room_code)
+	# Defer to avoid calling start() while inside room_list_received callback
+	(func(): client.start(host.text, room_code, mesh.button_pressed, true, "")).call_deferred()
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_CLOSE_REQUEST or what == NOTIFICATION_PREDELETE:
+		_release_host_lock()
+
+# endregion
